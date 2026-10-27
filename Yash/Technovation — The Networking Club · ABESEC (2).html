@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Technovation — The Networking Club · ABESEC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,800;1,9..144,500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f1ede4;--fg:#14130f;--mut:#6b675c;--line:rgba(20,19,15,.16);--card:#faf8f3;--vm:#ff4d1c;--p:clamp(48px,8vw,110px);
+--s:'Fraunces',Georgia,'Times New Roman',serif;--m:'IBM Plex Mono',ui-monospace,Menlo,Consolas,monospace;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f0e0b;--fg:#f1ede4;--mut:#9a958a;--line:rgba(241,237,228,.18);--card:#18160f}}
+:root[data-theme="dark"]{--bg:#0f0e0b;--fg:#f1ede4;--mut:#9a958a;--line:rgba(241,237,228,.18);--card:#18160f}
+html{scroll-behavior:smooth;scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit;margin:0}
+body{background:var(--bg);color:var(--fg);font:14.5px/1.65 var(--m);overflow-x:hidden}
+a{color:inherit;text-decoration:none}::selection{background:var(--vm);color:#fff}
+nav{position:fixed;top:env(safe-area-inset-top,0px);left:0;right:0;z-index:20;display:flex;justify-content:space-between;align-items:center;padding:14px clamp(18px,4vw,48px);background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.brand{font:800 22px var(--s);letter-spacing:-.02em}.brand i{color:var(--vm)}
+nav ul{display:flex;gap:26px;list-style:none;font-size:12px;text-transform:uppercase;letter-spacing:.1em}nav ul a:hover{color:var(--vm)}
+.btn{display:inline-block;background:var(--vm);color:#fff;padding:12px 26px;border-radius:99px;font-size:12px;text-transform:uppercase;letter-spacing:.1em;font-weight:500;transition:transform .2s,box-shadow .2s}
+.btn:hover{transform:translateY(-3px);box-shadow:0 10px 24px -8px var(--vm)}.btn.o{background:none;color:var(--fg);border:1.5px solid var(--fg)}
+main{position:relative;padding-left:var(--p)}
+main::before,.prog{content:"";position:absolute;left:calc(var(--p)/2 - 1.5px);top:0;width:3px;background:var(--line)}main::before{bottom:0}
+.prog{background:var(--vm);height:0;z-index:2}
+section{padding:clamp(70px,12vh,140px) clamp(18px,5vw,64px) clamp(70px,12vh,140px) 0;max-width:1300px}
+.tag{position:relative;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--mut);margin-bottom:26px}
+.tag::before{content:"";position:absolute;left:calc(var(--p)/-2 - 9px);top:-1px;width:18px;height:18px;border-radius:50%;background:var(--bg);border:3px solid var(--fg);transition:.3s}
+.tag.in2::before{background:var(--vm);border-color:var(--vm)}
+h2{font:800 clamp(2rem,5.4vw,4.4rem)/1 var(--s);letter-spacing:-.03em;max-width:16ch}h2 em,h1 em{font-style:italic;font-weight:500;color:var(--vm)}
+#hero{min-height:100svh;display:flex;flex-direction:column;justify-content:center;position:relative;padding-top:110px}
+#knot{position:absolute;right:-6%;top:50%;transform:translateY(-50%);width:min(62vw,740px);height:min(62vw,740px);z-index:0}
+.hc{position:relative;z-index:1;max-width:700px}
+h1{font:800 clamp(2.8rem,8.4vw,7.6rem)/.94 var(--s);letter-spacing:-.04em}
+.lead{margin:28px 0 34px;max-width:46ch;color:var(--mut);font-size:15px}
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:44px}.chips span{border:1px solid var(--line);border-radius:99px;padding:6px 16px;font-size:12px;background:var(--card)}.chips b{color:var(--vm)}
+.tick{overflow:hidden;border-block:1.5px solid var(--fg);margin-left:calc(var(--p)*-1);background:var(--fg);color:var(--bg)}
+.tick div{display:flex;gap:40px;width:max-content;padding:14px 0;animation:mq 34s linear infinite;font:800 clamp(1.1rem,2.6vw,1.8rem) var(--s);font-style:italic}@keyframes mq{to{transform:translateX(-50%)}}
+#mf{font:500 clamp(1.7rem,4.4vw,3.6rem)/1.16 var(--s);letter-spacing:-.02em;max-width:1050px}
+#mf .w{opacity:.16;transition:opacity .3s}#mf .w.on{opacity:1}#mf .hl.on{color:var(--vm);font-style:italic}
+.vis{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:36px;margin-top:40px}
+.vis h3{font:800 clamp(2rem,4vw,3.2rem)/1 var(--s);margin:10px 0 14px;letter-spacing:-.03em}.vis span{color:var(--vm);font-size:12px}.vis p{color:var(--mut);max-width:30ch}
+.doms{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:22px;margin-top:50px;perspective:1200px}
+.dm{--rx:0deg;--ry:0deg;background:var(--c);color:#fff;border-radius:22px;padding:30px;min-height:380px;display:flex;flex-direction:column;justify-content:space-between;transform:rotateX(var(--rx)) rotateY(var(--ry));transform-style:preserve-3d;transition:transform .15s;position:relative;overflow:hidden}
+.dm::after{content:"";position:absolute;inset:0;background:radial-gradient(circle at var(--mx,50%) var(--my,0%),rgba(255,255,255,.35),transparent 55%);pointer-events:none}
+.dm .n{font:800 7rem/.8 var(--s);font-style:italic;opacity:.35;transform:translateZ(30px)}
+.dm h3{font:800 2.2rem var(--s);margin-bottom:8px;transform:translateZ(60px)}.dm p{max-width:28ch;font-size:13px;transform:translateZ(40px)}
+.lgs{display:flex;gap:18px;overflow-x:auto;padding:30px 6px 40px;margin-top:20px;scroll-snap-type:x mandatory}
+.lgc{flex:0 0 300px;height:310px;background:var(--card);border:1.5px solid var(--fg);border-radius:16px;padding:22px;display:flex;flex-direction:column;justify-content:space-between;scroll-snap-align:start;transition:.35s;transform:rotate(var(--r))}
+.lgc b{display:block;font:italic 800 2.6rem/1 var(--s);margin-bottom:10px;letter-spacing:-.02em}.lgc p{font-size:12.5px;color:var(--mut)}.lgc span{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--mut)}
+.lgc:hover{transform:rotate(0) translateY(-12px);background:var(--vm);color:#fff}.lgc:hover span,.lgc:hover p{color:#fff}
+.ev{border-top:1.5px solid var(--fg);margin-top:40px}
+.row{display:grid;grid-template-columns:110px 1fr auto 28px;gap:18px;align-items:center;padding:24px 8px;border-bottom:1px solid var(--line);cursor:pointer;transition:padding .3s,background .3s;position:relative}
+.row:hover{padding-left:22px;background:var(--card)}.row .t{font:800 clamp(1.15rem,2.6vw,1.9rem) var(--s);letter-spacing:-.02em}
+.row .k{font-size:11px;letter-spacing:.12em;text-transform:uppercase;border:1px solid var(--fg);border-radius:99px;padding:3px 12px}.row .a{font-size:22px;color:var(--vm);transition:transform .3s}.row.open .a{transform:rotate(45deg)}
+.det{grid-column:2/-1;max-height:0;overflow:hidden;transition:max-height .4s;color:var(--mut)}.row.open .det{max-height:100px}
+.core{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px;margin-top:40px}
+.id{background:var(--card);border:1.5px solid var(--fg);border-radius:14px;padding:20px;position:relative;overflow:hidden;transition:transform .3s}
+.id::before{content:"";display:block;width:44px;height:6px;border-radius:9px;background:var(--fg);margin-bottom:46px;opacity:.8}
+.id b{display:block;font:800 1.9rem/1 var(--s);letter-spacing:-.02em}.id span{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--mut)}.id:hover{transform:translateY(-6px) rotate(-1deg)}
+.depts{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;margin-top:20px;perspective:1200px}
+.dc{--rx:0deg;--ry:0deg;background:var(--card);border:1.5px solid var(--fg);border-top:12px solid var(--c);border-radius:14px;padding:24px;transform:rotateX(var(--rx)) rotateY(var(--ry));transition:transform .15s,box-shadow .3s}
+.dc:hover{box-shadow:10px 10px 0 var(--c)}.dc small{font-size:11px;letter-spacing:.14em;color:var(--mut)}
+.dc h3{font:800 1.9rem var(--s);letter-spacing:-.02em;margin:6px 0 8px}.dc p{color:var(--mut);font-size:13px}
+.ld{margin:16px 0 12px;font-size:12px;text-transform:uppercase;letter-spacing:.08em}.ld b{background:var(--c);color:#fff;padding:2px 10px;border-radius:99px;font-weight:500}
+.mb{display:flex;flex-wrap:wrap;gap:6px}.mb span{font-size:11.5px;border:1px solid var(--line);border-radius:99px;padding:3px 10px}.mb span:hover{background:var(--c);color:#fff;border-color:var(--c)}
+.faq{margin-top:40px;max-width:860px;border-top:1.5px solid var(--fg)}.faq details{border-bottom:1px solid var(--line)}
+.faq summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;gap:20px;padding:20px 0;font:800 clamp(1.1rem,2.2vw,1.5rem) var(--s)}.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";color:var(--vm);font-size:1.8rem;line-height:1;transition:transform .3s}.faq details[open] summary::after{transform:rotate(45deg)}.faq p{color:var(--mut);padding:0 0 20px;max-width:60ch}
+.pass{display:grid;grid-template-columns:1fr 230px;background:var(--card);border:2px solid var(--fg);border-radius:20px;overflow:hidden;max-width:920px;margin-top:40px}
+.pass>div{padding:32px}.pass .r{border-left:2px dashed var(--fg);display:flex;flex-direction:column;justify-content:space-between}
+.pass h3{font:800 clamp(1.8rem,4vw,3rem)/1 var(--s);letter-spacing:-.03em;margin:8px 0 20px}.pass dl{display:grid;grid-template-columns:auto 1fr;gap:6px 18px;font-size:13px;margin-bottom:26px}.pass dt{color:var(--mut);text-transform:uppercase;font-size:11px;letter-spacing:.12em}
+.bar{height:70px;background:repeating-linear-gradient(90deg,var(--fg) 0 2px,transparent 2px 5px,var(--fg) 5px 6px,transparent 6px 10px)}
+footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px;padding:28px clamp(18px,5vw,64px);border-top:1.5px solid var(--fg);font-size:12px;color:var(--mut)}footer a:hover{color:var(--vm)}
+.flt{display:flex;flex-wrap:wrap;gap:8px;margin:34px 0 22px}.flt button{font:inherit;font-size:12px;text-transform:uppercase;letter-spacing:.08em;background:none;color:var(--fg);border:1.5px solid var(--fg);border-radius:99px;padding:7px 16px;cursor:pointer;transition:.2s}
+.flt button:hover,.flt button.on{background:var(--fg);color:var(--bg)}
+.ppl{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px}
+.pp{background:var(--card);border:1.5px solid var(--fg);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:4px;cursor:pointer;transition:.25s;outline:none}.pp:hover,.pp:focus-visible{transform:translateY(-5px);box-shadow:6px 6px 0 var(--c)}
+.pa{width:46px;height:46px;border-radius:50%;background:var(--c);color:#fff;display:grid;place-items:center;font:800 16px var(--s);margin-bottom:10px}.pp b{font:800 1.15rem var(--s)}.pp small{color:var(--mut);font-size:11px;text-transform:uppercase;letter-spacing:.06em}
+.md{position:fixed;inset:0;z-index:50;display:grid;place-items:center;padding:18px;background:rgba(20,19,15,.62);backdrop-filter:blur(8px);opacity:0;pointer-events:none;transition:opacity .3s}.md.on{opacity:1;pointer-events:auto}
+.pc{--sc:.94;--c:var(--vm);position:relative;width:min(500px,100%);max-height:92vh;overflow:auto;background:var(--card);border:2px solid var(--fg);border-radius:22px;transform:perspective(1100px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) scale(var(--sc));transition:transform .25s}.md.on .pc{--sc:1}
+.pc .hd{background:var(--c);height:130px;position:relative;border-bottom:2px solid var(--fg)}
+.pc .hd::before{content:"";position:absolute;left:50%;top:14px;width:64px;height:12px;margin-left:-32px;border-radius:9px;background:var(--card);border:2px solid var(--fg)}
+.pc .av{position:absolute;left:28px;bottom:-42px;width:92px;height:92px;border-radius:50%;background:var(--card);color:var(--fg);border:3px solid var(--fg);display:grid;place-items:center;font:800 30px var(--s)}
+.pc .bd{padding:58px 28px 28px}.pc .x{position:absolute;right:14px;top:14px;z-index:2;width:34px;height:34px;border-radius:50%;background:var(--card);color:var(--fg);border:2px solid var(--fg);cursor:pointer}.pc .x:hover{background:var(--fg);color:var(--bg)}
+.pc .rl{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--vm)}.pc h3{font:800 2.2rem/1.05 var(--s);letter-spacing:-.02em;margin:6px 0 4px}.pc .tg{color:var(--mut);font-size:12px;margin-bottom:14px}.pc .bi{margin-bottom:20px}
+.pc .fc{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:16px 0;border-block:1.5px solid var(--line);margin-bottom:16px}.pc dt{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--mut)}
+.pc h4{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--mut);margin:16px 0 8px;font-weight:500}.pc .sk{display:flex;flex-wrap:wrap;gap:6px}.pc .sk span{border:1.5px solid var(--fg);border-radius:99px;padding:3px 12px;font-size:12px}
+.pc .fn{margin-top:20px;color:var(--mut);font-size:12.5px}.pc .fn b{color:var(--fg)}
+.rv{opacity:0;transform:translateY(34px);transition:opacity .9s,transform .9s cubic-bezier(.2,.7,.2,1)}.rv.in2{opacity:1;transform:none}
+@media(max-width:760px){nav ul{display:none}.row{grid-template-columns:1fr 24px}.row .d0,.row .k{display:none}.det{grid-column:1/-1}.pass{grid-template-columns:1fr}.pass .r{border-left:0;border-top:2px dashed var(--fg)}#knot{opacity:.3;right:-30%}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.rv{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<nav><a class="brand" href="#hero">Technovation<i>.</i></a>
+<ul><li><a href="#about">About</a></li><li><a href="#domains">Domains</a></li><li><a href="#legacy">Flagships</a></li><li><a href="#team">Team</a></li><li><a href="#faq">FAQ</a></li></ul>
+<a class="btn" href="#join">Join</a></nav>
+<main id="mn"><div class="prog" id="pg"></div>
+<section id="hero"><canvas id="knot"></canvas><div class="hc">
+<div class="tag in2">The Networking Club · ABES Engineering College</div>
+<h1>Where <em>connections</em> spark innovation.</h1>
+<p class="lead">A community of students exploring networking, cybersecurity and real-world problem-solving. Every byte, a bridge.</p>
+<a class="btn" href="#join">Join the mission</a> <a class="btn o" href="#domains">What we do</a>
+<div class="chips" id="chips"></div></div></section>
+<div class="tick"><div id="tk"></div></div>
+<section id="about"><div class="tag rv">Station 01 — Manifesto</div>
+<p id="mf">Every click begins a connection. We are students who design networks, break them on purpose, and learn to defend them. Here, curiosity is the protocol and **collaboration** is the **bandwidth**.</p>
+<div class="vis"><div class="rv"><span>01</span><h3>Collaborate</h3><p>Ideas get sharper when they are shared. We build in teams, across branches and years.</p></div>
+<div class="rv"><span>02</span><h3>Connect</h3><p>Between students, mentors and industry. Every connection opens a new door.</p></div>
+<div class="rv"><span>03</span><h3>Grow</h3><p>From first-year curiosity to confident leaders, one project at a time.</p></div></div></section>
+<section id="domains"><div class="tag rv">Station 02 — Domains</div><h2 class="rv">Three ways into the <em>network</em></h2><div class="doms" id="doms"></div></section>
+<section id="legacy"><div class="tag rv">Station 03 — Legacy</div><h2 class="rv">Our <em>flagship</em> events</h2><div class="lgs" id="lgs"></div>
+<div class="tag rv" style="margin-top:70px">Mission log</div><div class="ev rv" id="evl"></div></section>
+<section id="team"><div class="tag rv">Station 04 — The people</div><h2 class="rv">Six lines, one <em>network</em></h2>
+<div class="core" id="core"></div><div class="tag rv" style="margin-top:80px">Departments</div><div class="depts" id="depts"></div>
+<div class="tag rv" style="margin-top:90px">Meet everyone</div><h2 class="rv" style="font-size:clamp(1.6rem,3.6vw,2.8rem);max-width:24ch">Tap a card to <em>meet them</em></h2>
+<div class="flt" id="flt"></div><div class="ppl" id="ppl"></div></section>
+<section id="faq"><div class="tag rv">Station 05 — FAQ</div><h2 class="rv">Questions, <em>answered</em></h2><div class="faq rv">
+<details><summary>Who can join Technovation?</summary><p>All B.Tech branches are welcome. We focus on 1st and 2nd year students.</p></details>
+<details><summary>When does recruitment happen?</summary><p>Online, once a year at the end of June, run by the core team with our faculty coordinator.</p></details>
+<details><summary>Which departments can I join?</summary><p>Technical, Events, PR &amp; Outreach, Graphics, Content and Production.</p></details>
+<details><summary>How do I contact the club?</summary><p>Write to abes.technovation@gmail.com or message us on Instagram, LinkedIn or Facebook.</p></details></div></section>
+<section id="join"><div class="tag rv">Terminus — Join</div><h2 class="rv">Ready, <em>agent?</em></h2>
+<div class="pass rv"><div><small>BOARDING PASS</small><h3>Technovation Express</h3>
+<dl><dt>From</dt><dd>ABESEC, Ghaziabad</dd><dt>To</dt><dd>The Network</dd><dt>Boarding</dt><dd>Every June, online</dd><dt>Eligible</dt><dd>All B.Tech branches · 1st &amp; 2nd years</dd></dl>
+<a class="btn" href="mailto:abes.technovation@gmail.com?subject=Joining%20Technovation">Get my ticket</a></div>
+<div class="r"><small>ADMIT ONE AGENT</small><div class="bar"></div></div></div></section>
+</main>
+<footer><span>© Technovation — The Networking Club, ABESEC</span><span><a href="https://www.abes.ac.in/Technovation.html">College page</a> · <a href="https://twitter.com/technovationcse">X</a> · <a href="https://www.facebook.com/abestechnovation/">Facebook</a> · <a href="https://www.instagram.com/technovationabes">Instagram</a> · <a href="https://www.linkedin.com/company/the-networking-club-abesec/">LinkedIn</a> · <a href="mailto:abes.technovation@gmail.com">Email</a></span></footer>
+<div class="md" id="md" role="dialog" aria-modal="true" aria-label="Member card"><div class="pc" id="pc"></div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+const $=s=>document.querySelector(s),RM=matchMedia('(prefers-reduced-motion:reduce)').matches;
+/* ---- content (edit me) ---- */
+const CORE=[['Shresth','General Secretary'],['Ayush','Joint Secretary'],['Chaitanya','Joint Secretary'],['Lavi','Treasurer']];
+const TEAMS=[
+{n:'Technical',c:'#2430ff',d:'Code, networks and security. We build the club\'s tools and break things on purpose.',l:['Yash','Shruti'],m:['Dishant Ghalot','Vadanta Kumar Chauhaan','Aditya Dubey','Samarth Verma','Harsh Tiwari']},
+{n:'Events',c:'#ff4d1c',d:'Contests, workshops and CTF nights, planned from idea to showtime.',l:['Gudiya','Aditya'],m:['Aryan Jha','Tushti Gupta','Shrishti Gupta','Gauri Jain','Satyam Shukla']},
+{n:'PR & Outreach',c:'#00a86b',d:'Tell the story, grow the network, connect us with the world.',l:['Kaushiki','Harshvardhan'],m:['Sanskriti Pandey','Neha Gupta','Samriddhi Johri','Saavya Singh','Sakshi Yadav']},
+{n:'Graphics',c:'#e0207a',d:'Posters, motion and identity. If it looks sharp, it came from here.',l:['Anuj','Anushka'],m:['Ridah Abbasi','Ananya Singh','Anshita Garg','Shifa Saifi','Aaniya Singh']},
+{n:'Content',c:'#d49a00',d:'Words that make people click: copy, captions, articles and scripts.',l:['Juwairiyah'],m:['Shreya Shekhar','Aalia Idris','Arush Dixit','Pari','Manasvi Singh']},
+{n:'Production',c:'#7a3cff',d:'Build, record and ship the visuals and tech behind every event.',l:['Zeeshan'],m:['Aaryan Vashishta','Tripti Sahani','Smriti Patel','Ankit','Manas Kumar']}];
+const DOMS=[['AWS','#2430ff','Cloud fundamentals. Deploy, host and scale real services on the cloud.'],['Cyber Security','#ff4d1c','Ethical hacking, CTF challenges and learning to defend what you build.'],['Networking','#00a86b','How data actually moves: protocols, topologies and hands-on labs.']];
+const FLAG=[['TypoBuzz','Flagship','Our flagship typing and tech-trivia showdown. Fast fingers, sharp minds, a live leaderboard.','Editions 1.0 to 6.0'],['CyberQuest','Flagship','A cybersecurity quest of puzzles, CTF-style challenges and network riddles across timed rounds.','Open to all branches'],['Vertigo','Flagship','Our signature annual tech celebration with contests, talks and showcases from every department.','Annual']];
+const EVENTS=[['Next','Classified: next mission loading','Soon','Stay tuned. Follow our socials for the drop.'],
+['TBA','TypoBuzz','Flagship','Typing speed rounds, tech trivia and a head-to-head final with a live leaderboard.'],
+['TBA','CyberQuest','Flagship','Teams solve cryptography, web and network puzzles to climb the scoreboard.'],
+['TBA','Vertigo','Flagship','Contests, talks and project showcases across all six departments.'],
+['TBA','Quantum Computing Workshop (5 days)','Workshop','Five days from qubits and superposition to building and running circuits on a simulator. Hands-on every day.'],
+['Apr 2019','Web Development Workshop','Workshop','Hands-on session sponsored by GitHub Education, 15 April 2019.'],
+['Mar 2019','Coding Contest + C++ Workshop','Contest','A contest and a C++ workshop with GitHub Campus Experts.'],
+['Mar 2019','Two-day Git & GitHub Workshop','Workshop','Version control and open-source basics, sponsored by GitHub.']];
+const TAGS=['Networking','Cybersecurity','TypoBuzz','CyberQuest','Vertigo','Workshops','Quantum','Open Source'];
+const ACC='#ff4d1c';
+/* ---- people, profiles, member cards ---- */
+const H=s=>{let h=2166136261;for(const c of s){h^=c.charCodeAt(0);h=Math.imul(h,16777619)}return h>>>0};
+const PK=(a,n,s)=>{const o=[],b=[...a];let h=s||1;while(o.length<n&&b.length){h=Math.imul(h^(h>>>15),2246822519)>>>0;o.push(b.splice(h%b.length,1)[0])}return o};
+const POOL={'Technical':[['Networking','Linux','Python','Ethical Hacking','AWS','React','Wireshark','Docker'],'keeps the club tech running and loves breaking things on purpose (legally)'],
+'Events':[['Event Planning','Logistics','Stage Hosting','Sponsor Outreach','Team Coordination','Budgeting'],'turns ideas into events people remember'],
+'PR & Outreach':[['Public Speaking','Networking','Social Media','Negotiation','Partnerships','Community Building'],'connects the club with people, colleges and communities'],
+'Graphics':[['Figma','Photoshop','Illustrator','Motion Design','Typography','Branding'],'gives every poster and reel its look'],
+'Content':[['Copywriting','Storytelling','Research','Editing','Scriptwriting','SEO'],'writes the words behind every post and page'],
+'Production':[['Video Editing','Photography','Sound Design','Livestreaming','Lighting','After Effects'],'captures and ships the club on camera'],
+'Core Board':[['Leadership','Planning','Mentoring','Budgeting','Public Speaking','Team Management'],'steers the club and keeps every team in sync']};
+const BR=['CSE','CSE (AI & ML)','IT','CSE (Data Science)','ECE'],TOOLS=['Linux terminal','VS Code','Wireshark','Figma','Notion','Cisco Packet Tracer'],
+FUN=['Types 80+ WPM without looking.','Keeps a spare Ethernet cable in every bag.','Never misses a CTF scoreboard update.','Runs on chai and good Wi-Fi.','Collects mechanical keyboard switches.','Once fixed a network by unplugging it twice.'],
+INT=['open source','cybersecurity CTFs','quantum computing','photography','chess','football','music production','side projects'],
+WORK=['TypoBuzz','CyberQuest','Vertigo','Quantum Computing Workshop','Git & GitHub Workshop','Web Development Workshop','Coding Contest + C++'];
+const OVR={};/* placeholder profiles are generated; put real details here, e.g. OVR['Yash']={year:'3rd Year',bio:'...'} */
+const PEOPLE=[...CORE.map(c=>({name:c[0],role:c[1],dept:'Core Board',c:ACC,L:1})),...TEAMS.flatMap(t=>[...t.l.map(n=>({name:n,role:t.n+' Lead',dept:t.n,c:t.c||ACC,L:1})),...t.m.map(n=>({name:n,role:'Member',dept:t.n,c:t.c||ACC,L:0}))])];
+const ini=n=>n.split(' ').map(x=>x[0]).slice(0,2).join('').toUpperCase();
+function prof(p){const s=H(p.name),f=p.name.split(' ')[0],pl=POOL[p.dept],yr=(p.L?['3rd Year','4th Year']:['1st Year','2nd Year'])[s%2],br=BR[(s>>2)%BR.length],it=PK(INT,2,s>>3);
+const o={year:yr,branch:br,since:p.L?['2024','2025'][(s>>4)%2]:'2026',tool:TOOLS[(s>>5)%TOOLS.length],fun:FUN[(s>>6)%FUN.length],skills:PK(pl[0],4,s>>1),worked:PK(WORK,3,s>>7),tagline:p.role+' · '+(p.dept==='Core Board'?'Technovation':p.dept)};
+o.bio=`${f} is a ${yr.toLowerCase()} ${br} student and ${p.role} at Technovation. ${f} ${pl[1]}. Outside the club, ${f} is into ${it.join(' and ')}.`;
+return Object.assign(o,OVR[p.name]||{})}
+let FL='All';
+function drawP(){$('#flt').innerHTML=['All','Core Board',...TEAMS.map(t=>t.n)].map(f=>`<button class="${f===FL?'on':''}" data-f="${f}">${f}</button>`).join('');
+$('#ppl').innerHTML=PEOPLE.filter(p=>FL==='All'||p.dept===FL).map(p=>`<div class="pp" data-p="${p.name}" style="--c:${p.c}" tabindex="0"><span class="pa">${ini(p.name)}</span><b>${p.name}</b><small>${p.role}</small></div>`).join('')}
+drawP();
+$('#flt').addEventListener('click',e=>{const b=e.target.closest('button');if(b){FL=b.dataset.f;drawP()}});
+const md=$('#md'),pc=$('#pc');
+function openP(n){const p=PEOPLE.find(x=>x.name===n);if(!p)return;const d=prof(p);pc.style.setProperty('--c',p.c);
+pc.innerHTML=`<button class="x" aria-label="Close" onclick="closeP()">✕</button><div class="hd"><div class="av">${ini(p.name)}</div></div><div class="bd"><div class="rl">${p.role}</div><h3>${p.name}</h3><p class="tg">${d.tagline}</p><p class="bi">${d.bio}</p>
+<dl class="fc"><div><dt>Year</dt><dd>${d.year}</dd></div><div><dt>Branch</dt><dd>${d.branch}</dd></div><div><dt>Joined</dt><dd>${d.since}</dd></div><div><dt>Favourite tool</dt><dd>${d.tool}</dd></div></dl>
+<h4>Skills</h4><div class="sk">${d.skills.map(x=>`<span>${x}</span>`).join('')}</div><h4>Worked on</h4><div class="sk">${d.worked.map(x=>`<span>${x}</span>`).join('')}</div><p class="fn"><b>Fun fact:</b> ${d.fun}</p></div>`;
+md.classList.add('on');document.body.style.overflow='hidden';pc.scrollTop=0;pc.querySelector('.x').focus()}
+function closeP(){md.classList.remove('on');document.body.style.overflow=''}
+md.addEventListener('click',e=>{if(e.target===md)closeP()});
+document.addEventListener('click',e=>{const t=e.target.closest('[data-p]');if(t)openP(t.dataset.p)});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeP();if(e.key==='Enter'&&e.target.dataset&&e.target.dataset.p)openP(e.target.dataset.p)});
+pc.addEventListener('mousemove',e=>{const r=pc.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;pc.style.setProperty('--ry',x*10+'deg');pc.style.setProperty('--rx',-y*10+'deg')});
+pc.addEventListener('mouseleave',()=>{pc.style.setProperty('--rx','0deg');pc.style.setProperty('--ry','0deg')});
+/* ---- build ---- */
+const people=CORE.length+TEAMS.reduce((a,t)=>a+t.l.length+t.m.length,0);
+$('#chips').innerHTML=`<span><b>${TEAMS.length}</b> departments</span><span><b>${DOMS.length}</b> domains</span><span><b>${people}</b> agents</span><span><b>${FLAG.length}</b> flagship events</span>`;
+$('#tk').innerHTML=[...TAGS,...TAGS,...TAGS,...TAGS].map(t=>`<span>${t} ✺</span>`).join('');
+$('#doms').innerHTML=DOMS.map((d,i)=>`<div class="dm rv" style="--c:${d[1]}"><span class="n">0${i+1}</span><div><h3>${d[0]}</h3><p>${d[2]}</p></div></div>`).join('');
+$('#lgs').innerHTML=FLAG.map((f,i)=>`<div class="lgc" style="--r:${i%2?2:-2}deg"><span>${f[1]}</span><div><b>${f[0]}</b><p>${f[2]}</p></div><span>${f[3]}</span></div>`).join('');
+$('#evl').innerHTML=EVENTS.map(e=>`<div class="row"><span class="d0">${e[0]}</span><span class="t">${e[1]}</span><span class="k">${e[2]}</span><span class="a">+</span><div class="det">${e[3]}</div></div>`).join('');
+document.querySelectorAll('.row').forEach(r=>r.onclick=()=>r.classList.toggle('open'));
+$('#core').innerHTML=CORE.map(c=>`<div class="id rv" data-p="${c[0]}" tabindex="0" style="cursor:pointer"><b>${c[0]}</b><span>${c[1]}</span></div>`).join('');
+$('#depts').innerHTML=TEAMS.map((t,i)=>`<div class="dc rv" style="--c:${t.c}"><small>LINE 0${i+1}</small><h3>${t.n}</h3><p>${t.d}</p><div class="ld">${t.l.length>1?'Leads':'Lead'} <b>${t.l.join(' & ')}</b></div><div class="mb">${t.m.map(x=>`<span data-p="${x}" style="cursor:pointer">${x}</span>`).join('')}</div></div>`).join('');
+/* manifesto word reveal */
+const mf=$('#mf');let hl=false;
+mf.innerHTML=mf.textContent.split(' ').map(w=>{if(w.startsWith('**'))hl=true;const c=w.replace(/\*\*/g,''),s=`<span class="w${hl?' hl':''}">${c}</span>`;if(w.endsWith('**')||w.endsWith('**.'))hl=false;return s}).join(' ');
+const ws=[...mf.querySelectorAll('.w')],mn=$('#mn'),pg=$('#pg');
+function sc(){const r=mf.getBoundingClientRect(),p=Math.min(1,Math.max(0,(innerHeight*.85-r.top)/(r.height+innerHeight*.3)));ws.forEach((w,i)=>w.classList.toggle('on',i/ws.length<p));
+const m=mn.getBoundingClientRect();pg.style.height=Math.min(Math.max(innerHeight*.5-m.top,0),m.height)+'px'}
+addEventListener('scroll',sc,{passive:true});sc();
+const io=new IntersectionObserver(es=>es.forEach(e=>e.isIntersecting&&(e.target.classList.add('in2'),io.unobserve(e.target))),{threshold:.15});
+document.querySelectorAll('.rv').forEach((el,i)=>{el.style.transitionDelay=(i%3)*90+'ms';io.observe(el)});
+/* 3D tilt */
+document.querySelectorAll('.dm,.dc').forEach(c=>{c.addEventListener('mousemove',e=>{const r=c.getBoundingClientRect(),x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height;
+c.style.setProperty('--ry',(x-.5)*14+'deg');c.style.setProperty('--rx',(.5-y)*14+'deg');c.style.setProperty('--mx',x*100+'%');c.style.setProperty('--my',y*100+'%')});
+c.addEventListener('mouseleave',()=>{c.style.setProperty('--rx','0deg');c.style.setProperty('--ry','0deg')})});
+/* 3D knot */
+(function(){if(typeof THREE==='undefined')return;
+const cv=$('#knot'),R=new THREE.WebGLRenderer({canvas:cv,alpha:true,antialias:true});R.setPixelRatio(Math.min(devicePixelRatio,2));
+const S=new THREE.Scene(),C=new THREE.PerspectiveCamera(45,1,.1,50);C.position.z=4.6;
+const fg=getComputedStyle(document.documentElement).getPropertyValue('--fg').trim()||'#14130f';
+const geo=new THREE.TorusKnotGeometry(1,.36,200,26,2,3),G=new THREE.Group();S.add(G);
+G.add(new THREE.Mesh(geo,new THREE.MeshBasicMaterial({color:fg,wireframe:true,transparent:true,opacity:.3})));
+G.add(new THREE.Points(geo,new THREE.PointsMaterial({color:0xff4d1c,size:.045})));
+function rs(){const w=cv.clientWidth,h=cv.clientHeight;R.setSize(w,h,false);C.aspect=w/h;C.updateProjectionMatrix()}rs();addEventListener('resize',rs);
+let mx=0,my=0,sy=0,t=0;addEventListener('mousemove',e=>{mx=e.clientX/innerWidth-.5;my=e.clientY/innerHeight-.5});
+addEventListener('scroll',()=>sy=Math.min(1,scrollY/innerHeight),{passive:true});
+(function an(){t+=RM?0:.004;G.rotation.y+=((t*2+mx*1.6)-G.rotation.y)*.06;G.rotation.x+=((t+my*1.2+sy*1.5)-G.rotation.x)*.06;G.scale.setScalar(1-sy*.35);
+R.render(S,C);requestAnimationFrame(an)})();
+})();
+</script>
+</body>
+</html>

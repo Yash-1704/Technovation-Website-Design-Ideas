@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Technovation, the Networking Club | ABESEC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Hanken+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#1a3cff;--deep:#071a8f;--w:#f4f6ff;--or:#ff7a1a;--dim:#b9c4ff;--gl:rgba(5,16,120,.55);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-behavior:smooth;scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box;margin:0}
+body{background:var(--bg);color:var(--w);font:17px/1.6 'Hanken Grotesk',system-ui,sans-serif;overflow-x:hidden}
+h1,h2,h3,.dsp{font-family:'Unbounded','Arial Black',sans-serif;font-weight:700;line-height:1.05;letter-spacing:-.02em}
+a{color:inherit}
+#gl{position:fixed;inset:0;width:100%;height:100%;z-index:0}
+nav,main,footer,#hud,#bar{position:relative;z-index:2}
+nav{position:fixed;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;padding:calc(14px + env(safe-area-inset-top,0px)) 5vw 14px;z-index:5}
+nav b{font:700 15px 'Unbounded',sans-serif}
+#bar{position:fixed;top:0;left:0;right:0;height:4px;background:var(--or);transform-origin:0 50%;transform:scaleX(0);z-index:6}
+.btn{display:inline-block;background:var(--w);color:var(--deep);font-weight:700;text-decoration:none;padding:14px 26px;border-radius:99px;border:0;font-size:1rem;cursor:pointer;transition:transform .2s}
+.btn.or{background:var(--or);color:#1b0a00}
+#hud{position:fixed;left:5vw;bottom:calc(16px + env(safe-area-inset-bottom,0px));font:500 13px 'Hanken Grotesk';color:var(--dim);z-index:5}
+section{min-height:100vh;padding:16vh 6vw 10vh;display:flex;flex-direction:column;justify-content:center;gap:28px}
+.in{max-width:1100px}
+h1{font-size:clamp(2.3rem,7.2vw,6.2rem);perspective:900px;max-width:11em}
+h2{font-size:clamp(1.8rem,4.6vw,3.8rem);max-width:14em}
+.ch{display:inline-block;opacity:0;transform:rotateX(-100deg) translateY(45%);transform-origin:50% 100%;animation:up .9s cubic-bezier(.2,.8,.2,1) forwards;animation-delay:calc(var(--i)*32ms + .3s)}
+@keyframes up{to{opacity:1;transform:none}}
+.lead{max-width:34em;color:var(--dim);font-size:1.12rem}
+.stat b{font:700 1.4em 'Unbounded';color:var(--or)}
+.gl{background:var(--gl);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.22);border-radius:22px;padding:26px}
+.tilt{position:relative;transition:transform .2s;transform-style:preserve-3d}
+.tilt::after{content:'';position:absolute;inset:0;border-radius:inherit;background:radial-gradient(260px at var(--x,50%) var(--y,50%),rgba(255,255,255,.2),transparent);opacity:0;transition:opacity .3s;pointer-events:none}
+.tilt.on::after{opacity:1}
+.grid{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
+#mf{font:500 clamp(1.4rem,3.2vw,2.5rem)/1.3 'Unbounded';letter-spacing:-.02em;max-width:22em}
+.w{opacity:.15}
+.vis{display:flex;flex-wrap:wrap;gap:12px 40px;font:700 clamp(1.6rem,4vw,3rem) 'Unbounded'}
+.vis span{-webkit-text-stroke:1.5px var(--w);color:transparent}
+.dom h3{font-size:1.5rem;margin-bottom:10px}.dom{border-radius:30px 8px 30px 8px}
+.fl{border-radius:8px 30px 8px 30px;min-height:240px;display:flex;flex-direction:column;justify-content:flex-end}
+.fl h3{font-size:1.9rem;margin-bottom:8px}.fl small,.dom small{color:var(--or);font-weight:700}
+.log{border-top:1px solid rgba(255,255,255,.35)}
+.row{display:grid;grid-template-columns:110px 1fr auto;gap:14px;padding:14px 8px;border-bottom:1px solid rgba(255,255,255,.35);transition:background .25s,color .25s,padding .25s}
+.row:hover{background:var(--w);color:var(--deep);padding-left:20px}
+.row p{grid-column:2/4;font-size:.95rem;opacity:.85}.row b{font-weight:700}
+.chips{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(190px,1fr))}
+.chip{padding:14px 16px;border-radius:14px;background:var(--gl);border:1px solid rgba(255,255,255,.2)}
+.chip b{display:block;font-family:'Unbounded';font-size:1rem}.chip span{font-size:.85rem;color:var(--dim)}
+.tabs{display:flex;flex-wrap:wrap;gap:8px}
+.tb{font:700 .95rem 'Hanken Grotesk';color:var(--w);background:transparent;border:2px solid var(--c);border-radius:99px;padding:8px 18px;cursor:pointer}
+.tb[aria-selected=true]{background:var(--c);color:#06103f}
+#tp{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(210px,1fr))}
+.mc{padding:18px;border-radius:18px;background:var(--gl);border:1px solid var(--c);backdrop-filter:blur(10px);animation:pop .5s both;animation-delay:calc(var(--i)*60ms)}
+@keyframes pop{from{opacity:0;transform:translateY(24px) rotateX(-40deg)}}
+.mc i{display:grid;place-items:center;width:46px;height:46px;border-radius:50%;background:var(--c);color:#06103f;font:700 .95rem 'Unbounded';font-style:normal;margin-bottom:12px}
+.mc b{display:block}.mc span{font-size:.85rem;color:var(--dim)}
+details{border-top:1px solid rgba(255,255,255,.35);padding:16px 4px;max-width:46em}details:last-child{border-bottom:1px solid rgba(255,255,255,.35)}
+summary{font:700 1.15rem 'Hanken Grotesk';cursor:pointer}details p{color:var(--dim);margin-top:8px}
+.pass{display:grid;gap:18px;grid-template-columns:1fr auto;align-items:center;max-width:760px;border-radius:26px}
+.pass h2{font-size:clamp(1.6rem,3.6vw,2.6rem)}
+footer{padding:8vh 6vw 12vh;display:flex;flex-wrap:wrap;gap:12px 28px;color:var(--dim);font-size:.95rem}
+#cur{position:fixed;left:0;top:0;width:34px;height:34px;margin:-17px 0 0 -17px;border:2px solid var(--or);border-radius:50%;pointer-events:none;z-index:9;transition:width .2s,height .2s,margin .2s}
+@media(pointer:coarse){#cur{display:none}}
+@media(max-width:700px){.pass{grid-template-columns:1fr}.row{grid-template-columns:1fr}.row p{grid-column:1}.dom,.fl{border-radius:22px}}
+a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var(--or);outline-offset:3px}
+@media(prefers-reduced-motion:reduce){.ch{animation:none;opacity:1;transform:none}.mc{animation:none}html{scroll-behavior:auto}}
+</style></head>
+<body>
+<canvas id="gl" aria-hidden="true"></canvas><div id="bar"></div><div id="cur"></div>
+<nav><b>Technovation</b><a class="btn or mag" href="#join">Join the mission</a></nav>
+<div id="hud" aria-hidden="true"></div>
+<main>
+<section data-s id="top"><div class="in">
+<h1 aria-label="Where connections spark innovation."><span class="sp">Where connections</span> <span class="sp">spark innovation.</span></h1>
+<p class="lead" style="margin:22px 0">Technovation, the Networking Club of the CSE department at ABES Engineering College, Ghaziabad. Scroll to send a packet through the network.</p>
+<p class="stat" style="margin-bottom:26px"><b id="n1">0</b> people in <b id="n2">0</b> departments, running <b id="n3">0</b> flagship events.</p>
+<a class="btn mag" href="#join">Join the mission</a></div></section>
+
+<section data-s id="about"><div class="in"><p id="mf"></p>
+<div class="vis" style="margin-top:40px"><span>Collaborate</span><span>Connect</span><span>Grow</span></div></div></section>
+
+<section data-s id="domains"><h2>Three domains we go deep on</h2>
+<div class="grid" style="max-width:1100px">
+<div class="gl dom tilt"><h3>AWS</h3><p>Cloud from the ground up: compute, storage and networking, deployed hands-on.</p><small>Draft copy, to confirm</small></div>
+<div class="gl dom tilt"><h3>Cyber Security</h3><p>Think like an attacker, build like a defender. Challenges, CTF-style rounds and secure design.</p><small>Draft copy, to confirm</small></div>
+<div class="gl dom tilt"><h3>Networking</h3><p>From packets to protocols: how data really moves, and how to design the network it travels on.</p><small>Draft copy, to confirm</small></div></div></section>
+
+<section data-s id="events"><h2>Fly through our flagships</h2>
+<div class="grid" id="fl" style="max-width:1100px"></div>
+<div class="in" style="width:100%"><h3 style="font-size:1.3rem;margin:18px 0 12px">Mission log</h3><div class="log" id="log"></div></div></section>
+
+<section data-s id="team"><h2>The people behind the network</h2>
+<div class="chips in" id="core" style="width:100%"></div>
+<div class="tabs" id="tabs" role="tablist"></div><div id="tp" class="in" style="width:100%"></div></section>
+
+<section data-s id="faq"><h2>Before you join</h2><div>
+<details><summary>Who can join?</summary><p>Students from all B.Tech branches. We focus on 1st and 2nd year students.</p></details>
+<details><summary>When is recruitment?</summary><p>Online, once a year at the end of June, run by the core team with our faculty coordinator.</p></details>
+<details><summary>Which departments are there?</summary><p>Technical, Events, PR and Outreach, Graphics, Content and Production.</p></details>
+<details><summary>How do I contact the club?</summary><p><a href="mailto:abes.technovation@gmail.com">abes.technovation@gmail.com</a></p></details></div></section>
+
+<section data-s id="join"><div class="gl pass"><div><h2>Are you ready, agent?</h2>
+<p class="lead" style="margin-top:12px">Open to all B.Tech branches. Recruitment runs online at the end of June. Write to us and get on the list.</p></div>
+<a class="btn or mag" href="mailto:abes.technovation@gmail.com?subject=Join%20Technovation">Email the club</a></div></section>
+</main>
+<footer><a href="https://www.abes.ac.in/Technovation.html">College page</a><a href="mailto:abes.technovation@gmail.com">Email</a><a href="https://www.instagram.com/technovationabes">Instagram</a><a href="https://www.linkedin.com/company/the-networking-club-abesec/">LinkedIn</a><a href="https://www.facebook.com/abestechnovation/">Facebook</a><a href="https://twitter.com/technovationcse">X</a></footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)],RM=matchMedia('(prefers-reduced-motion:reduce)').matches;
+// ---- DATA: edit here ----
+const CORE=[["Shresth","General Secretary"],["Ayush","Joint Secretary"],["Chaitanya","Joint Secretary"],["Lavi","Treasurer"],["Yash","Technical Lead"],["Shruti","Technical Lead"],["Anuj","Graphics Lead"],["Anushka","Graphics Lead"],["Zeeshan","Production Lead"],["Juwairiyah","Content Lead"],["Gudiya","Events Lead"],["Aditya","Events Lead"],["Kaushiki","PR & Outreach Lead"],["Harshvardhan","PR & Outreach Lead"]];
+const TEAMS=[
+["Technical","#bcd4ff",["Yash","Shruti"],["Dishant Ghalot","Vadanta Kumar Chauhaan","Aditya Dubey","Samarth Verma","Harsh Tiwari"]],
+["Events","#ff7a1a",["Gudiya","Aditya"],["Aryan Jha","Tushti Gupta","Shrishti Gupta","Gauri Jain","Satyam Shukla"]],
+["PR & Outreach","#3dffb0",["Kaushiki","Harshvardhan"],["Sanskriti Pandey","Neha Gupta","Samriddhi Johri","Saavya Singh","Sakshi Yadav"]],
+["Graphics","#ff5fb0",["Anuj","Anushka"],["Ridah Abbasi","Ananya Singh","Anshita Garg","Shifa Saifi","Aaniya Singh"]],
+["Content","#ffe14d",["Juwairiyah"],["Shreya Shekhar","Aalia Idris","Arush Dixit","Pari","Manasvi Singh"]],
+["Production","#c9a6ff",["Zeeshan"],["Aaryan Vashishta","Tripti Sahani","Smriti Patel","Ankit","Manas Kumar"]]];
+const FLAG=[["TypoBuzz","Typing and tech-trivia showdown with a live leaderboard.","Editions 1.0 to 6.0, count to confirm"],["CyberQuest","Cybersecurity quest of puzzles and CTF-style challenges in timed rounds.","Date TBA"],["Vertigo","Our annual signature tech celebration: contests, talks and showcases.","Date TBA"]];
+const LOG=[["Mar 2019","Git & GitHub Workshop","Workshop","Two days, sponsored by GitHub."],["Mar 2019","Coding Contest + C++ Workshop","Contest","Sponsored by GitHub, with a speaker from GitHub Campus Experts."],["15 Apr 2019","Web Development Workshop","Workshop","Sponsored by GitHub Education."],["TBA","Quantum Computing Workshop","5 days","Placeholder: qubits to circuits on a simulator, hands-on daily."],["Classified","Next mission","Incoming","Signal not yet decoded."]];
+// ---- render ----
+let k=0;$$('.sp').forEach(e=>{e.innerHTML=[...e.textContent].map(c=>`<span class="ch" style="--i:${k++}">${c==' '?'&nbsp;':c}</span>`).join('')});
+const TXT="Technovation is the networking club of the CSE department at ABES Engineering College. We are a community of students who care about networking, cybersecurity and real-world problem solving, and we learn by building, breaking and fixing things together.";
+$('#mf').innerHTML=TXT.split(' ').map(w=>`<span class="w">${w}</span>`).join(' ');const WD=$$('.w');
+$('#fl').innerHTML=FLAG.map(f=>`<div class="gl fl tilt"><h3>${f[0]}</h3><p>${f[1]}</p><small>${f[2]}</small></div>`).join('');
+$('#log').innerHTML=LOG.map(r=>`<div class="row"><span>${r[0]}</span><b>${r[1]}</b><span>${r[2]}</span><p>${r[3]}</p></div>`).join('');
+$('#core').innerHTML=CORE.map(c=>`<div class="chip tilt"><b>${c[0]}</b><span>${c[1]}</span></div>`).join('');
+const ini=n=>n.split(' ').map(w=>w[0]).slice(0,2).join('');
+function showT(i){const[n,c,L,M]=TEAMS[i];$$('.tb').forEach((b,j)=>b.setAttribute('aria-selected',j==i));
+$('#tp').innerHTML=[...L.map(x=>[x,n+' Lead']),...M.map(x=>[x,n])].map((m,j)=>`<div class="mc tilt" style="--c:${c};--i:${j}"><i>${ini(m[0])}</i><b>${m[0]}</b><span>${m[1]}</span></div>`).join('')}
+$('#tabs').innerHTML=TEAMS.map((t,i)=>`<button class="tb" role="tab" style="--c:${t[1]}" data-i="${i}">${t[0]}</button>`).join('');
+$('#tabs').onclick=e=>{const b=e.target.closest('.tb');if(b)showT(+b.dataset.i)};showT(0);
+const cnt=(id,to)=>{const e=$(id),t0=performance.now();(function f(t){const p=Math.min(1,(t-t0)/1400);e.textContent=Math.round(to*p);if(p<1)requestAnimationFrame(f)})(t0)};
+cnt('#n1',CORE.length+TEAMS.reduce((a,t)=>a+t[3].length,0));cnt('#n2',TEAMS.length);cnt('#n3',FLAG.length);
+// ---- 3D world: a packet flying through a cobalt network ----
+const V=THREE.Vector3,cl=(x,a=0,b=1)=>Math.min(b,Math.max(a,x));
+let R,S,C,PATH,O=[],pk=[],st=[],tp=0,mx=0,my=0,smx=0,smy=0,cx=0,cy=0;
+try{
+const BG=0x1a3cff,W=0xf4f6ff,OR=0xff7a1a;
+R=new THREE.WebGLRenderer({canvas:$('#gl'),antialias:true});R.setPixelRatio(Math.min(devicePixelRatio,2));
+S=new THREE.Scene();S.background=new THREE.Color(BG);S.fog=new THREE.FogExp2(BG,.014);
+C=new THREE.PerspectiveCamera(62,1,.1,300);
+PATH=new THREE.CatmullRomCurve3([[0,0,14],[4,2,-8],[-5,-2,-30],[3,3,-52],[-4,-1,-74],[2,1,-96],[0,0,-116]].map(a=>new V(...a)));
+const mat=(c,o=.85)=>new THREE.MeshBasicMaterial({color:c,wireframe:true,transparent:true,opacity:o});
+const ico=(r,d,c,o)=>new THREE.Mesh(new THREE.IcosahedronGeometry(r,d),mat(c,o));
+const ring=(r,t,c)=>new THREE.Mesh(new THREE.TorusGeometry(r,t,8,90),new THREE.MeshBasicMaterial({color:c}));
+const grp=(...a)=>{const g=new THREE.Group();g.add(...a);return g};
+const add=(m,i,d,lat=0,up=0,o={})=>{S.add(m);O.push({m,i,d,lat,up,...o})};
+S.add(new THREE.Mesh(new THREE.TubeGeometry(PATH,400,.04,5),new THREE.MeshBasicMaterial({color:W,transparent:true,opacity:.6})));
+const sp=[];for(let i=0;i<2200;i++)sp.push((Math.random()-.5)*110,(Math.random()-.5)*70,20-Math.random()*160);
+const sg=new THREE.BufferGeometry();sg.setAttribute('position',new THREE.Float32BufferAttribute(sp,3));
+S.add(new THREE.Points(sg,new THREE.PointsMaterial({color:W,size:.11,transparent:true,opacity:.8})));
+const rB=ring(3.4,.03,OR);rB.rotation.x=1.2;
+add(grp(ico(2.4,1,W),ico(1.3,0,OR,1),ring(4.2,.03,W),rB),0,.07,3.4,0,{s:[.002,.004,0]});
+add(new THREE.Mesh(new THREE.TorusKnotGeometry(1.8,.5,120,12),mat(W,.6)),1,.05,-3.8,0,{s:[.004,.006,0]});
+const cloud=grp(...[[-1,0,0,.9],[.2,.5,0,1.1],[1.3,0,0,.9],[.2,-.3,.7,.8]].map(a=>{const m=new THREE.Mesh(new THREE.SphereGeometry(a[3],10,8),mat(W,.8));m.position.set(a[0],a[1],a[2]);return m}));
+add(cloud,2,-.05,3.6,1,{s:[0,.006,0]});
+const sh=new THREE.Mesh(new THREE.OctahedronGeometry(2),mat(OR,.9));sh.scale.set(.9,1.3,.9);add(sh,2,.03,-3.8,-1,{s:[0,.008,0]});
+add(ico(2,2,W,.5),2,.09,3.6,0,{s:[.004,.005,0]});
+[[-.045,W],[0,OR],[.045,W]].forEach(([d,c])=>add(ring(3.3,.07,c),3,d,0,0,{r:1}));
+const tg=grp();TEAMS.forEach((t,j)=>{const p=[];for(let q=0;q<70;q++){const v=new V(Math.random()-.5,Math.random()-.5,Math.random()-.5).normalize().multiplyScalar(Math.random()*1.3);p.push(v.x,v.y,v.z)}
+const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(p,3));
+const pt=new THREE.Points(g,new THREE.PointsMaterial({color:t[1],size:.24}));const a=j/6*Math.PI*2;pt.position.set(Math.cos(a)*4.2,Math.sin(a)*4.2,0);tg.add(pt)});
+add(tg,4,.05,0,0,{s:[0,0,.003]});
+add(new THREE.Mesh(new THREE.DodecahedronGeometry(1.8),mat(W,.8)),5,.06,3.8,0,{s:[.005,.005,0]});
+add(grp(ico(2.6,1,OR,.95),ring(4,.04,W)),6,0,0,0,{f:11,s:[.004,.01,0],pulse:1});
+for(let i=0;i<8;i++){const m=new THREE.Mesh(new THREE.SphereGeometry(.15,10,8),new THREE.MeshBasicMaterial({color:OR}));S.add(m);pk.push(m)}
+}catch(e){console.warn('3D unavailable',e)}
+function place(){if(!R)return;const H=Math.max(1,document.documentElement.scrollHeight-innerHeight);
+st=$$('[data-s]').map(e=>cl((e.offsetTop+e.offsetHeight/2-innerHeight/2)/H));
+O.forEach(o=>{const t=cl(st[o.i]+o.d),p=PATH.getPoint(t),T=PATH.getTangent(t),s=new V().crossVectors(T,new V(0,1,0)).normalize();
+o.m.position.copy(p).addScaledVector(s,innerWidth<760?o.lat*.4:o.lat).addScaledVector(T,o.f||0);o.m.position.y+=o.up;
+if(o.r)o.m.lookAt(p.clone().add(T))})}
+function size(){if(!R)return;R.setSize(innerWidth,innerHeight,false);C.aspect=innerWidth/innerHeight;C.updateProjectionMatrix();place()}
+addEventListener('resize',size);addEventListener('load',size);size();
+// ---- input: tilt, magnetic buttons, cursor ----
+addEventListener('pointermove',e=>{mx=e.clientX/innerWidth*2-1;my=-(e.clientY/innerHeight*2-1);cx=e.clientX;cy=e.clientY;
+const t=e.target.closest&&e.target.closest('.tilt'),b=e.target.closest&&e.target.closest('.mag');
+$$('.tilt.on').forEach(x=>{if(x!==t){x.classList.remove('on');x.style.transform=''}});
+$$('.mag').forEach(x=>{if(x!==b)x.style.transform=''});
+if(RM)return;
+if(t){const r=t.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;t.classList.add('on');t.style.transform=`perspective(700px) rotateX(${-y*14}deg) rotateY(${x*14}deg)`;t.style.setProperty('--x',x*100+50+'%');t.style.setProperty('--y',y*100+50+'%')}
+if(b){const r=b.getBoundingClientRect();b.style.transform=`translate(${(e.clientX-r.left-r.width/2)*.25}px,${(e.clientY-r.top-r.height/2)*.35}px)`}
+const c=$('#cur'),big=e.target.closest&&e.target.closest('a,button,summary,.tilt');c.style.width=c.style.height=big?'64px':'34px';c.style.margin=big?'-32px 0 0 -32px':'-17px 0 0 -17px'});
+// ---- main loop ----
+const NAMES=['Core','Manifesto','Domains','Flagships','Team','FAQ','Join'],SEC=$$('[data-s]'),hud=$('#hud'),cur=$('#cur');let lx=0,ly=0;
+function frame(ms){const t=ms/1e3,H=Math.max(1,document.documentElement.scrollHeight-innerHeight),raw=cl(scrollY/H);
+tp+=(raw-tp)*(RM?1:.07);smx+=(mx-smx)*.05;smy+=(my-smy)*.05;
+$('#bar').style.transform=`scaleX(${raw})`;
+lx+=(cx-lx)*.2;ly+=(cy-ly)*.2;cur.style.transform=`translate(${lx}px,${ly}px)`;
+WD.forEach(w=>{w.style.opacity=cl((.8-w.getBoundingClientRect().top/innerHeight)/.3,.15,1)});
+let h=0;SEC.forEach((s,i)=>{const r=s.getBoundingClientRect();if(r.top<innerHeight*.5&&r.bottom>innerHeight*.5)h=i});
+hud.textContent=`Hop ${h+1} of ${SEC.length}: ${NAMES[h]} (${Math.round(tp*100)}%)`;
+if(R){const p=PATH.getPoint(tp),T=PATH.getTangent(tp);
+C.position.set(p.x+smx*.8,p.y+smy*.5,p.z);C.lookAt(p.x+T.x*8+smx*2.5,p.y+T.y*8+smy*1.5,p.z+T.z*8);
+O.forEach(o=>{if(o.s&&!RM){o.m.rotation.x+=o.s[0];o.m.rotation.y+=o.s[1];o.m.rotation.z+=o.s[2]}if(o.pulse)o.m.scale.setScalar(1+Math.sin(t*2)*.06)});
+pk.forEach((m,i)=>m.position.copy(PATH.getPoint(((RM?0:t*.02)+i/8)%1)));
+R.render(S,C)}
+requestAnimationFrame(frame)}
+requestAnimationFrame(frame);
+</script></body></html>

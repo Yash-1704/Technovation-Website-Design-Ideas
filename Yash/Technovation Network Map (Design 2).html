@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Technovation Network Map | ABESEC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f1f3f5;--fg:#11141b;--mut:#5a6270;--pn:#fff;--ye:#ffd400;color-scheme:light}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1117;--fg:#eef1f4;--mut:#98a2b3;--pn:#181c25;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0e1117;--fg:#eef1f4;--mut:#98a2b3;--pn:#181c25;color-scheme:dark}
+*,*::before,*::after{box-sizing:border-box;margin:0}
+html,body{height:100%;overflow:hidden}
+body{background:var(--bg);color:var(--fg);font:500 1rem/1.5 Archivo,system-ui,sans-serif;font-stretch:100%}
+:focus-visible{outline:3px solid var(--ye);outline-offset:3px}
+button{font:inherit;color:inherit;cursor:pointer}
+#map{position:fixed;inset:0;overflow:auto;scrollbar-width:none;cursor:grab}
+#map::-webkit-scrollbar{display:none}
+#map.dg{cursor:grabbing}
+svg{display:block;width:1800px;height:1100px;max-width:none}
+svg text{font-family:Archivo,sans-serif;fill:var(--fg)}
+.h{paint-order:stroke;stroke:var(--bg);stroke-width:5px;stroke-linejoin:round}
+.dom{font-weight:900;font-stretch:125%;fill:var(--fg);opacity:.07;cursor:pointer;transition:opacity .3s}
+.dom:hover,.dom:focus-visible{opacity:.3}
+.ln{fill:none;stroke-width:11;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1;animation:dr 1.8s cubic-bezier(.6,0,.2,1) forwards}
+@keyframes dr{to{stroke-dashoffset:0}}
+.g{transition:opacity .35s}.g.dm{opacity:.13}
+.s{animation:fi .5s 1.5s both;cursor:pointer}
+@keyframes fi{from{opacity:0}}
+.s circle{fill:var(--bg);stroke-width:5;transition:r .2s}
+.s:hover circle,.s:focus-visible circle{r:12}
+.s text{font-size:13px;font-weight:600;font-stretch:90%}
+.pin{cursor:pointer}.pin text{font-size:15px;font-weight:800;font-stretch:90%}
+.pin:hover rect,.pin:hover .jc{transform:scale(1.12);transform-box:fill-box;transform-origin:center}
+rect,.jc{transition:transform .2s}
+.jn{animation:pu 2s infinite}@keyframes pu{50%{opacity:.75}}
+.hud{position:fixed;z-index:3;background:var(--pn);border:0;border-radius:14px;box-shadow:0 6px 24px #0003;padding:12px 16px;text-align:left}
+.t{top:calc(14px + env(safe-area-inset-top,0px));left:14px;max-width:calc(100vw - 110px)}
+.t b{display:block;font-size:1.5rem;font-weight:900;font-stretch:125%;letter-spacing:-.02em;line-height:1}
+.t span{display:block;font-size:.85rem;color:var(--mut);margin-top:6px}
+.x{top:calc(14px + env(safe-area-inset-top,0px));right:14px;font-weight:700}
+.bar{position:fixed;z-index:3;left:0;right:0;bottom:calc(14px + env(safe-area-inset-bottom,0px));display:flex;gap:8px;padding:0 14px;overflow-x:auto;scrollbar-width:none;justify-content:safe center}
+.bar button{flex:none;background:var(--pn);border:2px solid transparent;border-radius:999px;padding:8px 16px;font-weight:700;font-size:.9rem;box-shadow:0 4px 16px #0003}
+.bar button[aria-pressed=true]{background:var(--fg);color:var(--bg)}
+#pn{position:fixed;z-index:4;top:0;right:0;bottom:0;width:min(430px,100%);background:var(--pn);padding:calc(26px + env(safe-area-inset-top,0px)) 26px 30px;overflow:auto;transform:translateX(105%);transition:transform .45s cubic-bezier(.2,.8,.2,1);box-shadow:-10px 0 40px #0004}
+#pn.on{transform:none}
+@media(max-width:700px){#pn{top:auto;height:68dvh;width:100%;border-radius:22px 22px 0 0;transform:translateY(105%);padding-top:26px}}
+#pn h2{font-size:2.2rem;font-weight:900;font-stretch:115%;letter-spacing:-.03em;line-height:1;margin:6px 0 14px;padding-right:70px}
+#pn p{color:var(--mut);margin-bottom:12px}
+#pn .cl{position:absolute;top:18px;right:18px;background:var(--fg);color:var(--bg);border:0;border-radius:999px;padding:6px 14px;font-weight:700}
+.k{display:inline-block;background:var(--ye);color:#11141b;font-weight:800;font-size:.85rem;padding:3px 10px;border-radius:6px}
+.cta{display:inline-block;background:var(--ye);color:#11141b;font-weight:800;padding:12px 22px;border-radius:999px;text-decoration:none;margin-top:6px}
+#pn a.l{display:block;padding:12px 0;border-top:2px solid #8883;font-weight:700;font-size:1.15rem;text-decoration:none}
+#pn a.l:hover{text-decoration:underline}
+#pn details{border-top:2px solid #8883;padding:12px 0}#pn summary{font-weight:700;cursor:pointer}#pn details p{margin:6px 0 0}
+.vs{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}.vs b{font-size:1.5rem;font-weight:900;font-stretch:120%}
+dialog{border:0;background:none;padding:0;width:min(400px,100vw);overflow:visible;color:#12141a}
+dialog::backdrop{background:#05070bcc;backdrop-filter:blur(3px)}
+.tk{background:#fff;border-radius:18px;margin:14px;overflow:hidden;max-height:calc(100dvh - 28px);overflow-y:auto;box-shadow:0 30px 70px #000a;position:relative;transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:transform .15s}
+.tk .bd{height:16px;background:var(--lc)}
+.tk .tp{padding:20px 22px 14px}
+.tk small{font-size:.78rem;color:#666;display:block}
+.tk h3{font-size:2.5rem;font-weight:900;font-stretch:110%;letter-spacing:-.04em;line-height:1;margin:2px 0 10px}
+.tk .rt{font-weight:700}
+.tk dl{display:grid;grid-template-columns:auto 1fr;gap:5px 14px;margin:14px 0;font-size:.92rem}
+.tk dt{color:#777}.tk dd{margin:0;font-weight:600}
+.tk .sb{border-top:3px dotted #bbb;padding:14px 22px 18px;display:flex;gap:14px;align-items:center;font-size:.78rem;color:#666}
+.tk .br{flex:none;width:90px;height:38px;background:repeating-linear-gradient(90deg,#111 0 2px,#fff 2px 5px,#111 5px 6px,#fff 6px 9px)}
+.tk .xx{position:absolute;top:26px;right:14px;background:#12141a;color:#fff;border:0;border-radius:999px;padding:6px 14px;font-weight:700}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.ln{stroke-dashoffset:0}}
+</style>
+</head>
+<body>
+<button class="hud t" data-a="about:0"><b>Technovation</b><span id="st"></span><span>Drag the map. Open anything.</span></button>
+<button class="hud x" data-a="exits:0">Exits</button>
+<div id="map"><svg id="sv" viewBox="0 0 1800 1100" role="group" aria-label="Technovation network map"><defs><pattern id="gp" width="40" height="40" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.4" fill="currentColor" opacity=".18"/></pattern></defs><rect width="1800" height="1100" fill="url(#gp)" style="color:var(--fg)"/></svg></div>
+<div class="bar" id="flt" role="group" aria-label="Highlight on map"></div>
+<aside id="pn" aria-label="Details" inert></aside>
+<dialog id="dlg" aria-label="Member ticket"><div class="tk" id="tk"></div></dialog>
+
+<script>
+/* ---------- DATA (member + event copy are PLACEHOLDERS, flagged ph:1) ---------- */
+const DEPT={tech:"Technical",ev:"Events",pr:"PR & Outreach",gfx:"Graphics",con:"Content",prod:"Production"};
+const COL={tech:"#2b6fff",ev:"#ff4b3e",pr:"#ff9500",gfx:"#e83fa8",con:"#12b886",prod:"#8b5cf6",core:"#8a93a3"};
+const CORE=[["Shresth","General Secretary","core"],["Ayush","Joint Secretary","core"],["Chaitanya","Joint Secretary","core"],["Lavi","Treasurer","core"],["Yash","Technical Lead","tech"],["Shruti","Technical Lead","tech"],["Anuj","Graphics Lead","gfx"],["Anushka","Graphics Lead","gfx"],["Zeeshan","Production Lead","prod"],["Juwairiyah","Content Lead","con"],["Gudiya","Events Lead","ev"],["Aditya","Events Lead","ev"],["Kaushiki","PR & Outreach Lead","pr"],["Harshvardhan","PR & Outreach Lead","pr"]];
+const MEM={tech:["Dishant Ghalot","Vadanta Kumar Chauhaan","Aditya Dubey","Samarth Verma","Harsh Tiwari"],ev:["Aryan Jha","Tushti Gupta","Shrishti Gupta","Gauri Jain","Satyam Shukla"],pr:["Sanskriti Pandey","Neha Gupta","Samriddhi Johri","Saavya Singh","Sakshi Yadav"],gfx:["Ridah Abbasi","Ananya Singh","Anshita Garg","Shifa Saifi","Aaniya Singh"],con:["Shreya Shekhar","Aalia Idris","Arush Dixit","Pari","Manasvi Singh"],prod:["Aaryan Vashishta","Tripti Sahani","Smriti Patel","Ankit","Manas Kumar"]};
+const DOM=[["AWS","Cloud from first principles. Launch it, scale it, and learn why you should switch it off.",[1260,1030,150]],["Cyber Security","Think like the attacker: threat models, CTF-style puzzles, and the habit of asking what happens when this breaks.",[30,120,118]],["Networking","Packets, routes and protocols. How the internet really moves, and how to design a network that holds.",[400,1075,128]]];
+const EV=[
+ {n:"TypoBuzz",k:"Flagship",d:"TBA",ph:1,xy:[1480,240],t:"A typing and tech-trivia showdown. Fast fingers, sharper answers, and a live leaderboard that changes every round."},
+ {n:"CyberQuest",k:"Flagship",d:"TBA",ph:1,xy:[330,300],t:"A cybersecurity quest of puzzles and CTF-style challenges in timed rounds. Solve the clue, unlock the next."},
+ {n:"Vertigo",k:"Flagship",d:"TBA",ph:1,xy:[690,960],t:"Our annual signature celebration of tech: contests, talks and showcases in one packed day."},
+ {n:"Quantum Computing Workshop",k:"Five-day workshop",d:"TBA",ph:1,xy:[1560,540],t:"From qubits and superposition to building and running circuits on a simulator, hands-on every day."},
+ {n:"Web Development Workshop",k:"Workshop",d:"15 Apr 2019",xy:[150,600],t:"A hands-on session on building for the web, sponsored by GitHub Education."},
+ {n:"Coding Contest + C++ Workshop",k:"Contest",d:"Mar 2019",xy:[200,900],t:"A contest paired with a C++ workshop, with a speaker from the GitHub Campus Experts."},
+ {n:"Git & GitHub Workshop",k:"Two-day workshop",d:"Mar 2019",xy:[1130,1035],t:"Two days on version control and collaboration, sponsored by GitHub."}
+];
+const SK={tech:["Linux","Python","React","Docker"],ev:["Logistics","Hosting","Budgeting","Stage flow"],pr:["Outreach","Negotiation","Social media","Speaking"],gfx:["Figma","Posters","Motion","Branding"],con:["Copywriting","Editing","Scripts","Research"],prod:["Video","Lighting","Audio","Livestreams"],core:["Planning","Leadership","Budgeting","Mentoring"]};
+const TG={tech:"Ships it, then reads the logs.",ev:"If it runs on time, I did my job.",pr:"Talks to everyone, remembers everyone.",gfx:"Pixels have opinions and so do I.",con:"Good words, in the right order.",prod:"Quiet on set, loud on screen.",core:"Keeps the whole network connected."};
+const FUN=["Names every Wi-Fi network after a spy movie.","Can solve a Rubik's cube faster than a build finishes.","Drinks chai at a rate that violates the club budget.","Keeps a sticky note on every laptop they own.","Has never lost to a router at rock paper scissors."];
+const YR=["1st year","2nd year","2nd year","3rd year"],BR=["CSE","CSE (AI/ML)","IT","CSE (Data Science)","ECE"],TL=["Wireshark","VS Code","Figma","Notion","Git","Canva"],JY=["2025","2025","2026","2024"];
+const P=[];CORE.forEach(([n,r,d])=>P.push({n,r,d,lead:1}));Object.keys(MEM).forEach(d=>MEM[d].forEach(n=>P.push({n,r:"Member",d,lead:0})));
+const pk=(i,s,a)=>a[(i*7+s*13+i*i*s)%a.length];
+P.forEach((p,i)=>{p.dept=p.d=="core"?"Core Board":DEPT[p.d];p.year=pk(i,1,YR);p.br=pk(i,2,BR);p.jn=pk(i,3,JY);p.tool=pk(i,4,TL);p.sk=SK[p.d].slice(0,3).join(", ");p.fun=pk(i,5,FUN);p.tag=TG[p.d];p.ev=[EV[i%4].n,EV[(i+2)%4].n].join(", ");p.bio=p.n.split(" ")[0]+" joined to learn how networks really work, and now "+(p.lead?"helps steer the "+p.dept+" side of the mission.":"pitches in on "+p.dept.toLowerCase()+" work and asks good questions in every session.")});
+const $=s=>document.querySelector(s),NS="http://www.w3.org/2000/svg";
+$("#st").textContent=P.length+" people on "+Object.keys(DEPT).length+" lines, "+DOM.length+" domains, "+EV.filter(e=>e.k=="Flagship").length+" flagships";
+/* ---------- MAP ---------- */
+const U={E:[1,0],W:[-1,0],N:[0,-1],S:[0,1],NE:[.7071,-.7071],NW:[-.7071,-.7071],SE:[.7071,.7071],SW:[-.7071,.7071]};
+const LN={tech:[[810,560],[["W",160],["NW",220],["W",260]]],ev:[[990,560],[["E",160],["SE",220],["E",260]]],pr:[[900,470],[["N",120],["NW",260],["W",250]]],gfx:[[900,650],[["S",110],["SE",250],["E",300]]],con:[[990,560],[["NE",200],["E",300]]],prod:[[810,560],[["SW",200],["W",260]]]};
+let h="",flt="all";
+DOM.forEach(([n,,[x,y,s]],i)=>h+=`<text class="dom" x="${x}" y="${y}" font-size="${s}" tabindex="0" role="button" data-a="dom:${i}">${n}</text>`);
+Object.keys(LN).forEach((d,li)=>{let [[x,y],sg]=LN[d],pts=[[x,y]];sg.forEach(([k,l])=>{x+=U[k][0]*l;y+=U[k][1]*l;pts.push([x,y])});
+  const seg=pts.slice(1).map((p,i)=>Math.hypot(p[0]-pts[i][0],p[1]-pts[i][1])),L=seg.reduce((a,b)=>a+b),m=P.filter(p=>p.d==d),n=m.length;
+  const at=s=>{let i=0;while(i<seg.length-1&&s>seg[i]){s-=seg[i];i++}const t=Math.min(s/seg[i],1);return[pts[i][0]+(pts[i+1][0]-pts[i][0])*t,pts[i][1]+(pts[i+1][1]-pts[i][1])*t]};
+  h+=`<g class="g" data-d="${d}"><path class="ln" pathLength="1" style="animation-delay:${li*.2}s" stroke="${COL[d]}" d="M${pts.map(p=>p.join(",")).join("L")}"/>`;
+  m.forEach((p,k)=>{const [sx,sy]=at(60+k*(L-60)/(n-1));p.xy=[sx,sy];h+=stn(p,sx,sy,COL[d],p.lead?10:7,"")});
+  const last=sg[sg.length-1][0],u=U[last],w=DEPT[d].length*9+26,[ex,ey]=pts[pts.length-1],cx=ex+u[0]*(w/2+22),cy=ey+u[1]*(w/2+22);
+  h+=`<rect x="${cx-w/2}" y="${cy-14}" width="${w}" height="28" rx="14" fill="${COL[d]}"/><text x="${cx}" y="${cy+5}" text-anchor="middle" font-size="14" font-weight="800" style="fill:#fff">${DEPT[d]}</text></g>`});
+function stn(p,x,y,c,r,cls){const i=P.indexOf(p);return `<g class="s ${cls}" data-i="${i}" data-a="p:${i}" tabindex="0" role="button" aria-label="${p.n}, ${p.r}, ${p.dept}" transform="translate(${x} ${y})"><circle r="${r}" stroke="${c}"/><text class="h" transform="rotate(-38)" x="${r+4}" y="-${r}">${p.n}</text></g>`}
+h+=`<g class="g" data-d="core"><circle cx="900" cy="560" r="90" fill="none" stroke="var(--fg)" stroke-width="10"/></g>`;
+P.filter(p=>p.d=="core").forEach((p,k)=>{const a=(45+90*k)*Math.PI/180,x=900+90*Math.cos(a),y=560+90*Math.sin(a);p.xy=[x,y];h+=`<g class="g" data-d="core">${stn(p,x,y,"var(--fg)",11,"")}</g>`});
+EV.forEach((e,i)=>{const[x,y]=e.xy,f=e.k=="Flagship";h+=`<g class="pin" data-a="ev:${i}" tabindex="0" role="button" aria-label="${e.n}, ${e.k}"><rect x="${x-14}" y="${y-14}" width="28" height="28" rx="7" fill="${f?"var(--ye)":"var(--bg)"}" stroke="var(--fg)" stroke-width="4"/><text class="h" x="${x+22}" y="${y+5}">${e.n}</text></g>`});
+h+=`<g class="pin" data-a="faq:0" tabindex="0" role="button" aria-label="Information, FAQ"><circle cx="1050" cy="250" r="16" style="fill:var(--fg)"/><text x="1050" y="257" text-anchor="middle" font-size="20" font-weight="900" style="fill:var(--bg)">i</text><text class="h" x="1075" y="256">Information</text></g>`;
+h+=`<g class="pin" data-a="next:0" tabindex="0" role="button" aria-label="Classified next mission"><rect x="786" y="136" width="28" height="28" rx="7" fill="none" stroke="var(--ye)" stroke-width="4" stroke-dasharray="6 5" class="jn"/><text class="h" x="822" y="156">Classified</text></g>`;
+h+=`<g class="pin" data-a="join:0" tabindex="0" role="button" aria-label="Join the mission"><circle class="jc jn" cx="900" cy="560" r="54" fill="var(--ye)"/><text x="900" y="558" text-anchor="middle" font-size="22" font-weight="900" style="fill:#11141b">Join</text><text x="900" y="578" text-anchor="middle" font-size="13" font-weight="700" style="fill:#11141b">you are here</text></g>`;
+$("#sv").insertAdjacentHTML("beforeend",h);
+/* filter */
+const FL=[["all","Everyone"],["core","Core + leads"],...Object.entries(DEPT)];
+const lit=p=>flt=="all"||(flt=="core"?p.lead:p.d==flt);
+function paint(){$("#flt").innerHTML=FL.map(([k,l])=>`<button aria-pressed="${k==flt}" data-k="${k}">${l}</button>`).join("");
+ document.querySelectorAll(".g").forEach(g=>{const d=g.dataset.d;g.classList.toggle("dm",flt!="all"&&flt!="core"&&d!=flt&&d!="core"&&!(d=="core"&&false))});
+ document.querySelectorAll(".s").forEach(s=>s.style.opacity=lit(P[s.dataset.i])?1:.13)}
+paint();
+$("#flt").onclick=e=>{const b=e.target.closest("button");if(b){flt=b.dataset.k;paint();$("#flt [aria-pressed=true]").focus()}};
+/* panels */
+const pn=$("#pn");let from=null;
+const mail="mailto:abes.technovation@gmail.com";
+const X={
+ about:()=>`<span class="k">Mission brief</span><h2>The Networking Club</h2><p>Technovation is the technical club of the CSE Department at ABES Engineering College, Ghaziabad. We build a community around networking, cybersecurity and real-world problem solving. Where connections spark innovation, and technology bridges every gap.</p><div class="vs"><span><b>Collaborate</b></span><span><b>Connect</b></span><span><b>Grow</b></span></div><p>Our vision: lead in connected innovation and empower students to explore, create and evolve in networking, cybersecurity and emerging technologies.</p><p>Each coloured line on the map is a department. Every dot is a person. Tap one to get their ticket.</p>`,
+ dom:i=>`<span class="k">Domain</span><h2>${DOM[i][0]}</h2><p>${DOM[i][1]}</p>`,
+ ev:i=>{const e=EV[i];return `<span class="k">${e.k}</span><h2>${e.n}</h2><p><b>Date:</b> ${e.d}</p><p>${e.t}${e.ph?" (Placeholder description.)":""}</p>`},
+ next:()=>`<span class="k">Classified</span><h2>Next mission loading</h2><p>Details are being decrypted. Check back soon, agent.</p>`,
+ faq:()=>`<span class="k">Information</span><h2>Questions</h2><details><summary>Who can join?</summary><p>Students from every B.Tech branch. We focus on first and second years.</p></details><details><summary>When is recruitment?</summary><p>Once a year, online, at the end of June, run by the core team with our faculty coordinator.</p></details><details><summary>Which departments exist?</summary><p>Technical, Events, PR and Outreach, Graphics, Content and Production.</p></details><details><summary>How do I contact you?</summary><p>Email abes.technovation@gmail.com or message us on Instagram.</p></details>`,
+ join:()=>`<span class="k">Platform 0</span><h2>Are you ready, agent?</h2><p>Open to all B.Tech branches, especially first and second years. Recruitment runs online at the end of June. Email us now and we will add you to the briefing list. An application form is coming soon.</p><a class="cta" href="${mail}?subject=Join%20Technovation">Email the club</a>`,
+ exits:()=>`<span class="k">Exits</span><h2>Leave the map</h2><a class="l" href="https://www.instagram.com/technovationabes">Instagram</a><a class="l" href="https://www.linkedin.com/company/the-networking-club-abesec/">LinkedIn</a><a class="l" href="https://www.facebook.com/abestechnovation/">Facebook</a><a class="l" href="https://twitter.com/technovationcse">X</a><a class="l" href="https://www.abes.ac.in/Technovation.html">College page</a><a class="l" href="${mail}">abes.technovation@gmail.com</a>`};
+function open(a){const[t,i]=a.split(":");if(t=="p")return ticket(+i);from=document.activeElement;pn.innerHTML=`<button class="cl">Close</button>`+X[t](+i);pn.inert=false;pn.classList.add("on");pn.querySelector(".cl").focus()}
+function shut(){if(!pn.classList.contains("on"))return;pn.classList.remove("on");pn.inert=true;from&&from.focus&&from.focus()}
+pn.onclick=e=>{if(e.target.closest(".cl"))shut()};
+addEventListener("keydown",e=>{if(e.key=="Escape")shut();if((e.key=="Enter"||e.key==" ")&&e.target.matches("svg [data-a]")){e.preventDefault();open(e.target.dataset.a)}});
+document.addEventListener("click",e=>{const t=e.target.closest("[data-a]");if(t&&!moved)open(t.dataset.a)});
+/* ticket */
+const dlg=$("#dlg"),tk=$("#tk");let opener=null;
+function ticket(i){const p=P[i];opener=document.activeElement;tk.style.setProperty("--lc",COL[p.d]);
+ tk.innerHTML=`<div class="bd"></div><button class="xx" aria-label="Close ticket">Close (Esc)</button><div class="tp"><small>Passenger</small><h3>${p.n}</h3><p class="rt">${p.r}, ${p.dept}</p><p style="font-style:italic;margin-top:4px">"${p.tag}"</p><dl><dt>Year</dt><dd>${p.year}</dd><dt>Branch</dt><dd>${p.br}</dd><dt>Joined</dt><dd>${p.jn}</dd><dt>Favourite tool</dt><dd>${p.tool}</dd><dt>Skills</dt><dd>${p.sk}</dd><dt>Events</dt><dd>${p.ev}</dd></dl><p style="font-size:.92rem">${p.bio}</p><p style="font-size:.92rem;margin-top:8px"><b>Fun fact:</b> ${p.fun}</p></div><div class="sb"><div class="br"></div><span>Valid for one mission. Placeholder profile.</span></div>`;
+ dlg.showModal();tk.querySelector(".xx").focus()}
+dlg.addEventListener("click",e=>{if(e.target===dlg||e.target.closest(".xx"))dlg.close()});
+dlg.addEventListener("close",()=>opener&&opener.focus&&opener.focus());
+const RM=matchMedia("(prefers-reduced-motion:reduce)").matches;
+dlg.addEventListener("pointermove",e=>{if(RM)return;const r=tk.getBoundingClientRect();tk.style.setProperty("--ry",((e.clientX-r.left)/r.width-.5)*7+"deg");tk.style.setProperty("--rx",(.5-(e.clientY-r.top)/r.height)*5+"deg")});
+/* pan */
+const mp=$("#map");let dr=null,moved=0;
+mp.scrollLeft=(1800-innerWidth)/2;mp.scrollTop=(1100-innerHeight)/2+20;
+mp.addEventListener("pointerdown",e=>{if(e.pointerType!="mouse")return;dr={x:e.clientX,y:e.clientY,l:mp.scrollLeft,t:mp.scrollTop};moved=0});
+addEventListener("pointermove",e=>{if(!dr)return;const dx=e.clientX-dr.x,dy=e.clientY-dr.y;if(Math.abs(dx)+Math.abs(dy)>5){moved=1;mp.classList.add("dg")}mp.scrollLeft=dr.l-dx;mp.scrollTop=dr.t-dy});
+addEventListener("pointerup",()=>{dr=null;mp.classList.remove("dg");setTimeout(()=>moved=0,0)});
+</script>
+</body>
+</html>

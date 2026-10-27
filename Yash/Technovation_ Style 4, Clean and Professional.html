@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Technovation, the Networking Club | ABES Engineering College</title>
+<meta name="description" content="Technovation is the networking club of the CSE department at ABES Engineering College, Ghaziabad.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#0f1b2d;--mut:#55627a;--bl:#1f5a96;--or:#f47c3c;--ord:#b8460f;--bg:#fff;--alt:#f2f5f9;--ln:#dbe2ea;--navy:#0f2742}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth;scroll-padding-top:80px}
+body{font:17px/1.65 'Schibsted Grotesk',system-ui,sans-serif;color:var(--ink);background:var(--bg)}
+a{color:inherit}
+h1,h2,h3{font-weight:800;letter-spacing:-.03em;line-height:1.08}
+.w{max-width:1160px;margin:0 auto;padding:0 6vw}
+section{padding:92px 0}.alt{background:var(--alt)}
+header{position:sticky;top:0;z-index:10;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid transparent;transition:border-color .2s;padding-top:env(safe-area-inset-top,0px)}
+header.s{border-color:var(--ln)}
+.nb{display:flex;align-items:center;justify-content:space-between;height:68px;gap:20px}
+.br{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:800;letter-spacing:-.02em}
+.br small{display:block;font-weight:500;font-size:.72rem;color:var(--mut);letter-spacing:0;line-height:1}
+nav ul{display:flex;gap:26px;list-style:none;padding:0}
+nav a{text-decoration:none;color:var(--mut);font-weight:500;font-size:.97rem}nav a:hover{color:var(--ink)}
+.btn{display:inline-block;background:var(--bl);color:#fff;text-decoration:none;font-weight:700;padding:12px 22px;border-radius:10px;border:0;font:700 .97rem 'Schibsted Grotesk';cursor:pointer;transition:background .2s,transform .2s}
+.btn:hover{background:#17497b;transform:translateY(-1px)}
+.btn.ghost{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--ln)}.btn.ghost:hover{background:var(--alt)}
+.btn.or{background:var(--or);color:#2a1100}.btn.or:hover{background:#ff8d52}
+#mb{display:none;background:none;border:1.5px solid var(--ln);border-radius:8px;padding:8px 12px;font:700 .9rem 'Schibsted Grotesk';cursor:pointer}
+.hero{padding:76px 0 96px}
+.hg{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center}
+h1{font-size:clamp(2.4rem,5.4vw,4.3rem)}
+.lead{font-size:1.2rem;color:var(--mut);max-width:30em;margin:22px 0 30px}
+.acts{display:flex;gap:12px;flex-wrap:wrap}
+.facts{display:flex;gap:36px;margin-top:44px;flex-wrap:wrap}
+.facts b{display:block;font-size:2rem;font-weight:800;letter-spacing:-.03em;color:var(--bl);line-height:1}.facts span{font-size:.9rem;color:var(--mut)}
+#hub{width:100%;max-width:470px;justify-self:center}
+.sp{stroke-dasharray:4 6;animation:fl 1.6s linear infinite}@keyframes fl{to{stroke-dashoffset:-20}}
+h2{font-size:clamp(1.9rem,3.6vw,2.9rem);margin-bottom:14px}
+.sub{color:var(--mut);max-width:36em;margin-bottom:44px}
+.two{display:grid;grid-template-columns:1.2fr 1fr;gap:60px;align-items:start}
+.big{font-size:clamp(1.3rem,2.2vw,1.7rem);line-height:1.4;font-weight:500;letter-spacing:-.015em}
+.pr div{padding:20px 0;border-top:1px solid var(--ln)}.pr div:last-child{border-bottom:1px solid var(--ln)}.pr b{font-size:1.15rem}.pr p{color:var(--mut)}
+.cols{display:grid;gap:22px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.card{background:var(--bg);border:1px solid var(--ln);border-radius:14px;padding:28px;border-top:4px solid var(--c,var(--bl));transition:box-shadow .25s,transform .25s}
+.card:hover{box-shadow:0 14px 34px rgba(15,39,66,.1);transform:translateY(-3px)}
+.card h3{font-size:1.4rem;margin-bottom:8px}.card p{color:var(--mut)}
+.tag{display:inline-block;margin-top:14px;font-size:.82rem;font-weight:700;color:var(--ord);background:#fff1e8;padding:3px 10px;border-radius:99px}
+.row{display:grid;grid-template-columns:130px 1fr auto;gap:6px 20px;padding:18px 4px;border-top:1px solid var(--ln)}
+.row:last-child{border-bottom:1px solid var(--ln)}.row span{color:var(--mut)}.row p{grid-column:2/4;color:var(--mut);font-size:.95rem}
+.cb{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(210px,1fr))}
+.p{padding:14px 16px;background:var(--bg);border:1px solid var(--ln);border-left:4px solid var(--c);border-radius:10px}
+.p b{display:block}.p span{font-size:.88rem;color:var(--mut)}
+.dp{background:var(--bg);border:1px solid var(--ln);border-radius:14px;padding:24px}
+.dp h3{font-size:1.15rem;display:flex;align-items:center;gap:10px}.dp h3 i{width:12px;height:12px;border-radius:50%;background:var(--c)}
+.dp>small{display:block;color:var(--mut);margin:4px 0 12px}.dp ul{list-style:none;padding:0}.dp li{padding:5px 0;border-top:1px solid var(--ln);font-size:.97rem}
+details{border-top:1px solid var(--ln);padding:18px 2px;max-width:44em}details:last-child{border-bottom:1px solid var(--ln)}
+summary{font-weight:700;font-size:1.1rem;cursor:pointer}details p{color:var(--mut);margin-top:8px}
+.cta{background:var(--navy);color:#fff;padding:84px 0}.cta p{color:#b9c8dc;max-width:34em;margin:6px 0 28px}
+footer{padding:38px 0 calc(38px + env(safe-area-inset-bottom,0px));font-size:.95rem;color:var(--mut)}
+footer .w{display:flex;flex-wrap:wrap;gap:14px 28px;justify-content:space-between;align-items:center}
+footer nav{display:flex;gap:22px;flex-wrap:wrap}
+a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var(--or);outline-offset:3px}
+@media(max-width:860px){.hg,.two{grid-template-columns:1fr}.two{gap:30px}section{padding:68px 0}
+#mb{display:block}nav ul{display:none;position:absolute;top:68px;left:0;right:0;flex-direction:column;gap:0;background:#fff;border-bottom:1px solid var(--ln);padding:8px 6vw 16px}
+nav.o ul{display:flex}nav li a{display:block;padding:12px 0}.nb>.btn{display:none}.row{grid-template-columns:1fr}.row p{grid-column:1}}
+@media(prefers-reduced-motion:reduce){.sp{animation:none}html{scroll-behavior:auto}.card,.btn{transition:none}}
+</style></head>
+<body>
+<header id="hd"><div class="w nb">
+<a class="br" href="#top" id="lg"><span id="mk"></span><span>Technovation<small>The Networking Club, ABESEC</small></span></a>
+<nav id="nv"><button id="mb" aria-expanded="false" aria-controls="ls">Menu</button>
+<ul id="ls"><li><a href="#about">About</a></li><li><a href="#domains">Domains</a></li><li><a href="#events">Events</a></li><li><a href="#team">Team</a></li><li><a href="#faq">FAQ</a></li></ul></nav>
+<a class="btn" href="#join">Join the club</a></div></header>
+
+<main id="top">
+<section class="hero"><div class="w hg"><div>
+<h1>Learn networking and security by building real things.</h1>
+<p class="lead">Technovation is the technical club of the CSE department at ABES Engineering College, Ghaziabad. We run workshops, contests and challenges for students who want to understand how connected systems work.</p>
+<div class="acts"><a class="btn" href="#join">Join the club</a><a class="btn ghost" href="#events">See our events</a></div>
+<div class="facts"><div><b id="n1">0</b><span>members</span></div><div><b id="n2">0</b><span>departments</span></div><div><b id="n3">0</b><span>flagship events</span></div></div></div>
+<div id="hub" role="img" aria-label="The six departments of Technovation connected around the club logo"></div></div></section>
+
+<section id="about" class="alt"><div class="w two"><div>
+<h2>About the club</h2>
+<p class="big">We are a community of students who care about networking, cybersecurity and real-world problem solving. We design networks, host security challenges and learn by building, breaking and fixing things together.</p></div>
+<div class="pr"><div><b>Collaborate</b><p>Work on problems as a team, across branches and years.</p></div><div><b>Connect</b><p>Meet peers, seniors and speakers from the wider tech community.</p></div><div><b>Grow</b><p>Turn curiosity into skills through workshops and contests.</p></div></div></div></section>
+
+<section id="domains"><div class="w"><h2>What we work on</h2><p class="sub">Three domains sit at the centre of the club. Descriptions are draft copy until the team confirms them.</p>
+<div class="cols">
+<div class="card"><h3>AWS</h3><p>Cloud basics through hands-on practice: compute, storage and networking, deployed for real.</p></div>
+<div class="card" style="--c:var(--or)"><h3>Cyber Security</h3><p>Learn how attacks work so you can defend against them, through challenges and CTF-style rounds.</p></div>
+<div class="card" style="--c:#1a9b6c"><h3>Networking</h3><p>How data moves between machines, and how to design the networks it travels across.</p></div></div></div></section>
+
+<section id="events" class="alt"><div class="w"><h2>Events</h2><p class="sub">Our flagship events, followed by past workshops and contests. Flagship details are placeholders until confirmed.</p>
+<div class="cols" id="fl" style="margin-bottom:56px"></div>
+<h3 style="font-size:1.35rem;margin-bottom:14px">Workshops and contests</h3><div id="log"></div></div></section>
+
+<section id="team"><div class="w"><h2>Our team</h2><p class="sub">The core board leads six departments, each with five members.</p>
+<h3 style="font-size:1.2rem;margin-bottom:14px">Core board</h3><div class="cb" id="core" style="margin-bottom:56px"></div>
+<h3 style="font-size:1.2rem;margin-bottom:14px">Departments</h3><div class="cols" id="dep"></div></div></section>
+
+<section id="faq" class="alt"><div class="w"><h2>Questions</h2><div style="margin-top:28px">
+<details><summary>Who can join?</summary><p>Students from all B.Tech branches. We focus on 1st and 2nd year students.</p></details>
+<details><summary>When is recruitment?</summary><p>Online, once a year at the end of June, run by the core team with our faculty coordinator.</p></details>
+<details><summary>Which departments are there?</summary><p>Technical, Events, PR and Outreach, Graphics, Content and Production.</p></details>
+<details><summary>How do I contact the club?</summary><p>Email <a href="mailto:abes.technovation@gmail.com">abes.technovation@gmail.com</a> or message us on Instagram.</p></details></div></div></section>
+
+<section id="join" class="cta"><div class="w"><h2>Join Technovation</h2>
+<p>Open to all B.Tech branches. Recruitment runs online at the end of June. Write to us to get on the list.</p>
+<a class="btn or" href="mailto:abes.technovation@gmail.com?subject=Join%20Technovation">Email the club</a></div></section>
+</main>
+<footer><div class="w"><span>Technovation, ABES Engineering College, Ghaziabad</span>
+<nav><a href="https://www.abes.ac.in/Technovation.html">College page</a><a href="https://www.instagram.com/technovationabes">Instagram</a><a href="https://www.linkedin.com/company/the-networking-club-abesec/">LinkedIn</a><a href="https://www.facebook.com/abestechnovation/">Facebook</a><a href="https://twitter.com/technovationcse">X</a></nav></div></footer>
+
+<script>
+const $=s=>document.querySelector(s);
+// ---- DATA: edit here ----
+const CORE=[["Shresth","General Secretary"],["Ayush","Joint Secretary"],["Chaitanya","Joint Secretary"],["Lavi","Treasurer"],["Yash","Technical Lead"],["Shruti","Technical Lead"],["Anuj","Graphics Lead"],["Anushka","Graphics Lead"],["Zeeshan","Production Lead"],["Juwairiyah","Content Lead"],["Gudiya","Events Lead"],["Aditya","Events Lead"],["Kaushiki","PR & Outreach Lead"],["Harshvardhan","PR & Outreach Lead"]];
+const TEAMS=[
+["Technical","#1f5a96",["Yash","Shruti"],["Dishant Ghalot","Vadanta Kumar Chauhaan","Aditya Dubey","Samarth Verma","Harsh Tiwari"]],
+["Events","#f47c3c",["Gudiya","Aditya"],["Aryan Jha","Tushti Gupta","Shrishti Gupta","Gauri Jain","Satyam Shukla"]],
+["PR & Outreach","#1a9b6c",["Kaushiki","Harshvardhan"],["Sanskriti Pandey","Neha Gupta","Samriddhi Johri","Saavya Singh","Sakshi Yadav"]],
+["Graphics","#d6347f",["Anuj","Anushka"],["Ridah Abbasi","Ananya Singh","Anshita Garg","Shifa Saifi","Aaniya Singh"]],
+["Content","#c99a00",["Juwairiyah"],["Shreya Shekhar","Aalia Idris","Arush Dixit","Pari","Manasvi Singh"]],
+["Production","#7a4fd1",["Zeeshan"],["Aaryan Vashishta","Tripti Sahani","Smriti Patel","Ankit","Manas Kumar"]]];
+const FLAG=[["TypoBuzz","Typing and tech-trivia showdown with a live leaderboard.","Details to confirm"],["CyberQuest","Cybersecurity quest of puzzles and CTF-style challenges in timed rounds.","Details to confirm"],["Vertigo","Our annual signature tech celebration with contests, talks and showcases.","Details to confirm"]];
+const LOG=[["Mar 2019","Git & GitHub Workshop","Workshop","Two days, sponsored by GitHub."],["Mar 2019","Coding Contest + C++ Workshop","Contest","Sponsored by GitHub, with a speaker from GitHub Campus Experts."],["15 Apr 2019","Web Development Workshop","Workshop","Sponsored by GitHub Education."],["Date TBA","Quantum Computing Workshop","5 days","Placeholder: qubits to circuits on a simulator, hands-on daily."]];
+// ---- render ----
+const MARK='<path fill="#1f5a96" d="M232 233h55v184h-55zM232 233h55l138 184h-55zM370 340h55v77h-55z"/><path fill="#f47c3c" d="M352 233h73v87z"/>';
+$('#mk').innerHTML=`<svg viewBox="228 229 201 192" width="30" height="29" aria-hidden="true">${MARK}</svg>`;
+const total=CORE.length+TEAMS.reduce((a,t)=>a+t[3].length,0);
+const cnt=(id,to)=>{const e=$(id),t0=performance.now();(function f(t){const p=Math.min(1,(t-t0)/1100);e.textContent=Math.round(to*p);if(p<1)requestAnimationFrame(f)})(t0)};
+cnt('#n1',total);cnt('#n2',TEAMS.length);cnt('#n3',FLAG.length);
+// hub diagram: departments around the logo mark
+let h='<svg viewBox="0 0 440 440" width="100%" font-family="Schibsted Grotesk,sans-serif">';
+TEAMS.forEach((t,i)=>{const a=(i/6)*Math.PI*2-Math.PI/2,x=220+Math.cos(a)*160,y=220+Math.sin(a)*160;
+h+=`<line class="sp" x1="220" y1="220" x2="${x}" y2="${y}" stroke="${t[1]}" stroke-width="2"/><circle cx="${x}" cy="${y}" r="15" fill="${t[1]}"/>`;
+const ty=y+(y>220?36:-26);h+=`<text x="${x}" y="${ty}" text-anchor="middle" font-size="13" font-weight="700" fill="#0f1b2d">${t[0].replace('&','and')}</text>`});
+h+=`<circle cx="220" cy="220" r="62" fill="#fff" stroke="#dbe2ea" stroke-width="2"/><g transform="translate(220 220) scale(.5) translate(-328.5 -325)">${MARK}</g></svg>`;
+$('#hub').innerHTML=h;
+$('#fl').innerHTML=FLAG.map((f,i)=>`<div class="card" style="--c:${['#1f5a96','#f47c3c','#1a9b6c'][i]}"><h3>${f[0]}</h3><p>${f[1]}</p><span class="tag">${f[2]}</span></div>`).join('');
+$('#log').innerHTML=LOG.map(r=>`<div class="row"><span>${r[0]}</span><b>${r[1]}</b><span>${r[2]}</span><p>${r[3]}</p></div>`).join('');
+const col=r=>(TEAMS.find(t=>r.includes(t[0]))||[0,'#0f2742'])[1];
+$('#core').innerHTML=CORE.map(c=>`<div class="p" style="--c:${col(c[1])}"><b>${c[0]}</b><span>${c[1]}</span></div>`).join('');
+$('#dep').innerHTML=TEAMS.map(t=>`<div class="dp" style="--c:${t[1]}"><h3><i></i>${t[0]}</h3><small>Led by ${t[2].join(' and ')}</small><ul>${t[3].map(m=>`<li>${m}</li>`).join('')}</ul></div>`).join('');
+// ---- behaviour ----
+addEventListener('scroll',()=>$('#hd').classList.toggle('s',scrollY>8),{passive:true});
+const nv=$('#nv'),mb=$('#mb');
+mb.onclick=()=>mb.setAttribute('aria-expanded',nv.classList.toggle('o'));
+nv.onclick=e=>{if(e.target.closest('a')){nv.classList.remove('o');mb.setAttribute('aria-expanded',false)}};
+</script></body></html>

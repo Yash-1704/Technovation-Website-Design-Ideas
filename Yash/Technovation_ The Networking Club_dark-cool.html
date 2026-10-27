@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Technovation | The Networking Club, ABESEC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Special+Elite&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#080b14;--fg:#e8edff;--mut:#8d99b8;--line:#e8edff26;--acc:#8b6cff;--fl:#35d0ba;--nd:#e8edff;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:dark}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#080b14;--fg:#e8edff;--mut:#8d99b8;--line:#e8edff26;--acc:#8b6cff;--nd:#e8edff;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#080b14;--fg:#e8edff;--mut:#8d99b8;--line:#e8edff26;--acc:#8b6cff;--nd:#e8edff;color-scheme:dark}
+*,*::before,*::after{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth;scroll-padding-top:calc(64px + env(safe-area-inset-top,0px))}
+body{background:var(--bg);color:var(--fg);font:500 1.05rem/1.55 "Bricolage Grotesque",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--acc);outline-offset:3px}
+.w{max-width:1120px;margin:0 auto;padding:0 20px}
+header{position:fixed;inset:0 0 auto;z-index:5;display:flex;justify-content:space-between;align-items:center;padding:calc(14px + env(safe-area-inset-top,0px)) 20px 14px;gap:16px}
+.logo{font-weight:800;font-size:1.15rem;letter-spacing:-.02em;text-decoration:none}
+nav{display:flex;gap:22px;align-items:center}
+nav a{text-decoration:none;font-size:.95rem}
+nav a:hover{text-decoration:underline;text-underline-offset:5px;text-decoration-thickness:2px}
+.btn{display:inline-block;background:var(--fl);color:#080b14;font-weight:700;padding:13px 24px;border-radius:999px;text-decoration:none;border:0;cursor:pointer;font-family:inherit;font-size:1rem;transition:transform .2s}
+.btn:hover{transform:translateY(-2px) rotate(-1deg)}
+@media(max-width:720px){nav a:not(.btn){display:none}}
+.hero{position:relative;min-height:100svh;display:flex;align-items:flex-end;overflow:hidden}
+#net{position:absolute;inset:0;width:100%;height:100%;cursor:grab;touch-action:pan-y}
+.hero .w{position:relative;pointer-events:none;padding-bottom:56px;padding-top:120px}
+.hero .w>*{pointer-events:auto}
+h1{font-size:clamp(2.8rem,9.5vw,8.2rem);line-height:.9;letter-spacing:-.045em;font-weight:800;max-width:11ch;font-variation-settings:"opsz" 96}
+.sub{max-width:44ch;margin:24px 0;color:var(--fg);font-size:1.15rem}
+.stats{display:flex;flex-wrap:wrap;gap:6px 26px;margin-top:26px;color:var(--mut);font-size:.95rem}
+.stats b{color:var(--fg);font-size:1.6rem;letter-spacing:-.03em;margin-right:5px}
+.hint{position:absolute;right:20px;bottom:20px;color:var(--mut);font-size:.85rem;text-align:right;max-width:20ch;pointer-events:none}
+#tip{position:absolute;z-index:3;pointer-events:none;background:var(--fg);color:var(--bg);padding:6px 12px;border-radius:8px;font-size:.85rem;font-weight:600;white-space:nowrap;opacity:0;transform:translate(-50%,-140%);transition:opacity .15s}
+section{padding:110px 0 30px}
+h2{font-size:clamp(2rem,5vw,3.6rem);line-height:1;letter-spacing:-.035em;font-weight:800;max-width:18ch;margin-bottom:34px}
+.mf{font-size:clamp(1.6rem,4vw,2.9rem);line-height:1.15;letter-spacing:-.03em;font-weight:700;max-width:24ch}
+.mf span{color:var(--mut)}
+.rd{background:var(--fg);color:transparent;border-radius:4px;padding:0 6px;cursor:help;transition:all .35s;box-decoration-break:clone}
+.rd:hover,.rd:focus-visible{background:var(--fl);color:#080b14}
+.dom{border-top:1.5px solid var(--line)}
+.dom>div{display:grid;grid-template-columns:minmax(150px,1fr) 2fr;gap:12px 40px;padding:26px 0;border-bottom:1.5px solid var(--line);transition:padding .3s}
+.dom>div:hover{padding-left:16px}
+.dom h3{font-size:clamp(1.5rem,3.4vw,2.4rem);letter-spacing:-.03em;line-height:1}
+.dom p{color:var(--mut);max-width:52ch}
+@media(max-width:640px){.dom>div{grid-template-columns:1fr}}
+details.ev{border-top:1.5px solid var(--line)}
+details.ev:last-of-type{border-bottom:1.5px solid var(--line)}
+.ev summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:22px 0}
+.ev summary::-webkit-details-marker{display:none}
+.ev h3{font-size:clamp(1.5rem,4vw,2.8rem);letter-spacing:-.035em;line-height:1}
+.ev.fl h3::after{content:"";display:inline-block;width:.38em;height:.38em;border-radius:50%;background:var(--fl);margin-left:.3em;vertical-align:.2em}
+.ev .m{color:var(--mut);font-size:.95rem;text-align:right}
+.ev .b{padding:0 0 26px;max-width:60ch;color:var(--mut)}
+.ev[open] summary h3{color:var(--acc)}
+.tz{margin-top:30px;border:2px dashed var(--line);border-radius:16px;padding:22px;font-weight:700}
+.tz i{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--fl);margin-right:10px;animation:bl 1.2s steps(2) infinite}
+@keyframes bl{50%{opacity:0}}
+.flt{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:26px}
+.flt button{font:inherit;font-size:.95rem;font-weight:600;background:none;color:var(--fg);border:1.5px solid var(--line);border-radius:999px;padding:8px 16px;cursor:pointer}
+.flt button[aria-pressed=true]{background:var(--fl);border-color:var(--fl);color:#080b14}
+.ros{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:0 28px}
+.ros button{font:inherit;text-align:left;background:none;color:var(--fg);border:0;border-top:1.5px solid var(--line);padding:12px 0;cursor:pointer;display:block;width:100%}
+.ros button:hover b{color:var(--acc);text-decoration:underline;text-underline-offset:4px}
+.ros b{display:block;font-size:1.1rem;letter-spacing:-.01em}
+.ros small{color:var(--mut);font-size:.88rem}
+details.q{border-top:1.5px solid var(--line);padding:16px 0}
+.q summary{font-weight:700;font-size:1.15rem;cursor:pointer}
+.q p{color:var(--mut);margin-top:8px;max-width:60ch}
+.join{background:var(--fl);color:#080b14;border-radius:28px;padding:clamp(28px,6vw,64px);margin-top:110px}
+.join h2{margin-bottom:16px}
+.join p{max-width:46ch;margin-bottom:26px}
+.join .btn{background:#0d2622;color:#e6efe4}
+footer{padding:60px 0 50px;color:var(--mut);font-size:.95rem}
+footer .w{display:flex;flex-wrap:wrap;gap:12px 26px;justify-content:space-between}
+footer div{display:flex;flex-wrap:wrap;gap:8px 20px}
+dialog{border:0;padding:0;background:transparent;max-width:100vw;max-height:100dvh;width:min(560px,100vw);overflow:visible;color:#e8edff}
+dialog::backdrop{background:#02040bcc;backdrop-filter:blur(4px)}
+.sheet{position:relative;background:#11172a;border-radius:6px 18px 18px 18px;padding:34px 26px 26px;margin:30px 10px 10px;font-family:"Special Elite","Courier New",monospace;font-size:.95rem;line-height:1.5;transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:transform .15s;max-height:calc(100dvh - 60px);overflow:auto;box-shadow:0 30px 60px #000b}
+.sheet::before{content:attr(data-no);position:absolute;top:-26px;left:0;background:#11172a;padding:4px 18px;border-radius:10px 10px 0 0;font-size:.85rem}
+.sheet h3{font:800 clamp(2rem,7vw,2.8rem)/1 "Bricolage Grotesque",sans-serif;letter-spacing:-.04em}
+.sheet .tl{margin:6px 0 16px;font-style:italic}
+.sheet dl{display:grid;grid-template-columns:auto 1fr;gap:6px 16px;margin:16px 0;padding:14px 0;border-block:1.5px dashed #8d99b855}
+.sheet dt{opacity:.65}
+.sheet dd{margin:0}
+.sheet .x{position:absolute;top:10px;right:12px;font:inherit;background:#35d0ba;color:#080b14;border:0;border-radius:999px;padding:6px 14px;cursor:pointer}
+.stamp{position:absolute;right:20px;top:58px;border:3px solid #ff6b8a;color:#ff6b8a;padding:2px 10px;transform:rotate(9deg);font-size:.8rem;opacity:.8;border-radius:4px}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<header>
+  <a class="logo" href="#top">Technovation</a>
+  <nav aria-label="Main"><a href="#about">About</a><a href="#domains">Domains</a><a href="#events">Events</a><a href="#team">Team</a><a href="#faq">FAQ</a><a class="btn" href="#join">Join the mission</a></nav>
+</header>
+
+<main id="top">
+<div class="hero">
+  <canvas id="net" aria-hidden="true"></canvas>
+  <div id="tip"></div>
+  <div class="w">
+    <h1>Where connections spark innovation.</h1>
+    <p class="sub">Technovation is the networking club of ABES Engineering College. We learn how machines talk, how they get broken into, and how to build the room where students figure it out together.</p>
+    <a class="btn" href="#join">Join the mission</a>
+    <div class="stats" id="stats"></div>
+  </div>
+  <p class="hint">Every dot is a member. Drag to turn the network, tap a dot to open their file.</p>
+</div>
+
+<section id="about"><div class="w">
+  <p class="mf">We secure the packets. We crack the puzzles. <span>And we make sure nobody figures it out alone.</span> Some of the best work happens <span class="rd" tabindex="0">on a Tuesday night, three people, one whiteboard</span>.</p>
+</div></section>
+
+<section id="domains"><div class="w">
+  <h2>Three domains, one connected club.</h2>
+  <div class="dom">
+    <div><h3>AWS</h3><p>Cloud from first principles. Launch it, scale it, and learn why you should switch it off.</p></div>
+    <div><h3>Cyber Security</h3><p>Think like the attacker. Threat models, CTF-style puzzles, and the habit of asking what happens when this breaks.</p></div>
+    <div><h3>Networking</h3><p>Packets, routes and protocols: how the internet really moves, and how to design a network that holds.</p></div>
+  </div>
+  <p style="margin-top:34px;font-weight:700;font-size:1.3rem;letter-spacing:-.02em">Collaborate. Connect. Grow.</p>
+</div></section>
+
+<section id="events"><div class="w">
+  <h2>Flagships, workshops and contests.</h2>
+  <div id="evl"></div>
+  <p class="tz"><i></i>Classified: next mission loading.</p>
+</div></section>
+
+<section id="team"><div class="w">
+  <h2>Meet the team. Open any file.</h2>
+  <div class="flt" id="flt" role="group" aria-label="Filter team"></div>
+  <div class="ros" id="ros"></div>
+</div></section>
+
+<section id="faq"><div class="w">
+  <h2>Questions, answered.</h2>
+  <details class="q"><summary>Who can join?</summary><p>Students from every B.Tech branch. We focus on first and second years.</p></details>
+  <details class="q"><summary>When does recruitment happen?</summary><p>Once a year, online, at the end of June. The core team runs it with our faculty coordinator.</p></details>
+  <details class="q"><summary>Which departments are there?</summary><p>Technical, Events, PR and Outreach, Graphics, Content and Production.</p></details>
+  <details class="q" style="border-bottom:1.5px solid var(--line)"><summary>How do I contact the club?</summary><p>Email abes.technovation@gmail.com or message us on Instagram.</p></details>
+  <div class="join" id="join">
+    <h2>Are you ready, agent?</h2>
+    <p>Recruitment opens at the end of June. Email us now and we will add you to the briefing list. An application form is coming soon.</p>
+    <a class="btn" href="mailto:abes.technovation@gmail.com?subject=Join%20Technovation">Email the club</a>
+  </div>
+</div></section>
+</main>
+
+<footer><div class="w">
+  <span>Technovation, CSE Department, ABES Engineering College, Ghaziabad.</span>
+  <div><a href="https://www.facebook.com/abestechnovation/">Facebook</a><a href="https://www.instagram.com/technovationabes">Instagram</a><a href="https://www.linkedin.com/company/the-networking-club-abesec/">LinkedIn</a><a href="https://twitter.com/technovationcse">X</a><a href="https://www.abes.ac.in/Technovation.html">College page</a></div>
+</div></footer>
+
+<dialog id="dlg" aria-label="Member file"><div class="sheet" id="sheet"></div></dialog>
+
+<script>
+/* ---------- DATA (all member details below are PLACEHOLDERS: ph:true) ---------- */
+const DEPT={tech:"Technical",ev:"Events",pr:"PR & Outreach",gfx:"Graphics",con:"Content",prod:"Production"};
+const CORE=[["Shresth","General Secretary","core"],["Ayush","Joint Secretary","core"],["Chaitanya","Joint Secretary","core"],["Lavi","Treasurer","core"],["Yash","Technical Lead","tech"],["Shruti","Technical Lead","tech"],["Anuj","Graphics Lead","gfx"],["Anushka","Graphics Lead","gfx"],["Zeeshan","Production Lead","prod"],["Juwairiyah","Content Lead","con"],["Gudiya","Events Lead","ev"],["Aditya","Events Lead","ev"],["Kaushiki","PR & Outreach Lead","pr"],["Harshvardhan","PR & Outreach Lead","pr"]];
+const MEM={tech:["Dishant Ghalot","Vadanta Kumar Chauhaan","Aditya Dubey","Samarth Verma","Harsh Tiwari"],ev:["Aryan Jha","Tushti Gupta","Shrishti Gupta","Gauri Jain","Satyam Shukla"],pr:["Sanskriti Pandey","Neha Gupta","Samriddhi Johri","Saavya Singh","Sakshi Yadav"],gfx:["Ridah Abbasi","Ananya Singh","Anshita Garg","Shifa Saifi","Aaniya Singh"],con:["Shreya Shekhar","Aalia Idris","Arush Dixit","Pari","Manasvi Singh"],prod:["Aaryan Vashishta","Tripti Sahani","Smriti Patel","Ankit","Manas Kumar"]};
+const EV=[
+ {n:"TypoBuzz",k:"Flagship",d:"TBA",ph:1,t:"A typing and tech-trivia showdown. Fast fingers, sharper answers, and a live leaderboard that changes every round."},
+ {n:"CyberQuest",k:"Flagship",d:"TBA",ph:1,t:"A cybersecurity quest of puzzles and CTF-style challenges, played in timed rounds. Solve the clue, unlock the next."},
+ {n:"Vertigo",k:"Flagship",d:"TBA",ph:1,t:"Our annual signature celebration of tech: contests, talks and showcases, all in one packed day."},
+ {n:"Quantum Computing Workshop",k:"Five-day workshop",d:"TBA",ph:1,t:"From qubits and superposition to building and running circuits on a simulator, hands-on every day."},
+ {n:"Web Development Workshop",k:"Workshop",d:"15 Apr 2019",t:"A hands-on session on building for the web, sponsored by GitHub Education."},
+ {n:"Coding Contest and C++ Workshop",k:"Contest",d:"Mar 2019",t:"A contest paired with a C++ workshop, with a speaker from the GitHub Campus Experts."},
+ {n:"Git and GitHub Workshop",k:"Two-day workshop",d:"Mar 2019",t:"Two days on version control and collaboration, sponsored by GitHub."}
+];
+const SOC={tech:["Linux","Python","React","Docker"],ev:["Logistics","Hosting","Budgeting","Stage flow"],pr:["Outreach","Negotiation","Social media","Public speaking"],gfx:["Figma","Posters","Motion","Branding"],con:["Copywriting","Editing","Scripts","Research"],prod:["Video","Lighting","Audio","Livestreams"],core:["Planning","Leadership","Budgeting","Mentoring"]};
+const TAG={tech:"Ships it, then reads the logs.",ev:"If it runs on time, I did my job.",pr:"Talks to everyone, remembers everyone.",gfx:"Pixels have opinions and so do I.",con:"Good words, in the right order.",prod:"Quiet on set, loud on screen.",core:"Keeps the whole network connected."};
+const FUN=["Has never lost a game of rock paper scissors against a router.","Names every Wi-Fi network after a spy movie.","Can solve a Rubik's cube faster than a build finishes.","Drinks chai at a rate that violates the club budget.","Keeps a sticky note on every laptop they own."];
+const YR=["1st year","2nd year","2nd year","3rd year"],BR=["CSE","CSE (AI/ML)","IT","CSE (Data Science)","ECE"],TL=["Wireshark","VS Code","Figma","Notion","Git","Canva"],JY=["2025","2025","2026","2024"];
+const P=[];
+CORE.forEach(([n,r,d])=>P.push({n,r,d,lead:1}));
+Object.keys(MEM).forEach(d=>MEM[d].forEach(n=>P.push({n,r:DEPT[d]+" Member",d,lead:0})));
+const pick=(i,s,a)=>a[(i*7+s*13+i*i*s)%a.length];
+P.forEach((p,i)=>{p.dept=p.d=="core"?"Core Board":DEPT[p.d];p.year=pick(i,1,YR);p.branch=pick(i,2,BR);p.joined=pick(i,3,JY);p.tool=pick(i,4,TL);p.skills=[...SOC[p.d]].sort(()=>0).slice(0,3).join(", ");p.fun=pick(i,5,FUN);p.tag=TAG[p.d];p.events=[EV[i%4].n,EV[(i+2)%4].n].filter((v,j,a)=>a.indexOf(v)==j).join(", ");p.bio=p.n.split(" ")[0]+" joined the club to learn how networks really work. Now they "+(p.lead?"help steer the "+p.dept+" side of the mission.":"pitch in on "+p.dept.toLowerCase()+" work and bring good questions to every session.")});
+const $=s=>document.querySelector(s);
+/* stats from data */
+$("#stats").innerHTML=[[Object.keys(DEPT).length,"departments"],[3,"domains"],[P.length,"people"],[EV.filter(e=>e.k=="Flagship").length,"flagships"]].map(([v,l])=>`<span><b>${v}</b>${l}</span>`).join("");
+/* events */
+$("#evl").innerHTML=EV.map(e=>`<details class="ev${e.k=="Flagship"?" fl":""}"><summary><h3>${e.n}</h3><span class="m">${e.k}<br>${e.d}</span></summary><p class="b">${e.t}${e.ph?" (Placeholder description.)":""}</p></details>`).join("");
+/* team */
+let flt="all";
+const FL=[["all","Everyone"],["core","Core Board"],...Object.entries(DEPT)];
+const inF=p=>flt=="all"||(flt=="core"?p.lead:p.d==flt);
+function drawTeam(){
+  $("#flt").innerHTML=FL.map(([k,l])=>`<button aria-pressed="${k==flt}" data-k="${k}">${l}</button>`).join("");
+  $("#ros").innerHTML=P.map((p,i)=>inF(p)?`<button data-i="${i}"><b>${p.n}</b><small>${p.r}</small></button>`:"").join("");
+}
+drawTeam();
+$("#flt").onclick=e=>{const b=e.target.closest("button");if(b){flt=b.dataset.k;drawTeam();$("#flt [aria-pressed=true]").focus()}};
+/* dossier */
+const dlg=$("#dlg"),sh=$("#sheet");let opener=null;
+function openFile(i){const p=P[i];opener=document.activeElement;
+  sh.dataset.no="File no. "+String(i+1).padStart(2,"0");
+  sh.innerHTML=`<button class="x" aria-label="Close file">Close (Esc)</button><span class="stamp">Placeholder</span><h3>${p.n}</h3><p class="tl">"${p.tag}"</p><p>${p.r}, ${p.dept}</p><dl><dt>Year</dt><dd>${p.year}</dd><dt>Branch</dt><dd>${p.branch}</dd><dt>Joined</dt><dd>${p.joined}</dd><dt>Favourite tool</dt><dd>${p.tool}</dd><dt>Skills</dt><dd>${p.skills}</dd><dt>Events</dt><dd>${p.events}</dd></dl><p>${p.bio}</p><p style="margin-top:10px"><b>Fun fact:</b> ${p.fun}</p>`;
+  dlg.showModal();sh.querySelector(".x").focus()}
+$("#ros").onclick=e=>{const b=e.target.closest("button");if(b)openFile(+b.dataset.i)};
+dlg.addEventListener("click",e=>{if(e.target===dlg||e.target.closest(".x"))dlg.close()});
+dlg.addEventListener("close",()=>opener&&opener.focus&&opener.focus());
+const RM=matchMedia("(prefers-reduced-motion:reduce)").matches;
+dlg.addEventListener("pointermove",e=>{if(RM)return;const r=sh.getBoundingClientRect();sh.style.setProperty("--ry",((e.clientX-r.left)/r.width-.5)*8+"deg");sh.style.setProperty("--rx",(.5-(e.clientY-r.top)/r.height)*6+"deg")});
+/* 3D network: one node per person */
+const cv=$("#net"),c=cv.getContext("2d"),tip=$("#tip");let W,H,C={};
+function colors(){const s=getComputedStyle(document.documentElement);C={nd:s.getPropertyValue("--nd").trim(),fl:s.getPropertyValue("--fl").trim(),ac:s.getPropertyValue("--acc").trim()}}
+function size(){const d=Math.min(devicePixelRatio||1,2);W=cv.clientWidth;H=cv.clientHeight;cv.width=W*d;cv.height=H*d;c.setTransform(d,0,0,d,0,0);colors()}
+addEventListener("resize",size);matchMedia("(prefers-color-scheme:dark)").addEventListener("change",colors);size();
+const N=P.length,V=P.map((p,i)=>{const y=1-2*(i+.5)/N,r=Math.sqrt(1-y*y),a=i*2.39996;return{x:Math.cos(a)*r,y,z:Math.sin(a)*r}});
+const E=[];V.forEach((a,i)=>V.map((b,j)=>[j,(a.x-b.x)**2+(a.y-b.y)**2+(a.z-b.z)**2]).filter(o=>o[0]!=i).sort((u,v)=>u[1]-v[1]).slice(0,3).forEach(o=>{if(!E.some(e=>e[0]==o[0]&&e[1]==i||e[0]==i&&e[1]==o[0]))E.push([i,o[0]])}));
+const K=Array.from({length:16},()=>({e:Math.random()*E.length|0,t:Math.random(),s:.004+Math.random()*.007}));
+let ay=.4,ax=.35,vy=RM?0:.0025,dn=null,mx=-99,my=-99,hv=-1,moved=0,vis=true,S=[];
+new IntersectionObserver(([o])=>vis=o.isIntersecting).observe(cv);
+function frame(){requestAnimationFrame(frame);if(!vis)return;
+  c.clearRect(0,0,W,H);if(!dn)ay+=vy;
+  const R=Math.min(W,H*1.1)*(W>800?.4:.36),ox=W>800?W*.66:W*.5,oy=W>800?H*.5:H*.36,ca=Math.cos(ay),sa=Math.sin(ay),cb=Math.cos(ax),sb=Math.sin(ax);
+  S=V.map(v=>{const x=v.x*ca+v.z*sa,z1=-v.x*sa+v.z*ca,y=v.y*cb-z1*sb,z=v.y*sb+z1*cb,k=3/(3-z);return{x:ox+x*R*k,y:oy+y*R*k,z,k}});
+  c.lineWidth=1;c.strokeStyle=C.nd;
+  E.forEach(([a,b])=>{const p=S[a],q=S[b];c.globalAlpha=Math.max(.05,.1+.28*((p.z+q.z)/2+1)/2);c.beginPath();c.moveTo(p.x,p.y);c.lineTo(q.x,q.y);c.stroke()});
+  c.fillStyle=C.fl;K.forEach(k=>{k.t+=k.s;if(k.t>1){k.t=0;k.e=Math.random()*E.length|0}const p=S[E[k.e][0]],q=S[E[k.e][1]];c.globalAlpha=.95;c.beginPath();c.arc(p.x+(q.x-p.x)*k.t,p.y+(q.y-p.y)*k.t,2.6,0,7);c.fill()});
+  hv=-1;let best=22;
+  S.forEach((s,i)=>{const d=Math.hypot(s.x-mx,s.y-my);if(d<best&&s.z>-.3){best=d;hv=i}});
+  S.forEach((s,i)=>{const p=P[i],on=inF(p),r=(p.lead?6:4)*s.k*(i==hv?1.5:1);c.globalAlpha=on?.35+.65*(s.z+1)/2:.1;c.beginPath();c.arc(s.x,s.y,r,0,7);
+    if(p.lead||i==hv){c.fillStyle=C.fl;c.fill()}else{c.strokeStyle=C.nd;c.lineWidth=1.6;c.stroke()}});
+  c.globalAlpha=1;cv.style.cursor=hv>-1?"pointer":dn?"grabbing":"grab";
+  if(hv>-1){tip.style.opacity=1;tip.style.left=S[hv].x+"px";tip.style.top=S[hv].y+"px";tip.textContent=P[hv].n+", "+P[hv].r}else tip.style.opacity=0}
+cv.addEventListener("pointermove",e=>{const r=cv.getBoundingClientRect();mx=e.clientX-r.left;my=e.clientY-r.top;if(dn){ay+=(e.clientX-dn.x)*.006;ax=Math.max(-1,Math.min(1,ax+(e.clientY-dn.y)*.004));moved+=Math.abs(e.clientX-dn.x)+Math.abs(e.clientY-dn.y);dn={x:e.clientX,y:e.clientY}}});
+cv.addEventListener("pointerdown",e=>{dn={x:e.clientX,y:e.clientY};moved=0;const r=cv.getBoundingClientRect();mx=e.clientX-r.left;my=e.clientY-r.top});
+addEventListener("pointerup",()=>{if(dn&&moved<6&&hv>-1)openFile(hv);dn=null});
+cv.addEventListener("pointerleave",()=>{mx=my=-99});
+frame();
+</script>
+</body>
+</html>
