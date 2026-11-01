@@ -1,0 +1,2250 @@
+/**
+ * TECHNOVATION STORY ARCHIVES - FULL-VIEWPORT BOOK READER STYLESHEET
+ * Converts the entire 100vw × 100vh browser viewport into an authentic physical paper page.
+ * Uses exact typography matching the rest of the website:
+ * - Headlines & Editorial Serifs: "Newsreader", Georgia, serif
+ * - Subheadings, Kicker, Labels, Folios, Badges: "Inter Tight", system-ui, sans-serif
+ */
+
+:root {
+  --fsp-paper-bg: #FAF8F2;
+  --fsp-paper-gradient: radial-gradient(ellipse 95% 80% at 50% 32%, #FFFEFC 0%, #FAF6EE 52%, #EDE4D2 100%);
+  --fsp-ink: #141414;
+  --fsp-ink-muted: #5F5B54;
+  --fsp-ink-faint: #8E8980;
+  --fsp-rule: rgba(60, 45, 25, 0.14);
+  --fsp-rule-subtle: rgba(60, 45, 25, 0.08);
+  --fsp-card-bg: linear-gradient(175deg, rgba(255, 255, 255, 0.95) 0%, rgba(252, 249, 242, 0.88) 100%);
+  --fsp-card-border: rgba(130, 105, 75, 0.16);
+  --fsp-dept-color: #1F3FB0;
+  --fsp-dept-accent: #527FFF;
+  --fsp-dept-theme-color: var(--fsp-dept-color);
+
+  /* Typography strictly mapped to website tokens */
+  --fsp-font-serif: var(--font-serif, "Newsreader", Georgia, serif);
+  --fsp-font-sans: var(--font-sans, "Inter Tight", system-ui, -apple-system, sans-serif);
+}
+
+[data-theme="dark"] {
+  --fsp-paper-bg: #0C0E16;
+  --fsp-paper-gradient: radial-gradient(circle at 50% 35%, #141826 0%, #0F121D 60%, #090B12 100%);
+  --fsp-ink: #FFFFFF;
+  --fsp-ink-muted: #D1CEC7;
+  --fsp-ink-faint: #A6A29A;
+  --fsp-rule: rgba(255, 255, 255, 0.16);
+  --fsp-rule-subtle: rgba(255, 255, 255, 0.08);
+  --fsp-card-bg: rgba(20, 24, 38, 0.9);
+  --fsp-card-border: rgba(255, 255, 255, 0.14);
+  --fsp-dept-theme-color: var(--fsp-dept-accent, #60A5FA);
+}
+
+/* ==========================================================================
+   1. FULL-VIEWPORT READER SHELL & 3D STAGE
+   ========================================================================== */
+
+.fullscreen-book-reader {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9999;
+  background-color: #090A0D;
+  overflow: hidden;
+  user-select: none;
+  opacity: 0;
+  transform: scale(0.985);
+  transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.fullscreen-book-reader.fsp-active {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.fullscreen-book-reader.fsp-closing {
+  opacity: 0;
+  transform: scale(0.985);
+  pointer-events: none;
+}
+
+/* Hide native OS cursor on fine pointers so custom circle-with-center-point cursor is used */
+@media (pointer: fine) {
+  .fullscreen-book-reader,
+  .fullscreen-book-reader * {
+    cursor: none !important;
+  }
+}
+
+/* 3D Perspective Canvas */
+.fsp-stage {
+  position: absolute;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  perspective: 2600px;
+  perspective-origin: 50% 50%;
+  transform-style: preserve-3d;
+  overflow: hidden;
+}
+
+/* Resting / Base Page Layer */
+.fsp-base-page {
+  position: absolute;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1;
+  overflow: hidden;
+  background: var(--fsp-paper-bg);
+}
+
+/* Sweeping Under-Sheet Cast Shadow */
+.fsp-cast-shadow {
+  position: absolute;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0;
+  mix-blend-mode: multiply;
+  will-change: opacity, background;
+}
+
+/* 3D Turning Sheet Layer */
+.fsp-turning-sheet {
+  position: absolute;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 5;
+  pointer-events: none;
+  transform-style: preserve-3d;
+  transform-origin: left center;
+  will-change: transform;
+  display: none;
+}
+
+.fsp-sheet-curl-container {
+  position: absolute;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  transform-style: preserve-3d;
+}
+
+/* Front & Back Faces */
+.fsp-face {
+  position: absolute;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--fsp-paper-bg);
+}
+
+.fsp-front-face {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: rotateY(0deg);
+  z-index: 2;
+}
+
+.fsp-back-face {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: rotateY(180deg);
+  z-index: 1;
+  background: #F4EFE3;
+}
+
+[data-theme="dark"] .fsp-back-face {
+  background: #101217;
+}
+
+/* Dynamic Cylindrical Lighting Highlights */
+.fsp-curl-lighting {
+  position: absolute;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 10;
+  opacity: 0;
+  mix-blend-mode: overlay;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.fsp-back-lighting {
+  position: absolute;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 10;
+  opacity: 0;
+  mix-blend-mode: multiply;
+  transform: rotateY(180deg);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Underside Parchment Watermark & Translucent Bleed */
+.fsp-underside-surface {
+  position: absolute;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  background: var(--fsp-paper-bg);
+  overflow: hidden;
+}
+
+.fsp-underside-watermark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 50vw;
+  max-width: 450px;
+  opacity: 0.045;
+  pointer-events: none;
+}
+
+.fsp-underside-bleed {
+  position: absolute;
+  inset: 0;
+  transform: scaleX(-1);
+  filter: blur(1.8px);
+  opacity: 0.06;
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   2. AUTHENTIC PAPER SURFACE & EDITORIAL LAYOUT
+   ========================================================================== */
+
+.fsp-sheet-inner {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  background: var(--fsp-paper-gradient);
+  color: var(--fsp-ink);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+/* Subtle Paper Grain Overlay */
+.fsp-paper-grain {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(0, 0, 0, 0.04) 1px, transparent 1px);
+  background-size: 4px 4px;
+  pointer-events: none;
+  opacity: 0.55;
+  z-index: 1;
+}
+
+[data-theme="dark"] .fsp-paper-grain {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+}
+
+/* Subtle Edge Lighting Vignette */
+.fsp-paper-vignette {
+  position: absolute;
+  inset: 0;
+  box-shadow: 
+    inset 0 0 100px rgba(120, 95, 55, 0.08),
+    inset 0 0 35px rgba(90, 70, 35, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  pointer-events: none;
+  z-index: 2;
+}
+
+[data-theme="dark"] .fsp-paper-vignette {
+  box-shadow: inset 0 0 70px rgba(0, 0, 0, 0.5), inset 0 0 18px rgba(0, 0, 0, 0.7);
+}
+
+/* Spine Crease on Left Edge (where physical pages bind) */
+.fsp-paper-crease-left {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 32px;
+  height: 100%;
+  background: linear-gradient(to right, rgba(60, 45, 25, 0.12) 0%, rgba(60, 45, 25, 0.04) 35%, transparent 100%);
+  pointer-events: none;
+  z-index: 3;
+}
+
+[data-theme="dark"] .fsp-paper-crease-left {
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0.15) 40%, transparent 100%);
+}
+
+/* ==========================================================================
+   3. RUNNING HEADER & RUNNING FOOTER (MATCHING WEBSITE TOP NAV & LABELS)
+   ========================================================================== */
+
+.fsp-header {
+  position: relative;
+  z-index: 10;
+  height: 64px;
+  padding: 0 clamp(130px, 11vw, 170px) 0 6vw;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(180deg, rgba(255, 254, 250, 0.92) 0%, rgba(250, 246, 238, 0.72) 100%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(80, 60, 35, 0.12);
+  box-shadow: 0 2px 14px rgba(45, 30, 15, 0.04);
+  font-family: var(--fsp-font-sans);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--fsp-ink-muted);
+}
+
+[data-theme="dark"] .fsp-header {
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border-bottom: 1px solid var(--fsp-rule);
+  box-shadow: none;
+}
+
+.fsp-header-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.fsp-hdr-badge {
+  padding: 2.5px 8px;
+  border: 1px solid var(--fsp-dept-theme-color, var(--fsp-dept-color));
+  color: var(--fsp-dept-theme-color, var(--fsp-dept-color));
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 1px 4px rgba(40, 25, 10, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  border-radius: 3px;
+  font-weight: 700;
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+}
+
+[data-theme="dark"] .fsp-hdr-badge {
+  background: transparent;
+  box-shadow: none;
+  border-radius: 2px;
+}
+
+.fsp-hdr-dept {
+  font-weight: 600;
+  color: var(--fsp-ink);
+}
+
+.fsp-hdr-label {
+  font-weight: 600;
+  opacity: 0.85;
+}
+
+.fsp-header-right {
+  display: none; /* Top controls (sound toggle & close button) sit in top right */
+}
+
+.fsp-footer {
+  position: relative;
+  z-index: 10;
+  height: 48px;
+  padding: 0 5vw 0 6vw;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(0deg, rgba(255, 254, 250, 0.92) 0%, rgba(250, 246, 238, 0.72) 100%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid rgba(80, 60, 35, 0.12);
+  box-shadow: 0 -2px 14px rgba(45, 30, 15, 0.04);
+  font-family: var(--fsp-font-sans);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--fsp-ink-muted);
+}
+
+[data-theme="dark"] .fsp-footer {
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border-top: 1px solid var(--fsp-rule);
+  box-shadow: none;
+}
+
+.fsp-ftr-meta {
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  opacity: 0.6;
+}
+
+.fsp-pagination-dots,
+.fsp-ftr-folio {
+  display: none; /* Floating bottom HUD pill serves as the focal progress indicator */
+}
+
+/* ==========================================================================
+   4. EDITORIAL BODY & TYPOGRAPHY
+   ========================================================================== */
+
+.fsp-body {
+  position: relative;
+  z-index: 10;
+  flex: 1;
+  padding: 3vh 6.5vw 2.5vh 7.5vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+/* Custom Scrollbar for Long Editorial Content */
+.fsp-body::-webkit-scrollbar {
+  width: 4px;
+}
+
+.fsp-body::-webkit-scrollbar-thumb {
+  background: var(--fsp-rule);
+  border-radius: 4px;
+}
+
+/* Headings */
+.fsp-intro-head {
+  margin-bottom: 2.2vh;
+}
+
+.fsp-kicker {
+  display: block;
+  font-family: var(--fsp-font-sans);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  color: var(--fsp-dept-theme-color, var(--fsp-dept-color));
+}
+
+.fsp-headline {
+  font-family: var(--fsp-font-serif);
+  font-size: clamp(32px, 3.8vw, 56px);
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--fsp-ink);
+  margin: 0 0 12px 0;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8), 0 2px 4px rgba(45, 30, 15, 0.05);
+}
+
+[data-theme="dark"] .fsp-headline {
+  text-shadow: none;
+}
+
+.fsp-ornament-line {
+  position: relative;
+  height: 1px;
+  background: var(--fsp-rule);
+  margin: 12px 0 18px 0;
+}
+
+.fsp-ornament-diamond {
+  position: absolute;
+  top: 50%;
+  left: 32px;
+  transform: translateY(-50%) rotate(45deg);
+  width: 7px;
+  height: 7px;
+  background-color: var(--fsp-dept-theme-color, var(--fsp-dept-color));
+}
+
+/* Paragraphs & Drop Caps (Matching .detail-synopsis) */
+.fsp-p {
+  font-family: var(--fsp-font-serif);
+  font-size: clamp(15.5px, 1.15vw, 18px);
+  font-weight: 400;
+  line-height: 1.6;
+  letter-spacing: -0.01em;
+  color: var(--fsp-ink);
+  margin: 0 0 1.4vh 0;
+  text-align: justify;
+}
+
+.fsp-dropcap {
+  font-family: var(--fsp-font-serif);
+  font-size: 4.4rem;
+  line-height: 0.8;
+  float: left;
+  margin: 4px 14px 0 0;
+  font-weight: 400;
+  color: var(--fsp-dept-theme-color, var(--fsp-dept-color));
+  filter: drop-shadow(0 2px 4px rgba(31, 63, 176, 0.18));
+}
+
+[data-theme="dark"] .fsp-dropcap {
+  filter: none;
+}
+
+/* ==========================================================================
+   5. TEMPLATE-SPECIFIC EDITORIAL LAYOUTS
+   ========================================================================== */
+
+/* --- 1. INTRO LAYOUT --- */
+.fsp-intro-columns {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 4.5vw;
+  align-items: start;
+}
+
+.fsp-quote {
+  margin: 0 0 3vh 0;
+  padding: 20px 26px;
+  border-left: 4px solid var(--fsp-dept-theme-color, var(--fsp-dept-color));
+  background: linear-gradient(175deg, rgba(255, 255, 255, 0.95) 0%, rgba(252, 249, 242, 0.88) 100%);
+  border: 1px solid rgba(130, 105, 75, 0.14);
+  border-left-width: 4px;
+  border-left-color: var(--fsp-dept-theme-color, var(--fsp-dept-color));
+  border-radius: 0 8px 8px 0;
+  box-shadow: 
+    0 2px 6px rgba(45, 30, 15, 0.04),
+    0 10px 24px -4px rgba(45, 30, 15, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 1);
+  transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease);
+}
+
+.fsp-quote:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 4px 12px rgba(45, 30, 15, 0.06),
+    0 16px 32px -4px rgba(45, 30, 15, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 1);
+}
+
+[data-theme="dark"] .fsp-quote {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.fsp-quote-mark {
+  font-family: var(--fsp-font-serif);
+  font-size: 3.2rem;
+  line-height: 1;
+  color: var(--fsp-dept-theme-color, var(--fsp-dept-color));
+  display: block;
+  margin-bottom: -14px;
+}
+
+.fsp-quote-text {
+  font-family: var(--fsp-font-serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(17px, 1.35vw, 22px);
+  line-height: 1.5;
+  color: var(--fsp-ink);
+  margin: 0 0 12px 0;
+}
+
+.fsp-quote-cite {
+  font-family: var(--fsp-font-sans);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--fsp-ink-muted);
+  display: block;
+}
+
+.fsp-stamp-box {
+  padding: 22px;
+  border: 1.5px dashed rgba(130, 105, 75, 0.28);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.65);
+  box-shadow: 
+    inset 0 2px 8px rgba(45, 30, 15, 0.04),
+    0 4px 14px rgba(45, 30, 15, 0.03);
+  text-align: center;
+}
+
+.fsp-stamp-title {
+  font-family: var(--fsp-font-sans);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--fsp-dept-theme-color, var(--fsp-dept-color));
+  margin-bottom: 6px;
+}
+
+.fsp-stamp-motto {
+  font-family: var(--fsp-font-serif);
+  font-style: italic;
+  font-size: 15px;
+  color: var(--fsp-ink);
+  margin-bottom: 8px;
+}
+
+.fsp-stamp-id {
+  font-family: var(--fsp-font-sans);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--fsp-ink-faint);
+}
+
+/* --- 2. PHILOSOPHY LAYOUT --- */
+.fsp-philosophy-lead {
+  max-width: 85%;
+  margin-bottom: 3vh;
+}
+
+.fsp-principles-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2.2vw;
+}
+
+.fsp-principle-card {
+  padding: 24px;
+  background: var(--fsp-card-bg);
+  border: 1px solid var(--fsp-card-border);
+  border-radius: 8px;
+  box-shadow: 
+    0 1px 3px rgba(45, 30, 15, 0.04),
+    0 6px 18px -2px rgba(45, 30, 15, 0.07),
+    0 16px 32px -6px rgba(45, 30, 15, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 1);
+  transition: transform 0.28s var(--ease), box-shadow 0.28s var(--ease), border-color 0.28s var(--ease);
+}
+
+.fsp-principle-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(130, 105, 75, 0.28);
+  box-shadow: 
+    0 4px 10px rgba(45, 30, 15, 0.06),
+    0 14px 28px -4px rgba(45, 30, 15, 0.12),
+    0 24px 44px -8px rgba(45, 30, 15, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 1);
+}
+
+[data-theme="dark"] .fsp-principle-card {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45);
+}
+
+.fsp-pcard-header {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.fsp-pcard-num {
+  font-family: var(--fsp-font-sans);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--fsp-dept-theme-color, var(--fsp-dept-color));
+}
+
+.fsp-pcard-title {
+  font-family: var(--fsp-font-sans);
+  font-size: 0.92rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fsp-ink);
+  margin: 0;
+  line-height: 1.3;
+}
+
+.fsp-pcard-desc {
+  font-family: var(--fsp-font-serif);
+  font-size: 15.5px;
+  font-weight: 400;
+  line-height: 1.55;
+  color: var(--fsp-ink-muted);
+  margin: 0;
+}
+
+/* --- 3. PILLARS / DISCIPLINES LAYOUT --- */
+.fsp-pillars-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2vw;
+}
+
+.fsp-pillar-card {
+  padding: 22px 26px;
+  background: var(--fsp-card-bg);
+  border: 1px solid var(--fsp-card-border);
+  border-left: 4px solid var(--fsp-dept-theme-color, var(--fsp-dept-color));
+  border-radius: 6px;
+  box-shadow: 
+    0 1px 3px rgba(45, 30, 15, 0.04),
+    0 6px 18px -2px rgba(45, 30, 15, 0.07),
+    0 16px 32px -6px rgba(45, 30, 15, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 1);
+  transition: transform 0.28s var(--ease), box-shadow 0.28s var(--ease), border-color 0.28s var(--ease);
+}
+
+.fsp-pillar-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(130, 105, 75, 0.28);
+  border-left-color: var(--fsp-dept-theme-color, var(--fsp-dept-color));
+  box-shadow: 
+    0 4px 10px rgba(45, 30, 15, 0.06),
+    0 14px 28px -4px rgba(45, 30, 15, 0.12),
+    0 24px 44px -8px rgba(45, 30, 15, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 1);
+}
+
+[data-theme="dark"] .fsp-pillar-card {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45);
+}
+
+.fsp-plcard-top {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+
+.fsp-plcard-code {
+  font-family: var(--fsp-font-sans);
+  font-size: 0.88rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--fsp-dept-theme-color, var(--fsp-dept-color));
+}
+
+.fsp-plcard-title {
+  font-family: var(--fsp-font-sans);
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--fsp-ink);
+  margin: 0;
+}
+
+.fsp-plcard-tech {
+  font-family: var(--fsp-font-sans);
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--fsp-ink-faint);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.fsp-plcard-desc {
+  font-family: var(--fsp-font-serif);
+  font-size: 15.5px;
+  font-weight: 400;
+  line-height: 1.55;
+  color: var(--fsp-ink-muted);
+  margin: 0;
+}
+
+/* --- 4. PORTFOLIO LAYOUT --- */
+.fsp-portfolio-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2vw;
+}
+
+.fsp-project-card {
+  padding: 24px;
+  background: var(--fsp-card-bg);
+  border: 1px solid var(--fsp-card-border);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 
+    0 1px 3px rgba(45, 30, 15, 0.04),
+    0 6px 18px -2px rgba(45, 30, 15, 0.07),
+    0 16px 32px -6px rgba(45, 30, 15, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 1);
+  transition: transform 0.28s var(--ease), box-shadow 0.28s var(--ease), border-color 0.28s var(--ease);
+}
+
+.fsp-project-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(130, 105, 75, 0.28);
+  box-shadow: 
+    0 4px 10px rgba(45, 30, 15, 0.06),
+    0 14px 28px -4px rgba(45, 30, 15, 0.12),
+    0 24px 44px -8px rgba(45, 30, 15, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 1);
+}
+
+[data-theme="dark"] .fsp-project-card {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45);
+}
+
+.fsp-proj-tag {
+  align-self: flex-start;
+  font-family: var(--fsp-font-sans);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 3px;
+  margin-bottom: 12px;
+  background-color: rgba(31, 63, 176, 0.08);
+  color: var(--fsp-dept-theme-color, var(--fsp-dept-color));
+  border: 1px solid currentColor;
+}
+
+.fsp-proj-title {
+  font-family: var(--fsp-font-serif);
+  font-size: 1.25rem;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  color: var(--fsp-ink);
+  margin: 0 0 10px 0;
+  line-height: 1.35;
+}
+
+.fsp-proj-desc {
+  font-family: var(--fsp-font-serif);
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.55;
+  color: var(--fsp-ink-muted);
+  margin: 0 0 16px 0;
+  flex: 1;
+}
+
+.fsp-proj-stat {
+  padding-top: 14px;
+  border-top: 1px solid var(--fsp-rule-subtle);
+  display: flex;
+  flex-direction: column;
+}
+
+.fsp-stat-val {
+  font-family: var(--fsp-font-sans);
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--fsp-dept-theme-color, var(--fsp-dept-color));
+}
+
+.fsp-stat-label {
+  font-family: var(--fsp-font-sans);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--fsp-ink-faint);
+}
+
+/* --- 5. TIMELINE LAYOUT --- */
+.fsp-timeline-track {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2vw;
+  position: relative;
+  margin-top: 2vh;
+}
+
+.fsp-timeline-track::before {
+  content: '';
+  position: absolute;
+  top: 16px;
+  left: 20px;
+  right: 20px;
+  height: 2px;
+  background: var(--fsp-rule);
+  z-index: 1;
+}
+
+.fsp-timeline-node {
+  position: relative;
+  z-index: 2;
+  padding-top: 36px;
+}
+
+.fsp-tline-marker {
+  position: absolute;
+  top: 6px;
+  left: 0;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--fsp-paper-bg);
+  border: 2px solid var(--fsp-dept-theme-color, var(--fsp-dept-color));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fsp-tline-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--fsp-dept-theme-color, var(--fsp-dept-color));
+}
+
+.fsp-tline-year {
+  font-family: var(--fsp-font-sans);
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--fsp-dept-theme-color, var(--fsp-dept-color));
+  margin-bottom: 6px;
+}
+
+.fsp-tline-title {
+  font-family: var(--fsp-font-serif);
+  font-size: 1.15rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--fsp-ink);
+  margin: 0 0 8px 0;
+  line-height: 1.35;
+}
+
+.fsp-tline-desc {
+  font-family: var(--fsp-font-serif);
+  font-size: 14.5px;
+  font-weight: 400;
+  line-height: 1.55;
+  color: var(--fsp-ink-muted);
+  margin: 0;
+}
+
+/* --- 6. TEAM / ROSTER LAYOUT --- */
+.fsp-team-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.8vw;
+}
+
+.fsp-role-card {
+  padding: 20px 24px;
+  background: var(--fsp-card-bg);
+  border: 1px solid var(--fsp-card-border);
+  border-radius: 8px;
+  box-shadow: 
+    0 1px 3px rgba(45, 30, 15, 0.04),
+    0 6px 18px -2px rgba(45, 30, 15, 0.07),
+    0 16px 32px -6px rgba(45, 30, 15, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 1);
+  transition: transform 0.28s var(--ease), box-shadow 0.28s var(--ease), border-color 0.28s var(--ease);
+}
+
+.fsp-role-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(130, 105, 75, 0.28);
+  box-shadow: 
+    0 4px 10px rgba(45, 30, 15, 0.06),
+    0 14px 28px -4px rgba(45, 30, 15, 0.12),
+    0 24px 44px -8px rgba(45, 30, 15, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 1);
+}
+
+[data-theme="dark"] .fsp-role-card {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45);
+}
+
+.fsp-role-name {
+  font-family: var(--fsp-font-sans);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  color: var(--fsp-dept-theme-color, var(--fsp-dept-color));
+}
+
+.fsp-role-duty {
+  font-family: var(--fsp-font-serif);
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.55;
+  color: var(--fsp-ink-muted);
+}
+
+/* --- 7. OATH & SOLEMN COVENANT LAYOUT --- */
+.fsp-oath-body {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 4vw;
+  align-items: center;
+}
+
+.fsp-stanzas-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2vh;
+}
+
+.fsp-oath-stanza {
+  display: flex;
+  gap: 16px;
+  align-items: baseline;
+}
+
+.fsp-stanza-bullet {
+  font-size: 1rem;
+  color: var(--fsp-dept-theme-color, var(--fsp-dept-color));
+}
+
+.fsp-stanza-text {
+  font-family: var(--fsp-font-serif);
+  font-size: clamp(17px, 1.35vw, 21px);
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1.65;
+  letter-spacing: -0.01em;
+  color: var(--fsp-ink);
+  margin: 0;
+}
+
+.fsp-seal-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 30px;
+  background: var(--fsp-card-bg);
+  border: 1px solid var(--fsp-card-border);
+  border-radius: 10px;
+  box-shadow: 
+    0 2px 6px rgba(45, 30, 15, 0.04),
+    0 12px 28px -4px rgba(45, 30, 15, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 1);
+}
+
+[data-theme="dark"] .fsp-seal-wrapper {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45);
+}
+
+.fsp-wax-seal {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  margin-bottom: 18px;
+  filter: drop-shadow(0 4px 8px rgba(120, 20, 20, 0.25)) drop-shadow(0 12px 24px rgba(100, 15, 15, 0.2));
+}
+
+.fsp-wax-seal-svg {
+  width: 100%;
+  height: 100%;
+}
+
+.fsp-signoff-line {
+  font-family: var(--fsp-font-sans);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--fsp-ink);
+  margin-bottom: 6px;
+}
+
+.fsp-registry-code {
+  font-family: var(--fsp-font-sans);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--fsp-ink-faint);
+}
+
+/* --- 8. BOOK COMPLETED / ARCHIVE CONCLUDED LAYOUT --- */
+.fsp-layout-completed {
+  max-width: 760px;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 2vh 0;
+}
+
+.fsp-completed-head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 2vh;
+}
+
+.fsp-completed-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 14px;
+  border: 1px solid var(--fsp-dept-theme-color, var(--fsp-dept-color));
+  color: var(--fsp-dept-theme-color, var(--fsp-dept-color));
+  border-radius: 20px;
+  font-family: var(--fsp-font-sans);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 2px 8px rgba(45, 30, 15, 0.06), inset 0 1px 0 rgba(255, 255, 255, 1);
+}
+
+[data-theme="dark"] .fsp-completed-badge {
+  background: rgba(24, 27, 36, 0.6);
+  box-shadow: none;
+}
+
+.fsp-completed-check-icon {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: var(--fsp-dept-theme-color, var(--fsp-dept-color));
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.fsp-completed-title {
+  font-family: var(--fsp-font-serif);
+  font-size: clamp(36px, 4.2vw, 58px);
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+  color: var(--fsp-ink);
+  margin: 0 0 10px 0;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8), 0 2px 4px rgba(45, 30, 15, 0.05);
+}
+
+[data-theme="dark"] .fsp-completed-title {
+  text-shadow: none;
+}
+
+.fsp-completed-head .fsp-ornament-line {
+  width: 140px;
+  margin: 8px auto 14px auto;
+}
+
+.fsp-ornament-reticle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1.5px solid var(--fsp-dept-theme-color, var(--fsp-dept-color));
+  background: var(--fsp-paper-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 4px rgba(45, 30, 15, 0.08);
+}
+
+.fsp-ornament-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: var(--fsp-dept-theme-color, var(--fsp-dept-color));
+}
+
+.fsp-completed-lead {
+  font-family: var(--fsp-font-serif);
+  font-size: clamp(16.5px, 1.2vw, 19px);
+  font-weight: 400;
+  line-height: 1.6;
+  letter-spacing: -0.01em;
+  color: var(--fsp-ink);
+  max-width: 620px;
+  margin: 0 auto 3vh auto;
+  text-align: center;
+}
+
+.fsp-completed-card {
+  width: 100%;
+  max-width: 580px;
+  background: var(--fsp-card-bg);
+  border: 1px solid var(--fsp-card-border);
+  border-radius: 10px;
+  padding: 22px 30px;
+  box-shadow: 
+    0 2px 5px rgba(45, 30, 15, 0.03),
+    0 12px 28px -4px rgba(45, 30, 15, 0.08),
+    0 28px 56px -8px rgba(45, 30, 15, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 1);
+  margin-bottom: 3.5vh;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+[data-theme="dark"] .fsp-completed-card {
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.5);
+}
+
+.fsp-ccard-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--fsp-rule-subtle);
+  font-size: 13.5px;
+}
+
+.fsp-ccard-row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.fsp-ccard-lbl {
+  font-family: var(--fsp-font-sans);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--fsp-ink-muted);
+}
+
+.fsp-ccard-val {
+  font-family: var(--fsp-font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--fsp-ink);
+}
+
+.fsp-ccard-status {
+  color: var(--fsp-dept-theme-color, var(--fsp-dept-color));
+  font-weight: 700;
+}
+
+.fsp-completed-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  width: 100%;
+  max-width: 620px;
+}
+
+.fsp-action-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 20px;
+  border-radius: 8px;
+  border: 1px solid rgba(130, 105, 75, 0.18);
+  background: linear-gradient(180deg, #FFFFFF 0%, #FAF7F2 100%);
+  cursor: pointer;
+  box-shadow: 
+    0 3px 10px rgba(45, 30, 15, 0.06),
+    0 1px 2px rgba(45, 30, 15, 0.03),
+    inset 0 1px 0 rgba(255, 255, 255, 1);
+  transition: all 0.25s var(--ease);
+  text-align: left;
+  user-select: none;
+}
+
+.fsp-action-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 8px 24px rgba(45, 30, 15, 0.12),
+    0 2px 6px rgba(45, 30, 15, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 1);
+  border-color: var(--fsp-dept-color);
+}
+
+[data-theme="dark"] .fsp-action-btn {
+  background: var(--fsp-card-bg);
+  border: 1px solid var(--fsp-rule);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+.fsp-btn-shelf {
+  border: 1.5px solid var(--fsp-dept-theme-color, var(--fsp-dept-color));
+  box-shadow: 
+    0 4px 14px rgba(31, 63, 176, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 1);
+}
+
+.fsp-btn-shelf:hover {
+  box-shadow: 
+    0 10px 28px rgba(31, 63, 176, 0.22),
+    0 3px 8px rgba(31, 63, 176, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 1);
+}
+
+.fsp-btn-shelf .fsp-btn-icon {
+  stroke: var(--fsp-dept-theme-color, var(--fsp-dept-color));
+}
+
+.fsp-btn-shelf .fsp-btn-label {
+  color: var(--fsp-dept-theme-color, var(--fsp-dept-color));
+}
+
+.fsp-btn-icon {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: var(--fsp-ink);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex-shrink: 0;
+  transition: transform 0.25s var(--ease);
+}
+
+.fsp-action-btn:hover .fsp-btn-icon {
+  transform: translateX(-3px);
+}
+
+.fsp-btn-shelf:hover .fsp-btn-icon {
+  transform: scale(1.1);
+}
+
+.fsp-btn-text-group {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.fsp-btn-label {
+  font-family: var(--fsp-font-sans);
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--fsp-ink);
+}
+
+.fsp-btn-sub {
+  font-family: var(--fsp-font-sans);
+  font-size: 10.5px;
+  font-weight: 500;
+  color: var(--fsp-ink-muted);
+}
+
+/* ==========================================================================
+   6. FLOATING HUD & NAVIGATION CONTROLS
+   ========================================================================== */
+
+/* Edge Chevron Arrows */
+.fsp-edge-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 1px solid rgba(80, 60, 35, 0.14);
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: #141414;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 100;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  opacity: 0.85;
+  box-shadow: 
+    0 4px 18px rgba(45, 30, 15, 0.1),
+    0 1px 3px rgba(45, 30, 15, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 1);
+}
+
+.fsp-edge-nav:hover {
+  opacity: 1;
+  background: #FFFFFF;
+  color: var(--fsp-dept-color);
+  border-color: var(--fsp-dept-color);
+  transform: translateY(-50%) scale(1.08);
+  box-shadow: 
+    0 8px 26px rgba(45, 30, 15, 0.16),
+    0 2px 6px rgba(45, 30, 15, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 1);
+}
+
+[data-theme="dark"] .fsp-edge-nav {
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(18, 20, 26, 0.45);
+  color: #FFFFFF;
+  box-shadow: none;
+  opacity: 0.45;
+}
+
+[data-theme="dark"] .fsp-edge-nav:hover {
+  opacity: 1;
+  background: rgba(18, 20, 26, 0.85);
+  border-color: var(--fsp-dept-accent, #60A5FA);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+}
+
+.fsp-nav-left {
+  left: 28px;
+}
+
+.fsp-nav-right {
+  right: 28px;
+}
+
+.fsp-edge-nav.is-disabled {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+.fsp-nav-icon {
+  width: 24px;
+  height: 24px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Top Right Action Buttons */
+.fsp-top-controls {
+  position: absolute;
+  top: 14px;
+  right: 24px;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.fsp-sound-toggle-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(80, 60, 35, 0.14);
+  color: #141414;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0.85;
+  box-shadow: 
+    0 3px 12px rgba(45, 30, 15, 0.07),
+    inset 0 1px 0 rgba(255, 255, 255, 1);
+  transition: all 0.2s ease;
+}
+
+.fsp-sound-toggle-btn:hover {
+  opacity: 1;
+  background: #FFFFFF;
+  color: var(--fsp-dept-color);
+  border-color: var(--fsp-dept-color);
+  transform: scale(1.05);
+  box-shadow: 0 6px 18px rgba(45, 30, 15, 0.12);
+}
+
+[data-theme="dark"] .fsp-sound-toggle-btn {
+  background: rgba(18, 20, 26, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #FFFFFF;
+  opacity: 0.65;
+  box-shadow: none;
+}
+
+[data-theme="dark"] .fsp-sound-toggle-btn:hover {
+  background: rgba(18, 20, 26, 0.85);
+  color: #FFFFFF;
+}
+
+.fsp-sound-toggle-btn svg {
+  width: 17px;
+  height: 17px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.fsp-close-btn {
+  height: 36px;
+  padding: 0 14px 0 12px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(80, 60, 35, 0.14);
+  color: #141414;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  opacity: 0.85;
+  box-shadow: 
+    0 3px 12px rgba(45, 30, 15, 0.07),
+    inset 0 1px 0 rgba(255, 255, 255, 1);
+  transition: all 0.2s ease;
+  font-family: var(--fsp-font-sans);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.fsp-close-btn:hover {
+  opacity: 1;
+  background: #FFFFFF;
+  transform: scale(1.05);
+  border-color: #DC2626;
+  color: #DC2626;
+  box-shadow: 0 6px 18px rgba(220, 38, 38, 0.15);
+}
+
+[data-theme="dark"] .fsp-close-btn {
+  background: rgba(18, 20, 26, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #FFFFFF;
+  opacity: 0.65;
+  box-shadow: none;
+}
+
+[data-theme="dark"] .fsp-close-btn:hover {
+  background: rgba(18, 20, 26, 0.85);
+  border-color: #EF4444;
+  color: #FFFFFF;
+}
+
+.fsp-close-icon {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Bottom Floating Folio Badge */
+.fsp-bottom-hud {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  padding: 6px 18px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(80, 60, 35, 0.14);
+  color: #141414;
+  box-shadow: 
+    0 4px 18px rgba(45, 30, 15, 0.09),
+    0 1px 3px rgba(45, 30, 15, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 1);
+  font-family: var(--fsp-font-sans);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  pointer-events: none;
+  opacity: 0.92;
+}
+
+[data-theme="dark"] .fsp-bottom-hud {
+  background: rgba(18, 20, 26, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #FFFFFF;
+  box-shadow: none;
+  opacity: 0.85;
+}
+
+.fsp-hud-dept {
+  font-weight: 600;
+}
+
+.fsp-hud-separator {
+  opacity: 0.4;
+}
+
+.fsp-hud-folio {
+  font-weight: 700;
+  color: var(--fsp-dept-accent);
+}
+
+/* ==========================================================================
+   7. RESPONSIVE BEHAVIOUR (TABLETS, PHONES, COMPACT & SHORT SCREENS)
+   ========================================================================== */
+
+/* --- TABLETS LANDSCAPE / COMPACT DESKTOPS (<= 1024px) --- */
+@media (max-width: 1024px) {
+  .fsp-header {
+    padding: 0 130px 0 4vw;
+  }
+
+  .fsp-body {
+    padding: 2.5vh 5vw;
+  }
+
+  .fsp-principles-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .fsp-portfolio-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .fsp-timeline-track {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  .fsp-timeline-track::before {
+    display: none;
+  }
+
+  .fsp-timeline-node {
+    padding-top: 0;
+    padding-left: 32px;
+  }
+
+  .fsp-tline-marker {
+    top: 2px;
+    left: 0;
+  }
+
+  .fsp-edge-nav {
+    width: 46px;
+    height: 46px;
+  }
+
+  .fsp-nav-left {
+    left: 16px;
+  }
+
+  .fsp-nav-right {
+    right: 16px;
+  }
+
+  .fsp-footer {
+    display: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .fsp-header-center {
+    display: none;
+  }
+}
+
+/* --- TABLETS PORTRAIT & LARGE PHONES (<= 768px) --- */
+@media (max-width: 768px) {
+  .fsp-header {
+    height: 56px;
+    padding: 0 110px 0 4vw;
+  }
+
+  .fsp-footer {
+    display: none;
+  }
+
+  .fsp-body {
+    padding: 2vh 4vw 50px 4vw;
+  }
+
+  .fsp-intro-columns,
+  .fsp-oath-body {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .fsp-principles-grid,
+  .fsp-portfolio-grid,
+  .fsp-pillars-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .fsp-timeline-track {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    margin-top: 10px;
+  }
+
+  .fsp-edge-nav {
+    width: 40px;
+    height: 40px;
+  }
+
+  .fsp-nav-left {
+    left: 8px;
+  }
+
+  .fsp-nav-right {
+    right: 8px;
+  }
+
+  .fsp-headline {
+    font-size: clamp(24px, 5.5vw, 36px);
+  }
+
+  .fsp-dropcap {
+    font-size: 3.4rem;
+  }
+
+  .fsp-completed-actions {
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+  }
+
+  .fsp-action-btn {
+    width: 100%;
+  }
+}
+
+/* --- SMARTPHONES IN PORTRAIT (<= 640px) --- */
+@media (max-width: 640px) {
+  .fsp-header {
+    height: 50px;
+    padding: 0 94px 0 14px;
+  }
+
+  .fsp-header-left {
+    gap: 8px;
+  }
+
+  .fsp-hdr-badge {
+    font-size: 9.5px;
+    padding: 2px 6px;
+  }
+
+  .fsp-hdr-dept {
+    font-size: 11px;
+    max-width: 130px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .fsp-hdr-middle {
+    display: none;
+  }
+
+  .fsp-top-controls {
+    top: 9px;
+    right: 10px;
+    gap: 6px;
+  }
+
+  .fsp-close-btn {
+    height: 32px;
+    padding: 0 10px;
+    font-size: 10px;
+    gap: 4px;
+  }
+
+  .fsp-sound-toggle-btn {
+    width: 32px;
+    height: 32px;
+  }
+
+  .fsp-sound-toggle-btn svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .fsp-footer {
+    height: 42px;
+    padding: 0 14px;
+  }
+
+  .fsp-pagination-dots {
+    display: none;
+  }
+
+  .fsp-bottom-hud {
+    bottom: 8px;
+    padding: 4px 12px;
+    font-size: 10px;
+    gap: 6px;
+  }
+
+  .fsp-body {
+    padding: 1.5vh 14px 54px 14px;
+  }
+
+  .fsp-intro-head {
+    margin-bottom: 1.5vh;
+  }
+
+  .fsp-kicker {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    margin-bottom: 4px;
+  }
+
+  .fsp-headline {
+    font-size: clamp(22px, 6vw, 30px);
+    margin-bottom: 8px;
+    line-height: 1.1;
+  }
+
+  .fsp-ornament-line {
+    margin: 8px 0 14px 0;
+  }
+
+  .fsp-p {
+    font-size: 15px;
+    line-height: 1.55;
+  }
+
+  .fsp-dropcap {
+    font-size: 3rem;
+    margin-right: 8px;
+  }
+
+  .fsp-quote-box {
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+
+  .fsp-quote-text {
+    font-size: 16px;
+    line-height: 1.45;
+  }
+
+  .fsp-stamp-box {
+    padding: 14px;
+  }
+
+  .fsp-principle-card,
+  .fsp-pillar-card,
+  .fsp-project-card,
+  .fsp-role-card {
+    padding: 16px;
+  }
+
+  .fsp-pcard-num {
+    font-size: 1.1rem;
+  }
+
+  .fsp-pcard-title,
+  .fsp-plcard-title,
+  .fsp-proj-title {
+    font-size: 0.95rem;
+  }
+
+  .fsp-pcard-desc,
+  .fsp-plcard-desc,
+  .fsp-proj-desc,
+  .fsp-role-duty {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .fsp-timeline-node {
+    padding-left: 26px;
+  }
+
+  .fsp-tline-marker {
+    width: 18px;
+    height: 18px;
+  }
+
+  .fsp-tline-dot {
+    width: 6px;
+    height: 6px;
+  }
+
+  .fsp-tline-year {
+    font-size: 1.1rem;
+  }
+
+  .fsp-tline-title {
+    font-size: 1rem;
+  }
+
+  .fsp-tline-desc {
+    font-size: 13.5px;
+  }
+
+  .fsp-oath-body {
+    gap: 16px;
+  }
+
+  .fsp-oath-stanza {
+    gap: 10px;
+  }
+
+  .fsp-stanza-text {
+    font-size: 16px;
+    line-height: 1.55;
+  }
+
+  .fsp-seal-wrapper {
+    padding: 16px;
+  }
+
+  .fsp-wax-seal {
+    width: 72px;
+    height: 72px;
+    margin-bottom: 12px;
+  }
+
+  /* Page 8 Book Completed */
+  .fsp-completed-head {
+    margin-bottom: 1.5vh;
+  }
+
+  .fsp-completed-badge {
+    padding: 3px 10px;
+    font-size: 9.5px;
+    letter-spacing: 0.12em;
+    margin-bottom: 10px;
+  }
+
+  .fsp-completed-title {
+    font-size: clamp(26px, 7.5vw, 38px);
+    margin-bottom: 6px;
+  }
+
+  .fsp-completed-head .fsp-ornament-line {
+    width: 110px;
+    margin: 6px auto 12px auto;
+  }
+
+  .fsp-completed-lead {
+    font-size: 14.5px;
+    line-height: 1.5;
+    margin-bottom: 2vh;
+    padding: 0 4px;
+  }
+
+  .fsp-completed-card {
+    padding: 14px 16px;
+    margin-bottom: 2.5vh;
+    gap: 8px;
+  }
+
+  .fsp-ccard-row {
+    font-size: 12px;
+    padding-bottom: 6px;
+  }
+
+  .fsp-ccard-lbl {
+    font-size: 9.5px;
+    letter-spacing: 0.12em;
+  }
+
+  .fsp-ccard-val {
+    font-size: 12px;
+  }
+
+  .fsp-registry-hash {
+    font-size: 11px;
+  }
+
+  .fsp-action-btn {
+    padding: 12px 14px;
+    gap: 10px;
+  }
+
+  .fsp-btn-icon {
+    width: 18px;
+    height: 18px;
+  }
+
+  .fsp-btn-label {
+    font-size: 11.5px;
+    letter-spacing: 0.1em;
+  }
+
+  .fsp-btn-sub {
+    font-size: 9.5px;
+  }
+
+  /* Touch chevron sizes */
+  .fsp-edge-nav {
+    width: 36px;
+    height: 36px;
+    background: rgba(18, 20, 26, 0.65);
+  }
+
+  .fsp-nav-left {
+    left: 4px;
+  }
+
+  .fsp-nav-right {
+    right: 4px;
+  }
+
+  .fsp-nav-icon {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+/* --- ULTRA-NARROW / COMPACT PHONES (<= 360px) --- */
+@media (max-width: 360px) {
+  .fsp-header {
+    padding: 0 88px 0 10px;
+  }
+
+  .fsp-hdr-dept {
+    max-width: 95px;
+    font-size: 10px;
+  }
+
+  .fsp-close-btn span {
+    display: none;
+  }
+
+  .fsp-close-btn {
+    padding: 0 8px;
+    width: 32px;
+    justify-content: center;
+  }
+
+  .fsp-body {
+    padding: 1vh 10px 50px 10px;
+  }
+
+  .fsp-headline {
+    font-size: 21px;
+  }
+
+  .fsp-p {
+    font-size: 14px;
+  }
+
+  .fsp-completed-title {
+    font-size: 24px;
+  }
+
+  .fsp-completed-lead {
+    font-size: 13.5px;
+  }
+}
+
+/* --- SHORT HEIGHT / MOBILE LANDSCAPE (<= 520px height) --- */
+@media (max-height: 520px) {
+  .fsp-header {
+    height: 42px;
+    padding: 0 110px 0 24px;
+  }
+
+  .fsp-footer {
+    height: 36px;
+    padding: 0 24px;
+  }
+
+  .fsp-hdr-date,
+  .fsp-header-center,
+  .fsp-ftr-meta {
+    display: none;
+  }
+
+  .fsp-top-controls {
+    top: 5px;
+    right: 14px;
+    gap: 6px;
+  }
+
+  .fsp-close-btn,
+  .fsp-sound-toggle-btn {
+    height: 30px;
+  }
+
+  .fsp-sound-toggle-btn {
+    width: 30px;
+  }
+
+  .fsp-body {
+    padding: 1.5vh 5vw 42px 5vw;
+  }
+
+  .fsp-intro-head {
+    margin-bottom: 1vh;
+  }
+
+  .fsp-headline {
+    font-size: clamp(20px, 3.8vw, 28px);
+    margin-bottom: 4px;
+  }
+
+  .fsp-ornament-line {
+    margin: 4px 0 10px 0;
+  }
+
+  .fsp-bottom-hud {
+    bottom: 4px;
+    padding: 3px 10px;
+    font-size: 9.5px;
+  }
+
+  .fsp-edge-nav {
+    width: 34px;
+    height: 34px;
+  }
+
+  .fsp-nav-left {
+    left: 8px;
+  }
+
+  .fsp-nav-right {
+    right: 8px;
+  }
+
+  .fsp-wax-seal {
+    width: 56px;
+    height: 56px;
+    margin-bottom: 8px;
+  }
+
+  .fsp-completed-lead {
+    margin-bottom: 1.5vh;
+  }
+
+  .fsp-completed-card {
+    margin-bottom: 2vh;
+    padding: 10px 16px;
+  }
+
+  .fsp-action-btn {
+    padding: 8px 12px;
+  }
+}
+
+/* ==========================================================================
+   7. EXPLICIT HIGH-CONTRAST DARK MODE OVERRIDES FOR ALL 8 BOOKS
+   Ensures 100% crystal-clear readability, vibrant accents, and high contrast
+   across all departments in dark mode.
+   ========================================================================== */
+[data-theme="dark"] .fsp-kicker,
+[data-theme="dark"] .fsp-dropcap,
+[data-theme="dark"] .fsp-pcard-num,
+[data-theme="dark"] .fsp-plcard-code,
+[data-theme="dark"] .fsp-stat-val,
+[data-theme="dark"] .fsp-tline-year,
+[data-theme="dark"] .fsp-role-name,
+[data-theme="dark"] .fsp-stanza-bullet,
+[data-theme="dark"] .fsp-stamp-title,
+[data-theme="dark"] .fsp-quote-mark,
+[data-theme="dark"] .fsp-completed-badge,
+[data-theme="dark"] .fsp-hdr-badge,
+[data-theme="dark"] .fsp-btn-shelf .fsp-btn-label,
+[data-theme="dark"] .fsp-hud-dept,
+[data-theme="dark"] .fsp-ccard-status {
+  color: var(--fsp-dept-accent, #60A5FA) !important;
+}
+
+[data-theme="dark"] .fsp-ornament-diamond,
+[data-theme="dark"] .fsp-tline-dot,
+[data-theme="dark"] .fsp-ornament-dot {
+  background-color: var(--fsp-dept-accent, #60A5FA) !important;
+}
+
+[data-theme="dark"] .fsp-quote {
+  border-left-color: var(--fsp-dept-accent, #60A5FA) !important;
+  background: rgba(20, 24, 38, 0.9) !important;
+}
+
+[data-theme="dark"] .fsp-hdr-badge,
+[data-theme="dark"] .fsp-completed-badge,
+[data-theme="dark"] .fsp-ornament-reticle,
+[data-theme="dark"] .fsp-tline-marker,
+[data-theme="dark"] .fsp-btn-shelf {
+  border-color: var(--fsp-dept-accent, #60A5FA) !important;
+}
+
+[data-theme="dark"] .fsp-pillar-card {
+  border-left-color: var(--fsp-dept-accent, #60A5FA) !important;
+}
+
+[data-theme="dark"] .fsp-completed-check-icon,
+[data-theme="dark"] .fsp-btn-shelf .fsp-btn-icon {
+  stroke: var(--fsp-dept-accent, #60A5FA) !important;
+}
+
+[data-theme="dark"] .fsp-proj-tag {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+  color: var(--fsp-dept-accent, #60A5FA) !important;
+  border: 1px solid var(--fsp-dept-accent, #60A5FA) !important;
+}
+
+[data-theme="dark"] .fsp-stamp-box {
+  border-color: rgba(255, 255, 255, 0.22) !important;
+  background: rgba(20, 24, 38, 0.6) !important;
+}
+
+[data-theme="dark"] .fsp-stamp-motto {
+  color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .fsp-stamp-id {
+  color: #B5B0A6 !important;
+}
+
+[data-theme="dark"] .fsp-action-btn:hover {
+  border-color: var(--fsp-dept-accent, #60A5FA) !important;
+}
+
+[data-theme="dark"] .fsp-headline {
+  color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .fsp-p {
+  color: #F3F1EC !important;
+}
+
+[data-theme="dark"] .fsp-quote-text {
+  color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .fsp-pcard-title,
+[data-theme="dark"] .fsp-plcard-title,
+[data-theme="dark"] .fsp-proj-title,
+[data-theme="dark"] .fsp-tline-title,
+[data-theme="dark"] .fsp-completed-title {
+  color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .fsp-pcard-desc,
+[data-theme="dark"] .fsp-plcard-desc,
+[data-theme="dark"] .fsp-proj-desc,
+[data-theme="dark"] .fsp-tline-desc,
+[data-theme="dark"] .fsp-role-duty {
+  color: #D1CEC7 !important;
+}
+
+[data-theme="dark"] .fsp-plcard-tech,
+[data-theme="dark"] .fsp-stat-label,
+[data-theme="dark"] .fsp-quote-cite,
+[data-theme="dark"] .fsp-registry-code,
+[data-theme="dark"] .fsp-hdr-label,
+[data-theme="dark"] .fsp-ftr-meta,
+[data-theme="dark"] .fsp-ccard-lbl,
+[data-theme="dark"] .fsp-btn-sub {
+  color: #A6A29A !important;
+}
