@@ -1,0 +1,2036 @@
+/**
+ * TECHNOVATION STORY ARCHIVES - BOOK READER STYLESHEET
+ * Realistic physical hardcover book simulation, 3D spine creases,
+ * gutter shadow gradients, stacked paper edge depth, and floating HUD controls.
+ */
+
+/* =========================================================================
+   CSS VARIABLES & DESIGN TOKENS
+   ========================================================================= */
+:root {
+  --reader-paper-light: #FBF8F1;
+  --reader-paper-light-alt: #F4EFE6;
+  --reader-paper-dark: #191B22;
+  --reader-paper-dark-alt: #13151B;
+  --reader-ink-light: #1A1D20;
+  --reader-ink-light-muted: #575D65;
+  --reader-ink-dark: #E2E8F0;
+  --reader-ink-dark-muted: #94A3B8;
+  --reader-gold: #D97706;
+  --reader-gold-glow: rgba(217, 119, 6, 0.25);
+  --reader-border-light: rgba(180, 160, 130, 0.45);
+  --reader-border-dark: rgba(255, 255, 255, 0.12);
+  --reader-spine-width: 24px;
+}
+
+[data-theme="dark"] {
+  --reader-paper: var(--reader-paper-dark);
+  --reader-paper-alt: var(--reader-paper-dark-alt);
+  --reader-ink: var(--reader-ink-dark);
+  --reader-ink-muted: var(--reader-ink-dark-muted);
+  --reader-border: var(--reader-border-dark);
+  --reader-card-bg: rgba(255, 255, 255, 0.04);
+}
+
+[data-theme="light"], :root {
+  --reader-paper: var(--reader-paper-light);
+  --reader-paper-alt: var(--reader-paper-light-alt);
+  --reader-ink: var(--reader-ink-light);
+  --reader-ink-muted: var(--reader-ink-light-muted);
+  --reader-border: var(--reader-border-light);
+  --reader-card-bg: rgba(0, 0, 0, 0.025);
+}
+
+/* =========================================================================
+   OVERLAY & 3D STAGE
+   ========================================================================= */
+.book-reader-overlay {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  user-select: none;
+  background-color: #0B0D13;
+  perspective: 2500px;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.book-reader-overlay.reader-active {
+  opacity: 1;
+}
+
+.book-reader-overlay.reader-closing {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Atmospheric Ambient Spotlight & Studio Backdrop */
+.reader-ambient-backdrop {
+  position: absolute;
+  inset: 0;
+  background: 
+    radial-gradient(circle at 50% 45%, rgba(31, 63, 176, 0.12) 0%, transparent 70%),
+    radial-gradient(circle at 50% 50%, rgba(20, 22, 30, 0.94) 0%, #08090C 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* 3D Physical Book Stage */
+.book-reader-stage {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 90vw;
+  max-width: 1300px;
+  height: 86vh;
+  max-height: 860px;
+  perspective: 2000px;
+}
+
+/* StPageFlip Mount Wrapper */
+.book-pageflip-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  filter: drop-shadow(0 30px 60px rgba(0, 0, 0, 0.65)) drop-shadow(0 10px 25px rgba(0, 0, 0, 0.45));
+}
+
+.book-pageflip-container .page {
+  cursor: grab;
+  user-select: none;
+}
+
+.book-pageflip-container .page:active {
+  cursor: grabbing;
+}
+
+/* Center Spine Stitch Crease & Real Depth Shadow */
+.book-center-spine-shadow {
+  position: absolute;
+  top: 4%;
+  bottom: 4%;
+  left: 50%;
+  width: 32px;
+  transform: translateX(-50%);
+  z-index: 40;
+  pointer-events: none;
+  background: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.25) 35%,
+    rgba(0, 0, 0, 0.45) 50%,
+    rgba(0, 0, 0, 0.25) 65%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  opacity: 0.85;
+}
+
+/* =========================================================================
+   HARDCOVER COVERS (FRONT & BACK)
+   ========================================================================= */
+.page-hardcover {
+  background-color: var(--cover-base, #1F3FB0);
+  color: var(--cover-foil, #F59E0B);
+  box-sizing: border-box;
+  overflow: hidden;
+  position: relative;
+}
+
+.hardcover-casing {
+  position: absolute;
+  inset: 0;
+  padding: 32px 36px;
+  box-sizing: border-box;
+  background-color: var(--cover-base, #1F3FB0);
+  background-image: 
+    radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.12) 0%, transparent 50%),
+    radial-gradient(circle at 70% 80%, rgba(0, 0, 0, 0.35) 0%, transparent 60%),
+    repeating-linear-gradient(45deg, rgba(0,0,0,0.03) 0px, rgba(0,0,0,0.03) 2px, transparent 2px, transparent 4px);
+  box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.55);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Shelf-Matched Hardcover Front Cover (Exact as homepage shelf) */
+.shelf-matched-casing {
+  position: absolute;
+  inset: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+  border-radius: 3px;
+  box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.6);
+  padding: 0 !important;
+}
+
+.shelf-matched-casing .cv-bg-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(10, 12, 18, 0.25) 0%, rgba(10, 12, 18, 0.88) 100%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.shelf-matched-casing .cv-center-graphic {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  pointer-events: none;
+  padding: 30px;
+}
+
+.shelf-matched-casing .cv-center-graphic svg {
+  width: 100%;
+  max-width: 220px;
+  height: auto;
+  filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.85)) drop-shadow(0 0 20px rgba(245, 158, 11, 0.25));
+}
+
+.shelf-matched-casing .cv-plate {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  right: 20px;
+  background: rgba(12, 14, 20, 0.94);
+  backdrop-filter: blur(10px);
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.75), inset 0 0 16px rgba(0, 0, 0, 0.6);
+  border-radius: 4px;
+  padding: 14px 18px 16px;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  pointer-events: none;
+  box-sizing: border-box;
+}
+
+.shelf-matched-casing .cv-sub {
+  font-family: 'Inter Tight', -apple-system, sans-serif;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: rgba(255, 255, 255, 0.9);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+  padding-bottom: 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.shelf-matched-casing .cv-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #FFFFFF;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.95), 0 0 3px rgba(0, 0, 0, 1);
+  margin-top: 4px;
+  margin-bottom: 2px;
+  white-space: nowrap;
+  text-align: left;
+}
+
+.shelf-matched-casing .cv-tagline {
+  display: block;
+  font-family: 'Inter Tight', -apple-system, sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.shelf-matched-casing .cv-foot-plate {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  right: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 4;
+  background: rgba(12, 14, 20, 0.94);
+  backdrop-filter: blur(10px);
+  padding: 10px 16px;
+  border-radius: 3px;
+  border: 1.5px solid rgba(255, 255, 255, 0.28);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.7);
+  pointer-events: none;
+  box-sizing: border-box;
+}
+
+.shelf-matched-casing .cv-edition {
+  font-family: 'Inter Tight', -apple-system, sans-serif;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: #FFFFFF;
+  text-transform: uppercase;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 70%;
+}
+
+.shelf-matched-casing .cv-badge {
+  font-family: 'Inter Tight', -apple-system, sans-serif;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: #FFFFFF;
+  border: 1.5px solid rgba(255, 255, 255, 0.9);
+  padding: 2px 7px;
+  border-radius: 2px;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+}
+
+.shelf-matched-back {
+  background-size: cover;
+  position: relative;
+}
+
+.back-cover-scrim {
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 12, 18, 0.88);
+  backdrop-filter: blur(4px);
+  pointer-events: none;
+}
+
+/* Spine Hinge Indentation Crease (Groove where board folds) */
+.hardcover-hinge-crease {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 28px;
+  width: 6px;
+  background: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0.45) 0%,
+    rgba(255, 255, 255, 0.15) 40%,
+    rgba(0, 0, 0, 0.5) 100%
+  );
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
+  z-index: 15;
+}
+
+.hardcover-hinge-crease.back-hinge {
+  left: auto;
+  right: 28px;
+  background: linear-gradient(
+    to left,
+    rgba(0, 0, 0, 0.45) 0%,
+    rgba(255, 255, 255, 0.15) 40%,
+    rgba(0, 0, 0, 0.5) 100%
+  );
+}
+
+/* Embossed Foil Border Frame */
+.hardcover-border-frame {
+  position: relative;
+  flex: 1;
+  border: 2px solid var(--cover-foil, #F59E0B);
+  box-shadow: 
+    inset 0 0 0 3px rgba(0, 0, 0, 0.3),
+    0 0 10px rgba(245, 158, 11, 0.25);
+  padding: 30px 26px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.hardcover-border-frame::before {
+  content: '';
+  position: absolute;
+  inset: 5px;
+  border: 1px dashed var(--cover-foil, #F59E0B);
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* Corner Filigree SVG */
+.corner-flourish {
+  position: absolute;
+  width: 44px;
+  height: 44px;
+  color: var(--cover-foil, #F59E0B);
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.6));
+}
+
+.corner-tl { top: 6px; left: 6px; }
+.corner-tr { top: 6px; right: 6px; transform: scaleX(-1); }
+.corner-bl { bottom: 6px; left: 6px; transform: scaleY(-1); }
+.corner-br { bottom: 6px; right: 6px; transform: scale(-1); }
+
+.cover-filigree {
+  width: 100%;
+  height: 100%;
+}
+
+/* Front Cover Layout */
+.hardcover-content {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  text-align: center;
+}
+
+.cover-header-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.cover-society-label {
+  font-family: 'Cinzel', 'Playfair Display', serif;
+  font-size: 11px;
+  letter-spacing: 4px;
+  color: var(--cover-foil, #F59E0B);
+  font-weight: 700;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+}
+
+.cover-vol-badge {
+  padding: 4px 16px;
+  border: 1px solid var(--cover-foil, #F59E0B);
+  background: rgba(0, 0, 0, 0.35);
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.5);
+}
+
+.vol-text {
+  font-family: 'Cinzel', 'Playfair Display', serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: var(--cover-foil, #F59E0B);
+}
+
+.cover-series-tag {
+  font-family: 'Cinzel', serif;
+  font-size: 8.5px;
+  letter-spacing: 2.5px;
+  opacity: 0.85;
+}
+
+/* Crest Medallion */
+.cover-medallion-wrapper {
+  margin: 15px 0;
+}
+
+.cover-medallion-ring {
+  width: 110px;
+  height: 110px;
+  color: var(--cover-foil, #F59E0B);
+  filter: drop-shadow(0 2px 8px rgba(0,0,0,0.65)) drop-shadow(0 0 12px var(--cover-accent, #EAB308));
+}
+
+.cover-crest {
+  width: 100%;
+  height: 100%;
+}
+
+/* Cover Main Title */
+.cover-title-group {
+  margin: 5px 0;
+  width: 100%;
+}
+
+.cover-main-title {
+  font-family: 'Cinzel', 'Playfair Display', Georgia, serif;
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: 5px;
+  line-height: 1.15;
+  margin: 0 0 10px 0;
+  color: var(--cover-foil, #F59E0B);
+  text-shadow: 
+    0 1px 1px rgba(255, 255, 255, 0.25),
+    0 -1px 2px rgba(0, 0, 0, 0.9),
+    0 2px 10px rgba(0, 0, 0, 0.7);
+}
+
+.cover-rule-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 8px 0;
+}
+
+.rule-line {
+  height: 1px;
+  width: 50px;
+  background-color: var(--cover-foil, #F59E0B);
+  opacity: 0.7;
+}
+
+.rule-diamond {
+  font-size: 10px;
+  color: var(--cover-foil, #F59E0B);
+}
+
+.cover-subtitle {
+  font-family: 'Cinzel', serif;
+  font-size: 13px;
+  letter-spacing: 4px;
+  font-weight: 600;
+  margin: 0;
+  color: var(--cover-accent, #EAB308);
+}
+
+/* Cover Footer */
+.cover-footer-meta {
+  margin-bottom: 8px;
+}
+
+.cover-latin-motto {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  font-size: 12px;
+  letter-spacing: 1.5px;
+  margin: 0 0 6px 0;
+  opacity: 0.9;
+}
+
+.cover-imprint {
+  font-family: 'Cinzel', serif;
+  font-size: 8px;
+  letter-spacing: 2px;
+  opacity: 0.75;
+}
+
+.imprint-bullet {
+  margin: 0 4px;
+}
+
+/* Stacked Paper Block Edge Lines (Physical Paper Depth) */
+.paper-block-edge-right {
+  position: absolute;
+  top: 2px;
+  bottom: 2px;
+  right: 0;
+  width: 7px;
+  background: repeating-linear-gradient(
+    to bottom,
+    #EADCC6 0px,
+    #EADCC6 1px,
+    #C5B59E 1px,
+    #C5B59E 2px
+  );
+  box-shadow: inset -2px 0 3px rgba(0, 0, 0, 0.4);
+}
+
+.paper-block-edge-left {
+  position: absolute;
+  top: 2px;
+  bottom: 2px;
+  left: 0;
+  width: 7px;
+  background: repeating-linear-gradient(
+    to bottom,
+    #EADCC6 0px,
+    #EADCC6 1px,
+    #C5B59E 1px,
+    #C5B59E 2px
+  );
+  box-shadow: inset 2px 0 3px rgba(0, 0, 0, 0.4);
+}
+
+.paper-block-edge-bottom {
+  position: absolute;
+  bottom: 0;
+  left: 4px;
+  right: 4px;
+  height: 5px;
+  background: repeating-linear-gradient(
+    to right,
+    #EADCC6 0px,
+    #EADCC6 1px,
+    #C5B59E 1px,
+    #C5B59E 2px
+  );
+  box-shadow: inset 0 -2px 3px rgba(0, 0, 0, 0.4);
+}
+
+/* Back Hardcover */
+.back-casing .back-content {
+  justify-content: space-around;
+}
+
+.back-crest-mini {
+  width: 54px;
+  height: 54px;
+  margin: 0 auto 8px auto;
+  color: var(--cover-foil, #F59E0B);
+}
+
+.back-society-name {
+  font-family: 'Cinzel', serif;
+  font-size: 16px;
+  letter-spacing: 4px;
+  margin: 0 0 4px 0;
+}
+
+.back-dept-tag {
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  letter-spacing: 2px;
+  opacity: 0.8;
+}
+
+.back-synopsis-box {
+  max-width: 82%;
+  border-top: 1px solid rgba(245, 158, 11, 0.4);
+  border-bottom: 1px solid rgba(245, 158, 11, 0.4);
+  padding: 16px 10px;
+}
+
+.back-synopsis-quote {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  font-size: 13.5px;
+  line-height: 1.6;
+  margin: 0 0 10px 0;
+  opacity: 0.95;
+}
+
+.back-seal-emblem {
+  font-family: 'Cinzel', serif;
+  font-size: 8px;
+  letter-spacing: 2px;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  opacity: 0.8;
+}
+
+.back-barcode-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.cover-barcode {
+  width: 170px;
+  color: var(--cover-foil, #F59E0B);
+}
+
+.back-stamp-label {
+  font-family: 'Cinzel', serif;
+  font-size: 7.5px;
+  letter-spacing: 2px;
+  opacity: 0.75;
+}
+
+/* =========================================================================
+   INNER SPREADS & PAPER PHYSICALITY
+   ========================================================================= */
+.page-inner {
+  background-color: var(--reader-paper);
+  color: var(--reader-ink);
+  box-sizing: border-box;
+  overflow: hidden;
+  position: relative;
+  box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.05);
+}
+
+/* Paper Grain Texture Simulation */
+.page-paper-texture {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: radial-gradient(circle at 50% 50%, rgba(0,0,0,0.015) 0%, transparent 100%);
+  opacity: 0.8;
+}
+
+/* Physical Gutter Shadow Gradients */
+.page-gutter-shadow {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 48px;
+  z-index: 20;
+  pointer-events: none;
+}
+
+.gutter-right {
+  right: 0;
+  background: linear-gradient(
+    to left,
+    rgba(0, 0, 0, 0.18) 0%,
+    rgba(0, 0, 0, 0.08) 35%,
+    rgba(0, 0, 0, 0.02) 70%,
+    rgba(0, 0, 0, 0) 100%
+  );
+}
+
+.gutter-left {
+  left: 0;
+  background: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0.18) 0%,
+    rgba(0, 0, 0, 0.08) 35%,
+    rgba(0, 0, 0, 0.02) 70%,
+    rgba(0, 0, 0, 0) 100%
+  );
+}
+
+[data-theme="dark"] .gutter-right {
+  background: linear-gradient(to left, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0.2) 40%, transparent 100%);
+}
+
+[data-theme="dark"] .gutter-left {
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0.2) 40%, transparent 100%);
+}
+
+/* Page Sheet Content Wrapper */
+.page-sheet-content {
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 34px 40px 28px 40px;
+  box-sizing: border-box;
+  font-family: 'EB Garamond', 'Cinzel', Georgia, serif;
+}
+
+.page-left .page-sheet-content {
+  padding-right: 50px;
+}
+
+.page-right .page-sheet-content {
+  padding-left: 50px;
+}
+
+/* Running Header */
+.page-running-head {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.running-head-text {
+  font-family: 'Cinzel', serif;
+  font-size: 8.5px;
+  letter-spacing: 2px;
+  color: var(--reader-ink-muted);
+  font-weight: 600;
+}
+
+.running-head-left .running-head-text { text-align: left; }
+.running-head-right .running-head-text { text-align: right; }
+
+.running-head-rule {
+  height: 1px;
+  background-color: var(--reader-border);
+  width: 100%;
+}
+
+/* Page Footer with Folio Number */
+.page-footer {
+  margin-top: 12px;
+}
+
+.footer-rule {
+  height: 1px;
+  background-color: var(--reader-border);
+  width: 100%;
+  margin-bottom: 6px;
+}
+
+.footer-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  color: var(--reader-ink-muted);
+}
+
+.footer-left .footer-meta { justify-content: flex-start; }
+.footer-right .footer-meta { justify-content: flex-end; }
+
+.folio-num { font-weight: 700; }
+.folio-decor { font-size: 8px; opacity: 0.6; }
+
+/* Page Body Container */
+.page-body-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* =========================================================================
+   EDITORIAL PAGE LAYOUT TEMPLATES
+   ========================================================================= */
+
+/* 1. Bookplate (Page 2) */
+.spread-bookplate {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.bookplate-frame {
+  position: relative;
+  border: 1.5px solid var(--reader-border);
+  padding: 30px 24px;
+  text-align: center;
+  background: var(--reader-card-bg);
+  box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.04);
+  max-width: 90%;
+}
+
+.bookplate-seal-box {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 12px auto;
+  color: var(--reader-gold);
+}
+
+.ex-libris-seal-svg { width: 100%; height: 100%; }
+
+.bookplate-title {
+  font-family: 'Cinzel', serif;
+  font-size: 20px;
+  letter-spacing: 3px;
+  margin: 0 0 8px 0;
+  color: var(--reader-ink);
+}
+
+.bookplate-registry {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-bottom: 12px;
+}
+
+.reg-label {
+  font-size: 8px;
+  letter-spacing: 2px;
+  color: var(--reader-ink-muted);
+}
+
+.reg-code {
+  font-family: 'Courier New', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+}
+
+.bookplate-rule {
+  height: 1px;
+  width: 60px;
+  background-color: var(--reader-gold);
+  margin: 12px auto;
+}
+
+.bookplate-inscription {
+  font-style: italic;
+  font-size: 13px;
+  line-height: 1.6;
+  margin: 0 0 16px 0;
+  color: var(--reader-ink);
+}
+
+.bookplate-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px dashed var(--reader-border);
+  padding-top: 10px;
+  font-size: 8.5px;
+  letter-spacing: 1.5px;
+  color: var(--reader-ink-muted);
+}
+
+.bookplate-auth-stamp {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--reader-gold);
+  font-weight: 700;
+}
+
+/* 2. Frontispiece (Page 3) */
+.spread-frontispiece {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  height: 100%;
+  text-align: center;
+  padding: 10px 15px;
+}
+
+.frontispiece-label {
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: var(--reader-gold);
+  font-weight: 700;
+}
+
+.frontispiece-heading {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 26px;
+  margin: 6px 0 10px 0;
+  font-weight: 700;
+}
+
+.frontispiece-quote-card {
+  position: relative;
+  padding: 18px 24px;
+  margin: 15px 0;
+  max-width: 85%;
+}
+
+.quote-mark {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 40px;
+  line-height: 1;
+  color: var(--reader-gold);
+  opacity: 0.5;
+}
+
+.frontispiece-quote-text {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  font-size: 15px;
+  line-height: 1.65;
+  margin: 8px 0 12px 0;
+}
+
+.frontispiece-attribution {
+  display: block;
+  font-family: 'Cinzel', serif;
+  font-size: 9.5px;
+  letter-spacing: 2px;
+  color: var(--reader-ink-muted);
+}
+
+.frontispiece-seal-motif {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.motif-line {
+  flex: 1;
+  height: 1px;
+  background-color: var(--reader-border);
+}
+
+.motif-badge {
+  font-family: 'Cinzel', serif;
+  font-size: 8px;
+  letter-spacing: 2px;
+  padding: 3px 10px;
+  border: 1px solid var(--reader-border);
+  color: var(--reader-ink-muted);
+}
+
+/* Chapter Lead Block */
+.chapter-lead-block {
+  margin-bottom: 14px;
+}
+
+.chapter-roman-badge {
+  display: inline-block;
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: 2.5px;
+  font-weight: 700;
+  color: var(--reader-gold);
+  margin-bottom: 4px;
+}
+
+.chapter-display-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 26px;
+  font-weight: 700;
+  margin: 2px 0 4px 0;
+  letter-spacing: 0.5px;
+}
+
+.chapter-subheading {
+  font-family: 'Cinzel', serif;
+  font-size: 8.5px;
+  letter-spacing: 2px;
+  color: var(--reader-ink-muted);
+  margin: 0;
+}
+
+/* Drop Caps & Editorial Paragraphs */
+.editorial-columns {
+  margin: 8px 0;
+}
+
+.para-dropcap {
+  font-size: 13.5px;
+  line-height: 1.68;
+  margin: 0 0 10px 0;
+  text-align: justify;
+}
+
+.dropcap-letter {
+  float: left;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 52px;
+  line-height: 0.82;
+  padding-top: 4px;
+  padding-right: 8px;
+  padding-left: 2px;
+  color: var(--reader-gold);
+  font-weight: 700;
+}
+
+.para-standard {
+  font-size: 13.5px;
+  line-height: 1.68;
+  margin: 0 0 10px 0;
+  text-align: justify;
+}
+
+/* Editorial Pullquote */
+.editorial-pullquote {
+  position: relative;
+  display: flex;
+  gap: 12px;
+  margin-top: 14px;
+  padding: 8px 12px;
+  background: var(--reader-card-bg);
+  border-left: 3px solid var(--reader-gold);
+}
+
+.pullquote-content {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  font-size: 13.5px;
+  line-height: 1.5;
+  margin: 0;
+  color: var(--reader-ink);
+}
+
+/* Section Micro Header */
+.spread-section-header {
+  margin-bottom: 12px;
+}
+
+.section-micro-heading {
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  letter-spacing: 2.5px;
+  color: var(--reader-gold);
+  margin: 0 0 6px 0;
+}
+
+.section-micro-line {
+  height: 1px;
+  background-color: var(--reader-border);
+  width: 100%;
+}
+
+/* Stats Cards Grid */
+.manifesto-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin: 16px 0;
+}
+
+.stat-card {
+  border: 1px solid var(--reader-border);
+  padding: 10px 8px;
+  text-align: center;
+  background: var(--reader-card-bg);
+  border-radius: 2px;
+}
+
+.stat-number {
+  display: block;
+  font-family: 'Playfair Display', serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--reader-gold);
+  margin-bottom: 2px;
+}
+
+.stat-label {
+  font-family: 'Cinzel', serif;
+  font-size: 7.5px;
+  letter-spacing: 1px;
+  color: var(--reader-ink-muted);
+}
+
+/* Vignette */
+.archival-vignette {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 14px;
+  color: var(--reader-ink-muted);
+  font-size: 8.5px;
+  letter-spacing: 1.5px;
+}
+
+/* Vision / Mission Feature Box */
+.vision-feature-box, .mission-feature-box {
+  background: var(--reader-card-bg);
+  border: 1px solid var(--reader-border);
+  padding: 12px 14px;
+  margin-bottom: 12px;
+  border-left: 3px solid var(--reader-gold);
+}
+
+.feature-tag {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Cinzel', serif;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: var(--reader-gold);
+  margin-bottom: 6px;
+}
+
+.feature-body-text {
+  font-size: 13px;
+  line-height: 1.55;
+  margin: 0;
+}
+
+/* Pillars List */
+.pillars-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pillar-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 8px 10px;
+  border: 1px dashed var(--reader-border);
+  background: var(--reader-card-bg);
+}
+
+.pillar-code-badge {
+  font-family: 'Courier New', monospace;
+  font-weight: 700;
+  font-size: 12px;
+  color: var(--reader-gold);
+  border: 1px solid var(--reader-gold);
+  padding: 2px 6px;
+  border-radius: 2px;
+}
+
+.pillar-item-title {
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  letter-spacing: 1px;
+  margin: 0 0 3px 0;
+  font-weight: 700;
+}
+
+.pillar-item-desc {
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: var(--reader-ink-muted);
+  margin: 0;
+}
+
+/* Philosophy */
+.doctrine-callout {
+  padding: 10px 14px;
+  border-left: 3px solid var(--reader-gold);
+  background: var(--reader-card-bg);
+  margin-bottom: 12px;
+}
+
+.doctrine-text {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  font-size: 13.5px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.philosophy-two-column {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.philosophy-col-text {
+  font-size: 13px;
+  line-height: 1.6;
+  margin: 0;
+  text-align: justify;
+}
+
+.principles-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.principle-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--reader-border);
+  background: var(--reader-card-bg);
+}
+
+.principle-num-circle {
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  font-weight: 700;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--reader-gold);
+  border-radius: 50%;
+  color: var(--reader-gold);
+}
+
+.principle-card-title {
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  letter-spacing: 1px;
+  margin: 0 0 3px 0;
+}
+
+.principle-card-text {
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--reader-ink-muted);
+  margin: 0;
+}
+
+.philosophy-closing-flourish {
+  text-align: center;
+  font-family: 'Cinzel', serif;
+  font-size: 8px;
+  letter-spacing: 3px;
+  color: var(--reader-ink-muted);
+  margin-top: 14px;
+}
+
+/* Timeline */
+.timeline-chronicle {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-left: 20px;
+}
+
+.timeline-vertical-spine {
+  position: absolute;
+  top: 6px;
+  bottom: 6px;
+  left: 6px;
+  width: 1.5px;
+  background-color: var(--reader-gold);
+  opacity: 0.6;
+}
+
+.timeline-node {
+  position: relative;
+}
+
+.timeline-bullet {
+  position: absolute;
+  top: 8px;
+  left: -17px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--reader-gold);
+  box-shadow: 0 0 6px var(--reader-gold-glow);
+}
+
+.timeline-node-card {
+  padding: 8px 12px;
+  border: 1px solid var(--reader-border);
+  background: var(--reader-card-bg);
+}
+
+.timeline-year {
+  font-family: 'Courier New', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--reader-gold);
+}
+
+.timeline-title {
+  font-family: 'Cinzel', serif;
+  font-size: 12px;
+  letter-spacing: 1px;
+  margin: 2px 0 3px 0;
+}
+
+.timeline-desc {
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--reader-ink-muted);
+  margin: 0;
+}
+
+.timeline-closing-quote {
+  margin-top: 14px;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  font-size: 13px;
+  text-align: center;
+  color: var(--reader-ink-muted);
+}
+
+/* Honors & Laurels */
+.awards-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.award-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 12px;
+  border: 1px solid var(--reader-border);
+  background: var(--reader-card-bg);
+}
+
+.award-laurel-icon {
+  width: 28px;
+  height: 28px;
+  color: var(--reader-gold);
+  flex-shrink: 0;
+}
+
+.laurel-accent-svg { width: 100%; height: 100%; }
+
+.award-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.award-title {
+  font-family: 'Cinzel', serif;
+  font-size: 11.5px;
+  letter-spacing: 1px;
+  margin: 0;
+}
+
+.award-year {
+  font-family: 'Courier New', monospace;
+  font-size: 10.5px;
+  color: var(--reader-gold);
+  font-weight: 700;
+}
+
+.award-source {
+  font-size: 11px;
+  color: var(--reader-ink-muted);
+  margin: 2px 0 0 0;
+}
+
+/* Measurable Impact */
+.impact-hero-card {
+  padding: 14px;
+  border: 1px solid var(--reader-border);
+  background: var(--reader-card-bg);
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.impact-metric {
+  display: block;
+  font-family: 'Playfair Display', serif;
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--reader-gold);
+  line-height: 1.1;
+  margin-bottom: 4px;
+}
+
+.impact-description {
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--reader-ink);
+  margin: 0;
+}
+
+.callouts-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.callout-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  padding: 8px 10px;
+  background: var(--reader-card-bg);
+  border-left: 2px solid var(--reader-gold);
+}
+
+.callout-bullet { color: var(--reader-gold); }
+.callout-text { margin: 0; }
+
+/* The Council */
+.team-note-para {
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--reader-ink);
+  margin: 0 0 10px 0;
+}
+
+.roles-roster {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.role-roster-row {
+  padding: 8px 10px;
+  border: 1px solid var(--reader-border);
+  background: var(--reader-card-bg);
+}
+
+.role-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Cinzel', serif;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--reader-gold);
+  margin-bottom: 3px;
+}
+
+.role-badge-diamond { font-size: 7px; }
+.role-duty {
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: var(--reader-ink-muted);
+  margin: 0;
+}
+
+/* Epilogue & Technovation Oath */
+.oath-monumental-card {
+  padding: 16px 20px;
+  border: 2px solid var(--reader-gold);
+  background: var(--reader-card-bg);
+  text-align: center;
+  position: relative;
+}
+
+.oath-title {
+  font-family: 'Cinzel', serif;
+  font-size: 20px;
+  letter-spacing: 3px;
+  margin: 0 0 4px 0;
+  color: var(--reader-gold);
+}
+
+.oath-divider {
+  margin: 4px 0 10px 0;
+}
+
+.oath-star {
+  font-size: 10px;
+  color: var(--reader-gold);
+}
+
+.oath-stanzas {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.oath-line {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  font-size: 12.5px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.oath-seal-block {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  border-top: 1px dashed var(--reader-border);
+  padding-top: 10px;
+}
+
+.oath-wax-seal {
+  width: 50px;
+  height: 50px;
+  color: #DC2626;
+  filter: drop-shadow(0 2px 4px rgba(220, 38, 38, 0.4));
+}
+
+.wax-seal-svg { width: 100%; height: 100%; }
+
+.oath-signatures {
+  text-align: left;
+}
+
+.oath-signoff {
+  font-family: 'Cinzel', serif;
+  font-size: 8.5px;
+  letter-spacing: 1.5px;
+  margin: 0 0 3px 0;
+  font-weight: 600;
+}
+
+.oath-registry-stamp {
+  font-family: 'Courier New', monospace;
+  font-size: 8px;
+  letter-spacing: 1.5px;
+  color: var(--reader-gold);
+  font-weight: 700;
+}
+
+/* =========================================================================
+   HUD NAVIGATION & CONTROLS
+   ========================================================================= */
+.book-hud-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 50;
+  pointer-events: none;
+}
+
+/* Top HUD Bar */
+.hud-top-bar {
+  position: absolute;
+  top: 16px;
+  left: 24px;
+  right: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  pointer-events: auto;
+  z-index: 60;
+}
+
+.hud-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(18, 20, 26, 0.75);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: #F3F4F6;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-family: 'Cinzel', sans-serif;
+  font-size: 10.5px;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.hud-btn:hover {
+  background: rgba(30, 34, 46, 0.9);
+  border-color: rgba(245, 158, 11, 0.6);
+  color: #FBBF24;
+  transform: translateY(-1px);
+}
+
+.hud-icon {
+  width: 15px;
+  height: 15px;
+}
+
+.hud-center-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(18, 20, 26, 0.75);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 8px 18px;
+  border-radius: 4px;
+  font-family: 'Cinzel', serif;
+  font-size: 10.5px;
+  letter-spacing: 2px;
+  color: #E2E8F0;
+}
+
+.hud-society-badge {
+  color: #94A3B8;
+  font-size: 9.5px;
+}
+
+.hud-separator {
+  color: rgba(255, 255, 255, 0.25);
+}
+
+.hud-book-volume {
+  color: #FBBF24;
+  font-weight: 700;
+}
+
+.hud-book-title {
+  font-weight: 700;
+}
+
+.hud-right-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Page Navigation Arrows */
+.hud-page-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(18, 20, 26, 0.75);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #F3F4F6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: all 0.25s ease;
+  z-index: 60;
+}
+
+.hud-page-arrow:hover:not(.disabled) {
+  background: rgba(245, 158, 11, 0.9);
+  color: #111827;
+  border-color: #F59E0B;
+  transform: translateY(-50%) scale(1.1);
+  box-shadow: 0 0 20px rgba(245, 158, 11, 0.5);
+}
+
+.hud-page-arrow.disabled {
+  opacity: 0.25;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.hud-arrow-prev { left: 24px; }
+.hud-arrow-next { right: 24px; }
+
+/* Bottom HUD Navigation & Scrub Bar */
+.hud-bottom-bar {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  pointer-events: auto;
+  z-index: 60;
+}
+
+.hud-progress-wrap {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: rgba(18, 20, 26, 0.75);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 8px 18px;
+  border-radius: 4px;
+}
+
+.hud-progress-track {
+  width: 140px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.hud-progress-fill {
+  height: 100%;
+  background: #F59E0B;
+  transition: width 0.3s ease;
+}
+
+.hud-counter-label {
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: #F3F4F6;
+  font-weight: 700;
+}
+
+.hud-interaction-hint {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Cinzel', sans-serif;
+  font-size: 8px;
+  letter-spacing: 1.5px;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.hint-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #F59E0B;
+}
+
+/* =========================================================================
+   3D OPENING ANIMATION RIG
+   ========================================================================= */
+.book-opening-rig {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 2400px;
+  z-index: 30;
+  pointer-events: none;
+}
+
+.rig-viewport {
+  width: 460px;
+  height: 620px;
+  perspective: 2000px;
+}
+
+.rig-book-3d {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+}
+
+.rig-cover {
+  position: absolute;
+  inset: 0;
+  border-radius: 3px;
+  box-sizing: border-box;
+}
+
+.rig-cover-front {
+  background: var(--rig-base, #1F3FB0);
+  transform-style: preserve-3d;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  z-index: 10;
+}
+
+.rig-cover-front-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  padding: 30px 24px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: var(--rig-foil, #F59E0B);
+  border: 2px solid var(--rig-foil, #F59E0B);
+}
+
+.rig-vol-badge {
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  letter-spacing: 2.5px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.rig-book-title {
+  font-family: 'Cinzel', serif;
+  font-size: 28px;
+  letter-spacing: 4px;
+  margin: 0 0 14px 0;
+}
+
+.rig-crease-line {
+  height: 1px;
+  width: 60px;
+  background: var(--rig-foil, #F59E0B);
+  margin-bottom: 14px;
+}
+
+.rig-tagline {
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  letter-spacing: 2px;
+  margin: 0;
+}
+
+.rig-cover-inside-face {
+  position: absolute;
+  inset: 0;
+  transform: rotateY(180deg);
+  backface-visibility: hidden;
+  background: #F4EFE6;
+  border: 1px solid #D5C7B3;
+}
+
+.rig-spine {
+  position: absolute;
+  left: -28px;
+  top: 0;
+  bottom: 0;
+  width: 28px;
+  transform: rotateY(-90deg);
+  transform-origin: right center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.7);
+  overflow: hidden;
+}
+
+.rig-spine-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  height: 90%;
+  width: 100%;
+  padding: 8px 0;
+  box-sizing: border-box;
+  color: #FFFFFF;
+  text-align: center;
+}
+
+.rig-spine-icon {
+  width: 18px;
+  height: 18px;
+}
+
+.rig-spine-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.rig-spine-vol {
+  font-family: 'Inter Tight', sans-serif;
+  font-size: 7.5px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.rig-spine-title {
+  writing-mode: vertical-rl;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.rig-spine-badge {
+  font-family: 'Inter Tight', sans-serif;
+  font-size: 6.5px;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  padding: 1px 3px;
+  border-radius: 2px;
+}
+
+.rig-back-scrim {
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 12, 18, 0.85);
+}
+
+.rig-paper-block {
+  position: absolute;
+  inset: 6px;
+  background: #FAF6EE;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+}
+
+.rig-first-spread {
+  display: flex;
+  height: 100%;
+}
+
+.rig-spread-left, .rig-spread-right {
+  flex: 1;
+  padding: 30px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-family: 'Cinzel', serif;
+}
+
+.rig-spread-sub {
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: #B45309;
+}
+
+.rig-spread-code {
+  font-size: 8px;
+  letter-spacing: 1.5px;
+  color: #78716C;
+}
+
+.rig-spread-chapter {
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: #B45309;
+  margin-bottom: 8px;
+}
+
+.rig-spread-quote {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #1F2937;
+  margin: 0;
+}
+
+/* =========================================================================
+   RESPONSIVE DESIGN (MOBILE & TABLET)
+   ========================================================================= */
+@media (max-width: 900px) {
+  .book-reader-stage {
+    width: 96vw;
+    height: 84vh;
+  }
+
+  .page-sheet-content {
+    padding: 24px 24px 20px 24px;
+  }
+
+  .chapter-display-title {
+    font-size: 21px;
+  }
+
+  .para-standard, .para-dropcap {
+    font-size: 12px;
+    line-height: 1.55;
+  }
+
+  .dropcap-letter {
+    font-size: 40px;
+  }
+
+  .hud-page-arrow {
+    width: 38px;
+    height: 38px;
+  }
+
+  .hud-arrow-prev { left: 10px; }
+  .hud-arrow-next { right: 10px; }
+
+  .hud-top-bar {
+    left: 12px;
+    right: 12px;
+  }
+
+  .hud-society-badge, .hud-separator {
+    display: none;
+  }
+
+  .cover-main-title {
+    font-size: 24px;
+  }
+
+  .cover-medallion-ring {
+    width: 80px;
+    height: 80px;
+  }
+}
+
+@media (max-width: 600px) {
+  .hud-btn-label {
+    display: none;
+  }
+
+  .hud-btn {
+    padding: 7px 10px;
+  }
+
+  .hud-page-arrow {
+    display: none; /* Mobile uses swipe gestures */
+  }
+
+  .book-center-spine-shadow {
+    display: none; /* In portrait single page mode, hide central spine shadow */
+  }
+
+  .page-sheet-content {
+    padding: 18px 16px;
+  }
+
+  .manifesto-stats-grid {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .hud-progress-track {
+    width: 90px;
+  }
+}

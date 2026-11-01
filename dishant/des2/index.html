@@ -1,0 +1,3774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Technovation - Networking Club ABES</title>
+  
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="shortcut icon" href="favicon.ico">
+  <link rel="apple-touch-icon" href="favicon.png">
+  
+  <script>
+    (function() {
+      try {
+        const savedTheme = localStorage.getItem('technovation-theme');
+        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const theme = savedTheme ? savedTheme : (prefersDark ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+      } catch (_) {}
+    })();
+  </script>
+  
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  
+  <!-- Preconnect to Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Inter+Tight:wght@500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;0,6..72,700;1,6..72,400&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="components/BookReader/FullScreenReader.css?v=2.3">
+
+  <style>
+    :root, [data-theme="light"] {
+      --paper: #EDEBE6;
+      --sheet: #F4F2ED;
+      --ink: #141414;
+      --muted: #6D6A63;
+      --cobalt: #1F3FB0;
+      --rule: rgba(20, 20, 20, 0.9);
+      --rule-subtle: rgba(20, 20, 20, 0.15);
+      --nav-bg: rgba(237, 235, 230, 0.55);
+      --play-bg: rgba(237, 235, 230, 0.75);
+      --arrow-bg: #EDEBE6;
+      --arrow-hover-bg: #141414;
+      --arrow-hover-color: #EDEBE6;
+      --crest-filter: drop-shadow(0 2px 3px rgba(10, 10, 10, 0.32)) drop-shadow(0 8px 16px rgba(15, 20, 30, 0.22)) drop-shadow(0 16px 28px rgba(0, 0, 0, 0.14));
+      --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+      --ease-sheet: cubic-bezier(0.76, 0, 0.18, 1);
+      
+      --font-sans: "Inter Tight", system-ui, -apple-system, sans-serif;
+      --font-serif: "Newsreader", Georgia, serif;
+
+      /* Desktop book proportions - clamped for large/4K, laptops, and standard screens */
+      --H: clamp(190px, min(39vh, 26vw), 400px);
+      --ws: 65px;
+      --d: 250px;
+    }
+
+    [data-theme="dark"] {
+      --paper: #090B10;
+      --sheet: #0F121C;
+      --ink: #EAE6DF;
+      --muted: #959188;
+      --cobalt: #527FFF;
+      --rule: rgba(234, 230, 223, 0.28);
+      --rule-subtle: rgba(234, 230, 223, 0.12);
+      --nav-bg: rgba(14, 18, 28, 0.78);
+      --play-bg: rgba(14, 18, 30, 0.88);
+      --arrow-bg: #141824;
+      --arrow-hover-bg: #527FFF;
+      --arrow-hover-color: #FFFFFF;
+      --crest-filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.85)) drop-shadow(0 0 22px rgba(82, 127, 255, 0.42)) drop-shadow(0 0 16px rgba(255, 106, 0, 0.35)) drop-shadow(0 12px 28px rgba(0, 0, 0, 0.75));
+    }
+
+    /* Tablet breakpoint (768px - 1024px) */
+    @media (min-width: 768px) and (max-width: 1024px) {
+      :root {
+        --H: clamp(180px, min(38vh, 26vw), 320px);
+        --ws: 52px;
+        --d: 200px;
+      }
+    }
+
+    /* Mobile portrait breakpoint (≤ 767px) */
+    @media (max-width: 767px) {
+      :root {
+        --H: clamp(165px, min(65vw, 36vh, 36svh), 260px);
+        --ws: 40px;
+        --d: 155px;
+      }
+    }
+
+    /* Ultra-narrow phones (≤ 360px) */
+    @media (max-width: 360px) {
+      :root {
+        --H: clamp(140px, min(62vw, 34vh, 34svh), 200px);
+        --ws: 32px;
+        --d: 130px;
+      }
+    }
+
+    /* Short height / Mobile Landscape (≤ 520px height) */
+    @media (max-height: 520px) {
+      :root {
+        --H: clamp(120px, 38vh, 175px);
+        --ws: 32px;
+        --d: 125px;
+      }
+    }
+
+    /* Reset and global styles */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background-color: var(--paper);
+      color: var(--ink);
+      font-family: var(--font-sans);
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      transition: background-color 0.4s var(--ease), color 0.4s var(--ease);
+    }
+
+    /* Light Mode Ambient Archival Studio Atmosphere */
+    :root:not([data-theme="dark"]) body,
+    html[data-theme="light"] body {
+      background-color: #EDEBE6;
+      background-image: 
+        radial-gradient(ellipse 75% 55% at 50% 36%, rgba(255, 255, 255, 0.8) 0%, rgba(252, 249, 242, 0.45) 45%, transparent 75%),
+        radial-gradient(ellipse 55% 40% at 18% 18%, rgba(255, 150, 40, 0.05) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 45% at 82% 80%, rgba(48, 102, 255, 0.05) 0%, transparent 60%),
+        radial-gradient(ellipse 95% 85% at 50% 50%, transparent 50%, rgba(150, 135, 115, 0.16) 100%);
+      background-attachment: fixed;
+    }
+
+    /* Dark Mode Ambient Celestial Atmosphere */
+    html[data-theme="dark"] body {
+      background-color: #090B10;
+      background-image: 
+        radial-gradient(ellipse 70% 55% at 50% 50%, rgba(28, 58, 140, 0.22) 0%, transparent 72%),
+        radial-gradient(ellipse 50% 40% at 18% 22%, rgba(255, 110, 20, 0.08) 0%, transparent 60%),
+        radial-gradient(ellipse 55% 45% at 82% 78%, rgba(68, 128, 255, 0.12) 0%, transparent 65%),
+        radial-gradient(circle at 50% 50%, transparent 40%, rgba(4, 5, 8, 0.75) 100%);
+      background-attachment: fixed;
+    }
+
+    /* Hide native cursor on fine pointers */
+    @media (pointer: fine) {
+      html, body, button, a, [role="button"] {
+        cursor: none !important;
+      }
+    }
+
+    /* Label system */
+    .lbl {
+      font-family: var(--font-sans);
+      font-weight: 600;
+      font-size: 10.5px;
+      line-height: 1;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    .box {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 21px;
+      padding: 0 8px;
+      border: 1px solid var(--rule);
+      box-sizing: border-box;
+      background: transparent;
+      color: var(--ink);
+      text-decoration: none;
+      white-space: nowrap;
+      transition: border-color 0.35s var(--ease), color 0.35s var(--ease), background-color 0.35s var(--ease);
+    }
+
+    /* Paper grain overlay */
+    .paper-grain {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 40;
+      pointer-events: none;
+      mix-blend-mode: multiply;
+      opacity: 0.55;
+      transition: opacity 0.4s var(--ease), filter 0.4s var(--ease);
+    }
+
+    [data-theme="dark"] .paper-grain {
+      mix-blend-mode: screen;
+      opacity: 0.15;
+      filter: invert(1);
+    }
+
+    /* Probe element for precise height calculation */
+    #probe {
+      position: absolute;
+      top: -9999px;
+      left: -9999px;
+      height: var(--H);
+      width: 1px;
+      pointer-events: none;
+      visibility: hidden;
+    }
+
+    /* 1. Top Bar */
+    .top-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: clamp(68px, 9.5vh, 102px);
+      padding: clamp(12px, 1.8vh, 22px) clamp(16px, 3vw, 32px);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 30;
+      pointer-events: auto;
+    }
+
+    .top-left {
+      display: flex;
+      align-items: center;
+      z-index: 1;
+    }
+
+    /* 3D Crest Badge */
+    .crest-badge {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: clamp(48px, 6.8vh, 68px);
+      width: auto;
+      aspect-ratio: 1188 / 1324;
+      flex-shrink: 0;
+      background: transparent !important;
+      border: none !important;
+      outline: none;
+      filter: var(--crest-filter);
+      user-select: none;
+      -webkit-user-drag: none;
+      transition: filter 0.35s var(--ease);
+    }
+
+    .crest-img {
+      width: 100%;
+      height: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      display: block;
+      user-select: none;
+      -webkit-user-drag: none;
+      pointer-events: none;
+    }
+
+    .logo {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(2px, 0.5vh, 5px);
+      color: var(--cobalt);
+      text-decoration: none;
+      line-height: 1;
+      cursor: pointer;
+      text-align: center;
+      white-space: nowrap;
+      pointer-events: auto;
+      z-index: 2;
+    }
+
+    .logo-main {
+      font-family: var(--font-serif);
+      font-weight: 700;
+      font-size: clamp(20px, 2.3vw, 28px);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      display: inline-block;
+      /* Light Mode: Vibrant Solar Flame Orange to Royal Cobalt Blue Gradient */
+      background: linear-gradient(118deg, #E65100 0%, #FF6F00 26%, #FFA000 42%, #3066FF 70%, #15399E 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      color: transparent;
+      filter: drop-shadow(0 1px 1px rgba(255, 255, 255, 0.85)) drop-shadow(0 2px 4px rgba(20, 25, 45, 0.22));
+      transition: transform 0.25s var(--ease), filter 0.25s var(--ease);
+      will-change: transform, filter;
+    }
+
+    .logo:hover .logo-main {
+      transform: translateY(-2px);
+      filter: drop-shadow(0 2px 8px rgba(230, 81, 0, 0.38)) drop-shadow(0 3px 12px rgba(48, 102, 255, 0.38));
+    }
+
+    [data-theme="dark"] .logo-main {
+      /* Dark Mode: Luminous Neon Flame Orange to Electric Neon Cobalt Gradient */
+      background: linear-gradient(118deg, #FF6A00 0%, #FFA229 30%, #6490FF 66%, #3369FF 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      color: transparent;
+      filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.85)) drop-shadow(0 0 16px rgba(255, 106, 0, 0.44)) drop-shadow(0 0 24px rgba(82, 127, 255, 0.5));
+    }
+
+    [data-theme="dark"] .logo:hover .logo-main {
+      transform: translateY(-2px);
+      filter: drop-shadow(0 3px 10px rgba(0, 0, 0, 0.95)) drop-shadow(0 0 24px rgba(255, 106, 0, 0.65)) drop-shadow(0 0 34px rgba(82, 127, 255, 0.72));
+    }
+
+    .logo-sub {
+      font-family: var(--font-sans);
+      font-weight: 600;
+      font-size: clamp(8px, 0.85vw, 10px);
+      letter-spacing: 0.3em;
+      padding-left: 0.3em; /* optically centered */
+      color: var(--muted);
+      text-shadow: 0 1px 0 rgba(255, 255, 255, 0.7);
+      transition: color 0.35s var(--ease), text-shadow 0.35s var(--ease);
+    }
+
+    [data-theme="dark"] .logo-sub {
+      color: rgba(234, 230, 223, 0.65);
+      letter-spacing: 0.32em;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9), 0 0 10px rgba(82, 127, 255, 0.25);
+    }
+
+    .top-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--ink);
+      z-index: 1;
+    }
+
+    /* Theme Toggle Button */
+    .theme-toggle-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      height: 25px;
+      padding: 0 10px;
+      border: 1px solid rgba(35, 25, 15, 0.14);
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.82);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      box-shadow: 0 2px 8px rgba(35, 25, 15, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.95);
+      color: var(--ink);
+      cursor: pointer;
+      font-family: var(--font-sans);
+      font-weight: 600;
+      font-size: 8.5px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      outline: none;
+      transition: background-color 0.25s var(--ease), border-color 0.25s var(--ease), color 0.25s var(--ease), transform 0.2s var(--ease), box-shadow 0.25s var(--ease);
+      user-select: none;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    [data-theme="dark"] .theme-toggle-btn {
+      border: 1px solid var(--rule);
+      border-radius: 2px;
+      background: var(--nav-bg);
+      box-shadow: none;
+    }
+
+    .theme-toggle-btn:hover {
+      background-color: var(--cobalt);
+      border-color: var(--cobalt);
+      color: #FFFFFF;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(31, 63, 176, 0.25);
+    }
+
+    .theme-toggle-btn:active {
+      transform: translateY(0);
+    }
+
+    .theme-icon-slot {
+      position: relative;
+      width: 13px;
+      height: 13px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .theme-icon {
+      position: absolute;
+      width: 13px;
+      height: 13px;
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s var(--ease);
+    }
+
+    :root:not([data-theme="dark"]) .icon-sun,
+    [data-theme="light"] .icon-sun {
+      transform: rotate(90deg) scale(0);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    :root:not([data-theme="dark"]) .icon-moon,
+    [data-theme="light"] .icon-moon {
+      transform: rotate(0deg) scale(1);
+      opacity: 1;
+    }
+
+    [data-theme="dark"] .icon-sun {
+      transform: rotate(0deg) scale(1);
+      opacity: 1;
+    }
+
+    [data-theme="dark"] .icon-moon {
+      transform: rotate(-90deg) scale(0);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* 2. Chapter Tabs */
+    .tab-desktop { display: inline; }
+    .tab-mobile { display: none; }
+
+    @media (max-width: 767px) {
+      .tab-desktop { display: none; }
+      .tab-mobile { display: inline; }
+    }
+
+    .decade-nav {
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      top: calc(50% - var(--H) / 2 - clamp(82px, 11.5vh, 115px));
+      display: flex;
+      align-items: center;
+      width: min(94vw, 750px);
+      height: clamp(32px, 4.1vh, 38px);
+      border: 1px solid rgba(255, 255, 255, 0.75);
+      border-radius: 9999px;
+      background: rgba(255, 255, 255, 0.65);
+      backdrop-filter: blur(24px) saturate(180%);
+      -webkit-backdrop-filter: blur(24px) saturate(180%);
+      box-shadow: 
+        0 14px 36px -4px rgba(35, 25, 15, 0.08),
+        0 4px 12px -2px rgba(35, 25, 15, 0.04),
+        inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.95),
+        inset 0 -1px 1px 0 rgba(0, 0, 0, 0.03);
+      box-sizing: border-box;
+      overflow: hidden !important;
+      z-index: 30;
+      padding: 3px 4px;
+      transition: background-color 0.35s var(--ease), border-color 0.35s var(--ease), box-shadow 0.35s var(--ease), top 0.35s var(--ease);
+    }
+
+    [data-theme="dark"] .decade-nav {
+      background: rgba(14, 18, 28, 0.62);
+      backdrop-filter: blur(24px) saturate(190%);
+      -webkit-backdrop-filter: blur(24px) saturate(190%);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      box-shadow: 
+        0 16px 40px -4px rgba(0, 0, 0, 0.75),
+        0 0 22px rgba(82, 127, 255, 0.18),
+        inset 0 1.5px 1px rgba(255, 255, 255, 0.22),
+        inset 0 -1px 1px rgba(0, 0, 0, 0.4);
+      border-radius: 9999px;
+    }
+
+    .decade-indicator {
+      position: absolute;
+      top: 3px;
+      bottom: 3px;
+      height: calc(100% - 6px);
+      background: linear-gradient(135deg, #1B38A6 0%, #112470 100%);
+      box-shadow: 
+        0 3px 12px rgba(27, 56, 166, 0.38),
+        0 1px 3px rgba(27, 56, 166, 0.22),
+        inset 0 1px 1px rgba(255, 255, 255, 0.35);
+      border-radius: 9999px;
+      z-index: 0;
+      pointer-events: none;
+      transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1), width 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+      width: 0;
+      transform: translateX(0);
+    }
+
+    [data-theme="dark"] .decade-indicator {
+      background: linear-gradient(118deg, #FF6A00 0%, #FFA229 28%, #527FFF 70%, #2855E0 100%);
+      box-shadow: 
+        0 4px 14px rgba(82, 127, 255, 0.45),
+        0 0 14px rgba(255, 106, 0, 0.45),
+        inset 0 1px 1px rgba(255, 255, 255, 0.4);
+      border-radius: 9999px;
+    }
+
+    .decade-btn {
+      position: relative;
+      z-index: 1;
+      height: 100%;
+      flex: 1 1 0;
+      min-width: 0;
+      padding: 0 4px;
+      border: none;
+      border-radius: 9999px;
+      margin: 0;
+      background: transparent;
+      color: rgba(45, 38, 30, 0.72);
+      cursor: pointer;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      font-family: var(--font-sans);
+      font-weight: 600;
+      font-size: clamp(7.2px, 0.85vw, 9.4px);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      transition: color 0.3s var(--ease), background-color 0.25s var(--ease), transform 0.2s var(--ease);
+      outline: none;
+      box-sizing: border-box;
+    }
+
+    .decade-btn:hover:not(.active) {
+      color: #1F3FB0;
+      background: rgba(31, 63, 176, 0.07);
+    }
+
+    .decade-btn:last-of-type {
+      border-right: none;
+    }
+
+    .decade-btn.active {
+      color: #FFFFFF;
+      font-weight: 700;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+    }
+
+    [data-theme="dark"] .decade-btn {
+      color: rgba(234, 230, 223, 0.72);
+      border-right: none;
+    }
+
+    [data-theme="dark"] .decade-btn:hover:not(.active) {
+      color: #FFFFFF;
+      background: rgba(255, 255, 255, 0.08);
+      text-shadow: 0 0 8px rgba(82, 127, 255, 0.5);
+    }
+
+    [data-theme="dark"] .decade-btn.active {
+      color: #FFFFFF;
+      font-weight: 700;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
+    }
+
+    /* 3. The Shelf (3D Stage: 8 Bespoke Storybooks Perfectly Centered) */
+    .shelf-section {
+      position: fixed;
+      left: 0;
+      right: 0;
+      top: calc(50% - var(--H) / 2 - 40px);
+      height: calc(var(--H) + 80px);
+      perspective: 2200px;
+      perspective-origin: 50% 50%;
+      touch-action: pan-y;
+      z-index: 10;
+      overflow: visible;
+    }
+
+    /* Light Orangish Glow Behind the Bookshelf */
+    .shelf-section::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: min(96vw, 1020px);
+      height: calc(var(--H) * 1.55);
+      background: radial-gradient(ellipse 65% 55% at 50% 50%, 
+        rgba(255, 135, 25, 0.52) 0%, 
+        rgba(255, 160, 45, 0.34) 30%, 
+        rgba(255, 190, 80, 0.16) 55%, 
+        rgba(255, 215, 140, 0.05) 72%, 
+        transparent 85%);
+      border-radius: 50%;
+      filter: blur(36px);
+      pointer-events: none;
+      z-index: 0;
+      opacity: 1;
+      transition: opacity 0.4s var(--ease);
+    }
+
+    [data-theme="dark"] .shelf-section::before {
+      opacity: 0;
+    }
+
+    .stage {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 0;
+      height: 0;
+      transform-style: preserve-3d;
+      z-index: 1;
+    }
+
+    .tape {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 0;
+      height: 0;
+      transform-style: preserve-3d;
+      will-change: transform;
+      cursor: pointer;
+    }
+
+    .sp, .cv {
+      position: absolute;
+      height: var(--H);
+      top: calc(var(--H) * -0.5);
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      border-radius: 3px;
+      overflow: hidden;
+      transition: box-shadow 0.35s var(--ease);
+    }
+
+    .sp {
+      width: var(--ws);
+      left: calc(var(--ws) * -0.5);
+      transform: translateZ(calc(var(--d) * 0.5));
+    }
+
+    .cv {
+      width: var(--d);
+      left: calc(var(--d) * -0.5);
+      transform: rotateY(90deg) translateZ(calc(var(--ws) * 0.5));
+      box-shadow: none;
+    }
+
+    /* Dynamic overlay shading */
+    .sp::after, .cv::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: #000000;
+      opacity: var(--shade, 0);
+      pointer-events: none;
+      border-radius: inherit;
+      z-index: 10;
+    }
+
+    /* Custom Spine Label Plaque (Full Coverage) */
+    .sp-label {
+      position: absolute;
+      top: 10%;
+      bottom: 10%;
+      left: 4px;
+      right: 4px;
+      background: rgba(14, 16, 22, 0.95);
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(255, 255, 255, 0.32);
+      box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.8), 0 3px 8px rgba(0, 0, 0, 0.6);
+      border-radius: 2px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 2px;
+      z-index: 4;
+      pointer-events: none;
+    }
+
+    .sp-icon {
+      width: 18px;
+      height: 18px;
+      margin-bottom: 2px;
+      opacity: 0.95;
+    }
+
+    .sp-vol {
+      font-family: var(--font-sans);
+      font-size: 7.5px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      color: rgba(255, 255, 255, 0.9);
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+      white-space: nowrap;
+    }
+
+    .sp-title {
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      font-family: var(--font-serif);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #FFFFFF;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9), 0 0 2px rgba(0, 0, 0, 1);
+      margin: auto 0;
+      white-space: nowrap;
+    }
+
+    .sp-badge {
+      font-family: var(--font-sans);
+      font-size: 7px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      color: rgba(255, 255, 255, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.75);
+      padding: 1px 4px;
+      border-radius: 1px;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9);
+    }
+
+    /* Cover Graphic & Card System */
+    .cv-bg-vignette {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 50%, rgba(10,12,18,0.2) 0%, rgba(10,12,18,0.85) 100%);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .cv-center-graphic {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
+      pointer-events: none;
+      padding: 30px;
+    }
+
+    .cv-center-graphic svg {
+      width: 100%;
+      max-width: 150px;
+      height: auto;
+      filter: drop-shadow(0 6px 16px rgba(0,0,0,0.8));
+    }
+
+    .cv-plate {
+      position: absolute;
+      top: 10px;
+      left: 8px;
+      right: 8px;
+      background: rgba(12, 14, 20, 0.94);
+      backdrop-filter: blur(6px);
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.7), inset 0 0 12px rgba(0, 0, 0, 0.5);
+      border-radius: 3px;
+      padding: 9px 12px 10px;
+      z-index: 4;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      pointer-events: none;
+      box-sizing: border-box;
+    }
+
+    .cv-sub {
+      font-family: var(--font-sans);
+      font-size: 7.5px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: rgba(255, 255, 255, 0.85);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.22);
+      padding-bottom: 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .cv-sub span:first-child {
+      background: linear-gradient(118deg, #FF7A18 0%, #FFA834 35%, #6B97FF 72%, #3867FF 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+    }
+
+    .cv-title {
+      font-family: var(--font-serif);
+      font-size: clamp(12.5px, 1.4vw, 15.5px);
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: #FFFFFF;
+      text-shadow: 0 2px 6px rgba(0, 0, 0, 0.95), 0 0 2px rgba(0, 0, 0, 1);
+      margin-top: 3px;
+      white-space: nowrap;
+      text-align: left;
+    }
+
+    .cv-tagline {
+      display: block;
+      font-family: var(--font-sans);
+      font-size: 7.5px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      color: rgba(255, 255, 255, 0.9);
+      margin-top: 3px;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .cv-foot-plate {
+      position: absolute;
+      bottom: 10px;
+      left: 8px;
+      right: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 4;
+      background: rgba(12, 14, 20, 0.9);
+      padding: 6px 10px;
+      border-radius: 2px;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      pointer-events: none;
+      box-sizing: border-box;
+    }
+
+    .cv-edition {
+      font-family: var(--font-sans);
+      font-size: 8px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      color: #FFFFFF;
+      text-transform: uppercase;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 65%;
+    }
+
+    .cv-badge {
+      font-family: var(--font-sans);
+      font-size: 7.5px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      color: #FFFFFF;
+      border: 1px solid rgba(255, 255, 255, 0.85);
+      padding: 2px 5px;
+      border-radius: 1px;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+    }
+
+    /* 4. Play Ring */
+    .play-ring {
+      position: fixed;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      border: 1.5px solid var(--cobalt);
+      color: var(--cobalt);
+      background-color: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      box-shadow: 
+        0 6px 20px rgba(31, 63, 176, 0.22),
+        0 2px 6px rgba(35, 25, 15, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 30;
+      cursor: pointer;
+      outline: none;
+      transform: translate(-50%, -50%) scale(0);
+      transition: border-color 0.3s var(--ease), background-color 0.3s var(--ease), color 0.3s var(--ease), box-shadow 0.3s var(--ease), transform 0.25s var(--ease);
+      padding: 0;
+    }
+
+    .play-ring:hover {
+      background-color: var(--cobalt);
+      color: #FFFFFF;
+      box-shadow: 
+        0 8px 26px rgba(31, 63, 176, 0.38),
+        0 3px 8px rgba(31, 63, 176, 0.2);
+    }
+
+    [data-theme="dark"] .play-ring {
+      background: rgba(14, 18, 30, 0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1.5px solid rgba(82, 127, 255, 0.55);
+      color: #527FFF;
+      box-shadow: 
+        0 6px 24px rgba(0, 0, 0, 0.6),
+        0 0 20px rgba(82, 127, 255, 0.4),
+        inset 0 0 10px rgba(255, 106, 0, 0.25);
+    }
+
+    [data-theme="dark"] .play-ring:hover {
+      border-color: #8EB3FF;
+      color: #FFFFFF;
+      box-shadow: 
+        0 8px 30px rgba(0, 0, 0, 0.75),
+        0 0 28px rgba(82, 127, 255, 0.65),
+        0 0 16px rgba(255, 106, 0, 0.45);
+    }
+
+    .play-triangle {
+      width: 12px;
+      height: 12px;
+      margin-left: 2px;
+      fill: currentColor;
+    }
+
+    /* 5. Caption */
+    .caption-container {
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      top: calc(50% + var(--H) / 2 + clamp(40px, 5.8vh, 62px));
+      width: min(84vw, calc(100vw - 140px), 760px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: clamp(6px, 1vh, 9px);
+      pointer-events: none;
+      z-index: 20;
+    }
+
+    .caption-mask {
+      overflow: hidden;
+      width: 100%;
+      display: grid;
+      place-items: center;
+      position: relative;
+    }
+
+    .caption-title {
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-size: clamp(22px, 2.5vw, 31px);
+      line-height: 1.12;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+      text-align: center;
+      min-height: calc(clamp(22px, 2.5vw, 31px) * 1.12);
+      text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8), 0 2px 4px rgba(35, 25, 15, 0.06);
+    }
+
+    [data-theme="dark"] .caption-title {
+      color: #FFFFFF;
+      text-shadow: 
+        0 2px 16px rgba(0, 0, 0, 0.9),
+        0 0 32px rgba(82, 127, 255, 0.28);
+    }
+
+    .caption-sub {
+      color: var(--cobalt);
+      font-weight: 500;
+      min-height: 13px;
+    }
+
+    [data-theme="dark"] .caption-sub {
+      color: #FFA338;
+      text-shadow: 0 0 10px rgba(255, 163, 56, 0.35);
+      letter-spacing: 0.12em;
+    }
+
+    .caption-year {
+      font-family: var(--font-sans);
+      font-weight: 500;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      color: var(--ink);
+      min-height: 14px;
+    }
+
+    [data-theme="dark"] .caption-year {
+      color: rgba(234, 230, 223, 0.7);
+    }
+
+    /* 6. Navigation Arrows */
+    .arrow-btn {
+      position: fixed;
+      top: calc(50% + var(--H) / 2 + clamp(40px, 5.8vh, 62px) + 16px);
+      transform: translateY(-50%);
+      width: clamp(38px, 3.6vw, 46px);
+      height: clamp(38px, 3.6vw, 46px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(40, 30, 20, 0.12);
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      color: var(--ink);
+      cursor: pointer;
+      z-index: 30;
+      outline: none;
+      border-radius: 6px;
+      box-shadow: 
+        0 4px 16px rgba(35, 25, 15, 0.08),
+        0 1px 3px rgba(35, 25, 15, 0.05),
+        inset 0 1px 0 rgba(255, 255, 255, 1);
+      transition: transform 0.2s var(--ease), background-color 0.25s var(--ease), color 0.25s var(--ease), opacity 0.25s var(--ease), border-color 0.25s var(--ease), box-shadow 0.25s var(--ease);
+    }
+
+    [data-theme="dark"] .arrow-btn {
+      background: rgba(16, 20, 32, 0.82);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(82, 127, 255, 0.3);
+      color: #EAE6DF;
+      border-radius: 2px;
+      box-shadow: 
+        0 4px 18px rgba(0, 0, 0, 0.6),
+        0 0 12px rgba(82, 127, 255, 0.15);
+    }
+
+    .arrow-btn:hover:not(:disabled) {
+      background-color: #141414;
+      color: #FFFFFF;
+      border-color: #141414;
+      transform: translateY(-50%) translateY(-2px) scale(1.05);
+      box-shadow: 
+        0 8px 24px rgba(20, 20, 20, 0.22),
+        0 2px 6px rgba(20, 20, 20, 0.1);
+    }
+
+    [data-theme="dark"] .arrow-btn:hover:not(:disabled) {
+      background: linear-gradient(135deg, rgba(255, 106, 0, 0.25) 0%, rgba(82, 127, 255, 0.45) 100%);
+      border-color: #527FFF;
+      color: #FFFFFF;
+      box-shadow: 
+        0 6px 24px rgba(0, 0, 0, 0.75),
+        0 0 22px rgba(82, 127, 255, 0.55),
+        0 0 14px rgba(255, 106, 0, 0.35);
+    }
+
+    .arrow-btn:active:not(:disabled) {
+      transform: translateY(-50%) scale(0.95);
+    }
+
+    .arrow-left {
+      left: clamp(14px, 2vw, 24px);
+    }
+
+    .arrow-right {
+      right: clamp(14px, 2vw, 24px);
+    }
+
+    /* 7. Footer */
+    .footer {
+      position: fixed;
+      left: clamp(16px, 2.5vw, 32px);
+      right: clamp(16px, 2.5vw, 32px);
+      bottom: clamp(12px, 2.2vh, 26px);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 30;
+    }
+
+    .foot-link {
+      color: var(--ink);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .foot-link:hover {
+      color: var(--cobalt);
+    }
+
+    .foot-copy {
+      color: var(--muted) !important;
+      text-transform: lowercase !important;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+    }
+
+    .foot-extra {
+      color: inherit;
+      text-transform: inherit;
+    }
+
+    /* 8. Custom Cursor */
+    .cursor {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 58px;
+      height: 58px;
+      margin-left: -29px;
+      margin-top: -29px;
+      pointer-events: none;
+      z-index: 100005;
+      display: none;
+    }
+
+    @media (pointer: fine) {
+      .cursor {
+        display: block;
+      }
+    }
+
+    .cursor-ring {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 1.5px solid var(--ink);
+      box-sizing: border-box;
+      background-color: transparent;
+      transform: scale(1);
+      transition: transform 0.5s var(--ease), background-color 0.4s var(--ease), border-color 0.4s var(--ease);
+    }
+
+    .cursor-dot {
+      position: absolute;
+      left: calc(50% - 3px);
+      top: calc(50% - 3px);
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--ink);
+      transform: scale(1);
+      transition: transform 0.4s var(--ease);
+    }
+
+    .cursor-label {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #FFFFFF;
+      font-family: var(--font-sans);
+      font-weight: 600;
+      font-size: 10px;
+      line-height: 1.25;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      transform: scale(0);
+      transition: transform 0.45s var(--ease);
+      pointer-events: none;
+    }
+
+    .cursor.is-spine .cursor-ring {
+      transform: scale(0.72);
+    }
+
+    .cursor.is-spine .cursor-dot {
+      transform: scale(1);
+    }
+
+    .cursor.is-btn .cursor-ring {
+      transform: scale(0.55);
+    }
+
+    .cursor.is-btn .cursor-dot {
+      transform: scale(0);
+    }
+
+    .cursor.is-open .cursor-ring {
+      transform: scale(1.75);
+      background-color: var(--cobalt);
+      border-color: var(--cobalt);
+    }
+
+    .cursor.is-open .cursor-dot {
+      transform: scale(0);
+    }
+
+    .cursor.is-open .cursor-label {
+      transform: scale(1);
+    }
+
+    /* Opening Film Detail Dialog */
+    .detail {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: var(--sheet);
+      z-index: 60;
+      visibility: hidden;
+      overflow-y: auto;
+      overflow-x: hidden;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4vw;
+      padding: 110px 6vw 56px 7vw;
+      align-items: center;
+      transition: background-color 0.4s var(--ease), opacity 0.4s var(--ease);
+    }
+
+    :root:not([data-theme="dark"]) .detail,
+    [data-theme="light"] .detail {
+      background: 
+        radial-gradient(circle at 74% 50%, rgba(31, 63, 176, 0.05) 0%, transparent 58%),
+        radial-gradient(circle at 24% 35%, rgba(255, 106, 0, 0.04) 0%, transparent 48%),
+        #F4F2ED;
+    }
+
+    [data-theme="dark"] .detail {
+      background-color: #0A0C13;
+      background-image: 
+        radial-gradient(circle at 74% 50%, rgba(48, 90, 220, 0.22) 0%, transparent 62%),
+        radial-gradient(circle at 24% 38%, rgba(255, 106, 0, 0.12) 0%, transparent 52%),
+        radial-gradient(ellipse at 50% 100%, rgba(14, 20, 42, 0.85) 0%, transparent 80%),
+        radial-gradient(circle at 50% 50%, transparent 40%, rgba(4, 5, 8, 0.8) 100%);
+      background-attachment: fixed;
+    }
+
+    .detail-close {
+      position: fixed;
+      top: 31px;
+      left: 32px;
+      z-index: 70;
+      cursor: pointer;
+    }
+
+    [data-theme="dark"] .detail-close {
+      background: rgba(16, 20, 32, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(82, 127, 255, 0.35);
+      color: #EAE6DF;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
+      transition: all 0.25s var(--ease);
+    }
+
+    [data-theme="dark"] .detail-close:hover {
+      border-color: #527FFF;
+      color: #FFFFFF;
+      background: rgba(28, 38, 62, 0.95);
+      box-shadow: 0 0 20px rgba(82, 127, 255, 0.5);
+      transform: translateY(-1px);
+    }
+
+    .detail-logo-band {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 84px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 65;
+      pointer-events: none;
+    }
+
+    .detail-logo-band .logo {
+      pointer-events: auto;
+    }
+
+    .detail-left-col {
+      max-width: 520px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      justify-self: center;
+    }
+
+    .mask-line {
+      overflow: hidden;
+      display: block;
+    }
+
+    .mask-line > * {
+      display: block;
+    }
+
+    .detail-title {
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-size: clamp(38px, 4.8vw, 76px);
+      line-height: 1.05;
+      letter-spacing: -0.025em;
+      color: var(--ink);
+    }
+
+    [data-theme="dark"] .detail-title {
+      color: #FFFFFF;
+      text-shadow: 
+        0 2px 24px rgba(0, 0, 0, 0.9),
+        0 0 40px rgba(82, 127, 255, 0.22);
+    }
+
+    .detail-sub {
+      color: var(--cobalt);
+      font-weight: 600;
+      letter-spacing: 0.12em;
+    }
+
+    [data-theme="dark"] .detail-sub {
+      color: #FFA338;
+      text-shadow: 0 0 14px rgba(255, 163, 56, 0.4);
+      letter-spacing: 0.14em;
+    }
+
+    .detail-meta {
+      color: var(--muted);
+      font-weight: 500;
+      letter-spacing: 0.06em;
+    }
+
+    [data-theme="dark"] .detail-meta {
+      color: rgba(234, 230, 223, 0.72);
+      letter-spacing: 0.08em;
+    }
+
+    .detail-synopsis {
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-size: 16.5px;
+      line-height: 1.6;
+      max-width: 44ch;
+      color: var(--ink);
+    }
+
+    [data-theme="dark"] .detail-synopsis {
+      color: rgba(234, 230, 223, 0.92);
+    }
+
+    .detail-credit {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    [data-theme="dark"] .detail-credit {
+      color: rgba(149, 145, 136, 0.85);
+    }
+
+    .detail-watch-btn {
+      position: relative;
+      height: 48px;
+      padding: 0 26px;
+      border: 1.5px solid var(--cobalt);
+      background: linear-gradient(135deg, rgba(230, 81, 0, 0.08) 0%, rgba(31, 63, 176, 0.12) 100%);
+      color: var(--cobalt);
+      border-radius: 4px;
+      letter-spacing: 0.12em;
+      font-weight: 700;
+      margin-top: 10px;
+      cursor: pointer;
+      align-self: flex-start;
+      box-shadow: 0 3px 12px rgba(20, 20, 30, 0.1);
+      transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease), background 0.25s var(--ease), color 0.25s var(--ease), border-color 0.25s var(--ease);
+    }
+
+    .detail-watch-btn:hover {
+      background: linear-gradient(135deg, #E8590C 0%, #1F3FB0 100%);
+      border-color: transparent;
+      color: #FFFFFF;
+      box-shadow: 0 6px 24px rgba(31, 63, 176, 0.35), 0 0 16px rgba(232, 89, 12, 0.28);
+      transform: translateY(-2px);
+    }
+
+    [data-theme="dark"] .detail-watch-btn {
+      border: 1px solid rgba(82, 127, 255, 0.6);
+      background: linear-gradient(135deg, rgba(255, 106, 0, 0.18) 0%, rgba(45, 85, 210, 0.3) 100%);
+      color: #FFFFFF;
+      box-shadow: 
+        0 6px 24px rgba(0, 0, 0, 0.6),
+        0 0 20px rgba(82, 127, 255, 0.28),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    [data-theme="dark"] .detail-watch-btn:hover {
+      background: linear-gradient(135deg, #FF6A00 0%, #3B72FF 100%);
+      border-color: #8EB3FF;
+      color: #FFFFFF;
+      box-shadow: 
+        0 8px 32px rgba(59, 114, 255, 0.55),
+        0 0 28px rgba(255, 106, 0, 0.45);
+      transform: translateY(-2px);
+    }
+
+    .detail-right-col {
+      justify-self: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+    }
+
+    .detail-book-frame {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: min(100%, 78vh);
+      max-height: 78vh;
+      aspect-ratio: 474 / 900;
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: 
+        0 30px 60px -12px rgba(0, 0, 0, 0.55),
+        0 12px 24px -8px rgba(0, 0, 0, 0.4),
+        0 0 0 1px rgba(0, 0, 0, 0.12);
+      transform-style: preserve-3d;
+      transition: box-shadow 0.4s var(--ease);
+    }
+
+    [data-theme="dark"] .detail-book-frame {
+      box-shadow: 
+        0 35px 80px -15px rgba(0, 0, 0, 0.95),
+        0 15px 35px -10px rgba(0, 0, 0, 0.75),
+        0 0 45px rgba(82, 127, 255, 0.32),
+        0 0 90px rgba(255, 106, 0, 0.16),
+        0 0 0 1px rgba(255, 255, 255, 0.12);
+    }
+
+    .detail-poster-svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .detail-book-overlay {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.65s cubic-bezier(0.2, 0.8, 0.2, 1);
+      border-radius: inherit;
+      overflow: hidden;
+      z-index: 5;
+    }
+
+    .detail-book-overlay.is-visible {
+      opacity: 1;
+    }
+
+    .detail-book-overlay .cv-bg-vignette {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 50%, rgba(10, 12, 18, 0.25) 0%, rgba(10, 12, 18, 0.88) 100%);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .detail-book-overlay .cv-plate {
+      position: absolute;
+      top: 14px;
+      left: 12px;
+      right: 12px;
+      background: rgba(12, 14, 20, 0.94);
+      backdrop-filter: blur(8px);
+      border: 1.5px solid rgba(255, 255, 255, 0.35);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.75), inset 0 0 12px rgba(0, 0, 0, 0.5);
+      border-radius: 4px;
+      padding: 10px 14px 12px;
+      z-index: 4;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      box-sizing: border-box;
+    }
+
+    .detail-book-overlay .cv-sub {
+      font-family: var(--font-sans);
+      font-size: 8.5px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      color: rgba(255, 255, 255, 0.9);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.22);
+      padding-bottom: 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      white-space: nowrap;
+    }
+
+    .detail-book-overlay .cv-title {
+      font-family: var(--font-serif);
+      font-size: clamp(14px, 1.8vw, 20px);
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: #FFFFFF;
+      text-shadow: 0 2px 6px rgba(0, 0, 0, 0.95), 0 0 2px rgba(0, 0, 0, 1);
+      margin-top: 3px;
+      white-space: nowrap;
+    }
+
+    .detail-book-overlay .cv-tagline {
+      font-family: var(--font-sans);
+      font-size: 8.5px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      color: rgba(255, 255, 255, 0.9);
+      margin-top: 2px;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .detail-book-overlay .cv-center-graphic {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
+      padding: 30px;
+    }
+
+    .detail-book-overlay .cv-center-graphic svg {
+      width: 100%;
+      max-width: 180px;
+      height: auto;
+      filter: drop-shadow(0 6px 18px rgba(0, 0, 0, 0.85)) drop-shadow(0 0 16px rgba(245, 158, 11, 0.3));
+    }
+
+    .detail-book-overlay .cv-foot-plate {
+      position: absolute;
+      bottom: 14px;
+      left: 12px;
+      right: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 4;
+      background: rgba(12, 14, 20, 0.92);
+      backdrop-filter: blur(8px);
+      padding: 8px 12px;
+      border-radius: 3px;
+      border: 1.5px solid rgba(255, 255, 255, 0.28);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.7);
+      box-sizing: border-box;
+    }
+
+    .detail-book-overlay .cv-edition {
+      font-family: var(--font-sans);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      color: #FFFFFF;
+      text-transform: uppercase;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 65%;
+    }
+
+    .detail-book-overlay .cv-badge {
+      font-family: var(--font-sans);
+      font-size: 8px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      color: #FFFFFF;
+      border: 1px solid rgba(255, 255, 255, 0.85);
+      padding: 2px 6px;
+      border-radius: 2px;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+    }
+
+    /* Responsive Design (Tablet: 768px - 1024px) */
+    @media (min-width: 768px) and (max-width: 1024px) {
+      .top-bar {
+        height: clamp(66px, 8.5vh, 84px);
+        padding: clamp(10px, 1.5vh, 18px) 20px;
+      }
+
+      .decade-nav {
+        top: calc(50% - var(--H) / 2 - clamp(76px, 10.5vh, 100px));
+        width: min(94vw, 680px);
+        height: 34px;
+        padding: 3px 4px;
+      }
+
+      .decade-indicator {
+        top: 3px;
+        bottom: 3px;
+        height: calc(100% - 6px);
+      }
+
+      .decade-btn {
+        font-size: clamp(6.8px, 0.95vw, 8.5px);
+        padding: 0 3px;
+        letter-spacing: 0.04em;
+      }
+
+      .caption-container {
+        top: calc(50% + var(--H) / 2 + clamp(36px, 5vh, 50px));
+        width: min(88vw, calc(100vw - 110px));
+        gap: 6px;
+      }
+
+      .caption-title {
+        font-size: clamp(20px, 3.2vw, 28px);
+      }
+
+      .arrow-btn {
+        top: calc(50% + var(--H) / 2 + clamp(36px, 5vh, 50px) + 14px);
+        width: 40px;
+        height: 40px;
+      }
+
+      .arrow-left { left: 16px; }
+      .arrow-right { right: 16px; }
+
+      .footer {
+        left: 20px;
+        right: 20px;
+        bottom: clamp(12px, 2vh, 18px);
+      }
+
+      .detail {
+        padding: 85px 4vw 40px;
+        gap: 3vw;
+      }
+
+      .detail-poster-svg,
+      .detail-book-frame {
+        max-height: 65vh;
+      }
+    }
+
+    /* Intermediate Height Laptops & Resized Windows (521px - 720px height) */
+    @media (min-height: 521px) and (max-height: 720px) and (min-width: 768px) {
+      .top-bar {
+        height: 68px;
+        padding: 10px 24px;
+      }
+
+      .logo-main {
+        font-size: 21px;
+      }
+
+      .logo-sub {
+        font-size: 8.5px;
+      }
+
+      .decade-nav {
+        top: calc(50% - var(--H) / 2 - clamp(64px, 9.5vh, 84px));
+        height: 30px;
+        padding: 2.5px 3px;
+      }
+
+      .decade-indicator {
+        top: 2.5px;
+        bottom: 2.5px;
+        height: calc(100% - 5px);
+      }
+
+      .decade-btn {
+        font-size: 8px;
+        padding: 0 3px;
+      }
+
+      .caption-container {
+        top: calc(50% + var(--H) / 2 + clamp(34px, 5.2vh, 46px));
+        gap: 5px;
+      }
+
+      .caption-title {
+        font-size: clamp(19px, 2.6vw, 25px);
+      }
+
+      .caption-sub, .caption-year {
+        font-size: 9.5px;
+      }
+
+      .arrow-btn {
+        top: calc(50% + var(--H) / 2 + clamp(34px, 5.2vh, 46px) + 13px);
+        width: 38px;
+        height: 38px;
+      }
+
+      .footer {
+        bottom: 12px;
+      }
+    }
+
+    /* Responsive Design (Mobile: ≤ 767px) */
+    @media (max-width: 767px) {
+      html, body {
+        height: 100dvh;
+      }
+
+      .top-bar {
+        height: clamp(62px, 8.5vh, 74px);
+        padding: calc(clamp(10px, 1.5vh, 16px) + env(safe-area-inset-top, 0px)) 14px clamp(8px, 1.2vh, 12px);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+      }
+
+      .crest-badge {
+        height: clamp(38px, 5.2vh, 46px);
+      }
+
+      .logo {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        gap: 2px;
+        pointer-events: auto;
+      }
+
+      .logo-main {
+        font-size: clamp(17px, 4.6vw, 21px);
+        white-space: nowrap;
+      }
+
+      .logo-sub {
+        font-size: clamp(7.5px, 2vw, 8.5px);
+        letter-spacing: 0.24em;
+        white-space: nowrap;
+      }
+
+      .career-lbl {
+        display: none;
+      }
+
+      .top-right {
+        display: flex;
+        align-items: center;
+      }
+
+      .theme-toggle-btn {
+        margin-left: 0;
+        height: 27px;
+        padding: 0 8px;
+        gap: 5px;
+        font-size: 8px;
+      }
+
+      .decade-nav {
+        left: 50%;
+        transform: translateX(-50%);
+        top: calc(50% - var(--H) / 2 - clamp(60px, 8.8vh, 78px));
+        width: min(96vw, 520px);
+        height: 30px;
+        padding: 2.5px 3px;
+        overflow: hidden;
+      }
+
+      .decade-indicator {
+        top: 2.5px;
+        bottom: 2.5px;
+        height: calc(100% - 5px);
+      }
+
+      .decade-btn {
+        font-size: clamp(6.2px, 2.1vw, 8px);
+        padding: 0 2px;
+        letter-spacing: 0.03em;
+      }
+
+      .shelf-section {
+        perspective: 1200px;
+        touch-action: none;
+        top: clamp(66px, 9vh, 78px);
+        bottom: 40px;
+        height: auto;
+      }
+
+      /* Mobile Spine Plaque */
+      .sp-label {
+        top: 8%;
+        bottom: 8%;
+        left: 2px;
+        right: 2px;
+        padding: 6px 1px;
+      }
+
+      .sp-icon {
+        width: 12px;
+        height: 12px;
+      }
+
+      .sp-vol {
+        font-size: 6px;
+      }
+
+      .sp-title {
+        font-size: 9px;
+        letter-spacing: 0.08em;
+      }
+
+      .sp-badge {
+        font-size: 5.5px;
+        padding: 0 2px;
+      }
+
+      /* Mobile Cover Card - Proportional and Clean */
+      .cv-plate {
+        top: 6px;
+        left: 6px;
+        right: 6px;
+        padding: 5px 8px 6px;
+        gap: 2px;
+        border-radius: 2px;
+      }
+
+      .cv-sub {
+        font-size: 6.5px;
+        letter-spacing: 0.08em;
+        padding-bottom: 2px;
+        gap: 4px;
+        white-space: nowrap;
+      }
+
+      .cv-title {
+        font-size: clamp(10.5px, 3.2vw, 13px);
+        letter-spacing: 0.03em;
+        line-height: 1.1;
+        margin-top: 1.5px;
+        white-space: nowrap;
+      }
+
+      .cv-tagline {
+        font-size: 6px;
+        letter-spacing: 0.07em;
+        margin-top: 1.5px;
+        white-space: nowrap;
+      }
+
+      .cv-center-graphic {
+        padding: 10px;
+      }
+
+      .cv-center-graphic svg {
+        max-width: 76px;
+      }
+
+      .cv-foot-plate {
+        bottom: 6px;
+        left: 6px;
+        right: 6px;
+        padding: 3px 6px;
+      }
+
+      .cv-edition {
+        font-size: 6.5px;
+        letter-spacing: 0.08em;
+      }
+
+      .cv-badge {
+        font-size: 6px;
+        padding: 1px 3px;
+      }
+
+      /* Play Ring */
+      .play-ring {
+        width: 36px;
+        height: 36px;
+      }
+
+      .play-triangle {
+        width: 10px;
+        height: 10px;
+      }
+
+      /* Caption & Arrows */
+      .caption-container {
+        top: calc(50% + var(--H) / 2 + clamp(36px, 5.2vh, 52px));
+        width: calc(100vw - 32px);
+        max-width: 440px;
+        gap: clamp(4px, 1vh, 7px);
+      }
+
+      .caption-title {
+        font-size: clamp(17px, 5vw, 22px);
+        line-height: 1.15;
+        min-height: calc(18px * 1.15);
+      }
+
+      .caption-sub {
+        font-size: 8.5px;
+        min-height: 11px;
+      }
+
+      .caption-year {
+        font-size: 8.5px;
+        min-height: 11px;
+      }
+
+      .arrow-btn {
+        top: calc(50% - 10px);
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12);
+      }
+
+      .arrow-left {
+        left: 8px;
+      }
+
+      .arrow-right {
+        right: 8px;
+      }
+
+      .footer {
+        left: 14px;
+        right: 14px;
+        bottom: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .footer .lbl {
+        font-size: 7.5px;
+        white-space: nowrap;
+      }
+
+      .foot-extra {
+        display: none;
+      }
+
+      /* Detail View on Mobile */
+      .detail {
+        grid-template-columns: 1fr;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 66px 18px 30px;
+        gap: 16px;
+        height: 100dvh;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .detail-close {
+        top: 14px;
+        left: 14px;
+        height: 26px;
+        padding: 0 8px;
+        font-size: 8.5px;
+      }
+
+      .detail-logo-band {
+        height: 52px;
+      }
+
+      .detail-right-col {
+        order: -1;
+        width: 100%;
+        max-width: 180px;
+        margin: 0 auto;
+      }
+
+      .detail-poster-svg,
+      .detail-book-frame {
+        height: 32vh;
+        height: 32svh;
+        max-height: 32svh;
+        width: auto;
+      }
+
+      .detail-book-overlay .cv-plate {
+        top: 6px;
+        left: 6px;
+        right: 6px;
+        padding: 5px 8px;
+        gap: 2px;
+      }
+
+      .detail-book-overlay .cv-sub {
+        font-size: 6px;
+        padding-bottom: 2px;
+      }
+
+      .detail-book-overlay .cv-title {
+        font-size: 11px;
+        margin-top: 1px;
+      }
+
+      .detail-book-overlay .cv-tagline {
+        font-size: 6px;
+      }
+
+      .detail-book-overlay .cv-center-graphic svg {
+        max-width: 90px;
+      }
+
+      .detail-book-overlay .cv-foot-plate {
+        bottom: 6px;
+        left: 6px;
+        right: 6px;
+        padding: 4px 6px;
+      }
+
+      .detail-book-overlay .cv-edition {
+        font-size: 6.5px;
+      }
+
+      .detail-book-overlay .cv-badge {
+        font-size: 6px;
+        padding: 1px 4px;
+      }
+
+      .detail-left-col {
+        width: 100%;
+        gap: 10px;
+        text-align: center;
+        align-items: center;
+      }
+
+      .detail-title {
+        font-size: 24px;
+        line-height: 1.12;
+      }
+
+      .detail-sub {
+        font-size: 9.5px;
+      }
+
+      .detail-meta {
+        font-size: 8.5px;
+      }
+
+      .detail-synopsis {
+        font-size: 13.5px;
+        line-height: 1.5;
+        max-width: 100%;
+      }
+
+      .detail-credit {
+        font-size: 12px;
+      }
+
+      .detail-watch-btn {
+        align-self: center;
+        height: 36px;
+        padding: 0 14px;
+        font-size: 9px;
+        margin-top: 4px;
+      }
+    }
+
+    /* Responsive Design (Ultra-Narrow Phones: ≤ 360px) */
+    @media (max-width: 360px) {
+      .top-bar {
+        height: 54px;
+        padding: calc(8px + env(safe-area-inset-top, 0px)) 8px 6px;
+      }
+
+      .crest-badge {
+        height: 30px;
+      }
+
+      .logo-main {
+        font-size: 15.5px;
+      }
+
+      .logo-sub {
+        font-size: 7px;
+        letter-spacing: 0.18em;
+      }
+
+      .theme-toggle-btn {
+        height: 25px;
+        width: 25px;
+        padding: 0;
+        justify-content: center;
+      }
+
+      .theme-toggle-btn .theme-toggle-text {
+        display: none;
+      }
+
+      .decade-nav {
+        top: calc(50% - var(--H) / 2 - clamp(56px, 8vh, 70px));
+        width: min(96vw, 370px);
+        height: 28px;
+        padding: 2px;
+      }
+
+      .decade-indicator {
+        top: 2px;
+        bottom: 2px;
+        height: calc(100% - 4px);
+      }
+
+      .decade-btn {
+        font-size: clamp(5.6px, 1.9vw, 6.8px);
+        letter-spacing: 0.02em;
+        padding: 0 1px;
+      }
+
+      .cv-plate {
+        top: 4px;
+        left: 4px;
+        right: 4px;
+        padding: 4px 6px;
+      }
+
+      .cv-title {
+        font-size: 10px;
+      }
+
+      .cv-foot-plate {
+        bottom: 4px;
+        left: 4px;
+        right: 4px;
+        padding: 2px 4px;
+      }
+
+      .caption-container {
+        top: calc(50% + var(--H) / 2 + 40px);
+        width: calc(100vw - 20px);
+      }
+
+      .caption-title {
+        font-size: 15px;
+      }
+
+      .arrow-btn {
+        top: calc(50% - 10px);
+        width: 30px;
+        height: 30px;
+      }
+
+      .arrow-left { left: 4px; }
+      .arrow-right { right: 4px; }
+
+      .footer {
+        left: 6px;
+        right: 6px;
+        bottom: 6px;
+      }
+
+      .footer .lbl {
+        font-size: 6.5px;
+      }
+    }
+
+    /* Responsive Design (Short Height & Mobile Landscape: ≤ 520px height) */
+    @media (max-height: 520px) {
+      .top-bar {
+        height: 48px;
+        padding: 6px 16px 4px;
+      }
+
+      .crest-badge {
+        height: 32px;
+      }
+
+      .logo-main {
+        font-size: 16.5px;
+      }
+
+      .logo-sub {
+        font-size: 7.5px;
+        letter-spacing: 0.2em;
+      }
+
+      .theme-toggle-btn {
+        height: 22px;
+        padding: 0 6px;
+        font-size: 7.5px;
+      }
+
+      .decade-nav {
+        top: calc(50% - var(--H) / 2 - 46px);
+        width: min(94vw, 580px);
+        height: 26px;
+        padding: 2px;
+      }
+
+      .decade-indicator {
+        top: 2px;
+        bottom: 2px;
+        height: calc(100% - 4px);
+      }
+
+      .decade-btn {
+        height: 100%;
+        padding: 0 2px;
+        font-size: 7px;
+        letter-spacing: 0.02em;
+      }
+
+      .caption-container {
+        top: calc(50% + var(--H) / 2 + 14px);
+        width: calc(100vw - 32px);
+        gap: 2px;
+      }
+
+      .caption-title {
+        font-size: 17px;
+        min-height: calc(17px * 1.12);
+      }
+
+      .caption-sub, .caption-year {
+        font-size: 8px;
+        min-height: 10px;
+      }
+
+      .arrow-btn {
+        top: calc(50% - 6px);
+        width: 32px;
+        height: 32px;
+      }
+
+      .arrow-left { left: 10px; }
+      .arrow-right { right: 10px; }
+
+      .footer {
+        bottom: 6px;
+        left: 14px;
+        right: 14px;
+      }
+
+      .footer .lbl {
+        font-size: 7px;
+      }
+
+      /* Compact detail dialog for short screens / landscape */
+      .detail {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        padding: 46px 4vw 20px;
+        gap: 3vw;
+        height: 100vh;
+        align-items: center;
+      }
+
+      .detail-close {
+        top: 10px;
+        left: 14px;
+        height: 24px;
+        font-size: 8px;
+      }
+
+      .detail-logo-band {
+        height: 40px;
+      }
+
+      .detail-left-col {
+        max-width: 440px;
+        gap: 8px;
+        text-align: left;
+        align-items: flex-start;
+      }
+
+      .detail-right-col {
+        order: 1;
+        max-width: 140px;
+      }
+
+      .detail-poster-svg,
+      .detail-book-frame {
+        max-height: 60vh;
+        height: 60vh;
+      }
+
+      .detail-title {
+        font-size: clamp(20px, 3.5vw, 32px);
+      }
+
+      .detail-sub {
+        font-size: 9px;
+      }
+
+      .detail-meta {
+        font-size: 8px;
+      }
+
+      .detail-synopsis {
+        font-size: 11.5px;
+        line-height: 1.4;
+      }
+
+      .detail-credit {
+        font-size: 10.5px;
+      }
+
+      .detail-watch-btn {
+        height: 30px;
+        padding: 0 12px;
+        font-size: 8px;
+        margin-top: 2px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Probe for measuring exact --H -->
+  <div id="probe"></div>
+
+  <!-- Common SVG Gradients for Graphics -->
+  <svg style="position: absolute; width: 0; height: 0; overflow: hidden;" aria-hidden="true">
+    <defs>
+      <linearGradient id="grad-gold" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#FDE68A" />
+        <stop offset="100%" stop-color="#D97706" />
+      </linearGradient>
+      <linearGradient id="grad-cyan" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#67E8F9" />
+        <stop offset="100%" stop-color="#059669" />
+      </linearGradient>
+      <linearGradient id="grad-magenta" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#F472B6" />
+        <stop offset="100%" stop-color="#7C3AED" />
+      </linearGradient>
+      <linearGradient id="grad-blue" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#38BDF8" />
+        <stop offset="100%" stop-color="#1D4ED8" />
+      </linearGradient>
+      <linearGradient id="grad-shield" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#FBBF24" />
+        <stop offset="100%" stop-color="#DC2626" />
+      </linearGradient>
+      <linearGradient id="grad-flame" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#FDE047" />
+        <stop offset="50%" stop-color="#EA580C" />
+        <stop offset="100%" stop-color="#DC2626" />
+      </linearGradient>
+      <linearGradient id="grad-events" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#FB7185" />
+        <stop offset="50%" stop-color="#F43F5E" />
+        <stop offset="100%" stop-color="#FB923C" />
+      </linearGradient>
+      <linearGradient id="grad-graphics" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#A78BFA" />
+        <stop offset="50%" stop-color="#818CF8" />
+        <stop offset="100%" stop-color="#38BDF8" />
+      </linearGradient>
+    </defs>
+  </svg>
+
+  <!-- Paper Grain Overlay -->
+  <svg class="paper-grain" aria-hidden="true" width="100%" height="100%">
+    <defs>
+      <filter id="grain-filter" x="0%" y="0%" width="100%" height="100%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch" result="noise" />
+        <feColorMatrix type="matrix" values="
+          0 0 0 0 0.45
+          0 0 0 0 0.42
+          0 0 0 0 0.38
+          0 0 0 0.22 0" />
+      </filter>
+      <pattern id="grain-pattern" width="220" height="220" patternUnits="userSpaceOnUse">
+        <rect width="220" height="220" filter="url(#grain-filter)" />
+      </pattern>
+    </defs>
+    <rect width="100%" height="100%" fill="url(#grain-pattern)" />
+  </svg>
+
+  <!-- 1. Top Bar -->
+  <header class="top-bar">
+    <div class="top-left">
+      <div class="crest-badge" title="Technovation Networking Club ABES" aria-label="Technovation Networking Club ABES">
+        <img src="technovation_crest.png" alt="Technovation Networking Club Crest" class="crest-img" width="1188" height="1324" loading="eager" fetchpriority="high" decoding="sync" />
+      </div>
+    </div>
+    <div class="logo">
+      <span class="logo-main">TECHNOVATION</span>
+      <span class="logo-sub">STORY ARCHIVES</span>
+    </div>
+    <div class="top-right">
+      <span class="lbl career-lbl">CHAPTERS I — VIII · STORYBOOK</span>
+      <button class="theme-toggle-btn box lbl" id="theme-toggle-btn" type="button" aria-label="Toggle dark and light mode" title="Switch theme">
+        <span class="theme-icon-slot">
+          <svg class="theme-icon icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <svg class="theme-icon icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </span>
+        <span class="theme-toggle-text desktop-only" id="theme-label">DARK</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- 2. Story Chapter Tabs (8 Wing Chapters) -->
+  <nav class="decade-nav" aria-label="Story Chapters">
+    <div class="decade-indicator" id="decade-indicator"></div>
+    <button class="decade-btn lbl" type="button" data-chapter="0"><span class="tab-desktop">ABOUT US</span><span class="tab-mobile">ABOUT</span></button>
+    <button class="decade-btn lbl" type="button" data-chapter="1"><span class="tab-desktop">TECHNICAL</span><span class="tab-mobile">TECH</span></button>
+    <button class="decade-btn lbl" type="button" data-chapter="2"><span class="tab-desktop">GRAPHICS</span><span class="tab-mobile">GFX</span></button>
+    <button class="decade-btn lbl" type="button" data-chapter="3"><span class="tab-desktop">PRODUCTION</span><span class="tab-mobile">PROD</span></button>
+    <button class="decade-btn lbl" type="button" data-chapter="4"><span class="tab-desktop">EVENTS</span><span class="tab-mobile">EVENTS</span></button>
+    <button class="decade-btn lbl" type="button" data-chapter="5"><span class="tab-desktop">PR & OUTREACH</span><span class="tab-mobile">PR</span></button>
+    <button class="decade-btn lbl" type="button" data-chapter="6"><span class="tab-desktop">CORE TEAM</span><span class="tab-mobile">TEAM</span></button>
+    <button class="decade-btn lbl" type="button" data-chapter="7"><span class="tab-desktop">LEGACY</span><span class="tab-mobile">LEGACY</span></button>
+  </nav>
+
+  <!-- 3. The Shelf (3D Stage: 8 Bespoke Storybooks Perfectly Centered) -->
+  <section class="shelf-section" id="shelf-section" aria-label="Club story shelf">
+    <div class="stage" id="stage"></div>
+  </section>
+
+  <!-- 4. Play Ring -->
+  <button class="play-ring" id="play-ring" type="button" aria-label="Open chapter">
+    <svg class="play-triangle" viewBox="0 0 12 12" aria-hidden="true">
+      <polygon points="1,0 11,6 1,12" />
+    </svg>
+  </button>
+
+  <!-- 5. Caption -->
+  <div class="caption-container" aria-live="polite">
+    <div class="caption-mask caption-title" id="caption-title"></div>
+    <div class="caption-mask caption-sub lbl" id="caption-sub"></div>
+    <div class="caption-mask caption-year" id="caption-year"></div>
+  </div>
+
+  <!-- 6. Navigation Arrows -->
+  <button class="arrow-btn arrow-left" id="arrow-left" type="button" aria-label="Previous chapter">
+    <svg width="20" height="12" viewBox="0 0 18 10" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M5 1L1 5L5 9" />
+      <path d="M1 5H17" />
+    </svg>
+  </button>
+  <button class="arrow-btn arrow-right" id="arrow-right" type="button" aria-label="Next chapter">
+    <svg width="20" height="12" viewBox="0 0 18 10" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M13 1L17 5L13 9" />
+      <path d="M17 5H1" />
+    </svg>
+  </button>
+
+  <!-- 7. Footer -->
+  <footer class="footer">
+    <span class="lbl foot-copy">© 2026 technovation networking club abes <span class="foot-extra">. all stories reserved.</span></span>
+    <span class="lbl">
+      <a href="https://www.instagram.com/abes_technovation/" target="_blank" rel="noopener noreferrer" class="foot-link">INSTAGRAM</a> / 
+      <a href="#" class="foot-link">LINKEDIN</a>
+    </span>
+  </footer>
+
+  <!-- 8. Custom Cursor -->
+  <div class="cursor" id="cursor" aria-hidden="true">
+    <div class="cursor-ring"></div>
+    <div class="cursor-dot"></div>
+    <div class="cursor-label">
+      <span>OPEN</span>
+    </div>
+  </div>
+
+  <!-- Opening Chapter Detail Dialog -->
+  <div class="detail" id="detail" role="dialog" aria-modal="true" aria-label="Chapter story details">
+    <button class="box lbl detail-close" id="detail-close" type="button" aria-label="Close details">CLOSE</button>
+    <div class="detail-logo-band">
+      <div class="logo">
+        <span class="logo-main">TECHNOVATION</span>
+        <span class="logo-sub">STORY ARCHIVES</span>
+      </div>
+    </div>
+    
+    <div class="detail-left-col">
+      <div class="mask-line">
+        <div class="lbl detail-sub" id="detail-sub"></div>
+      </div>
+      <div class="mask-line">
+        <h1 class="detail-title" id="detail-title"></h1>
+      </div>
+      <div class="mask-line">
+        <div class="lbl detail-meta" id="detail-meta"></div>
+      </div>
+      <div class="mask-line">
+        <p class="detail-synopsis" id="detail-synopsis"></p>
+      </div>
+      <div class="mask-line">
+        <p class="detail-credit" id="detail-credit"></p>
+      </div>
+      <div class="mask-line">
+        <button class="box lbl detail-watch-btn" id="detail-action-btn" type="button"></button>
+      </div>
+    </div>
+
+    <div class="detail-right-col">
+      <div class="detail-book-frame" id="detail-book-frame">
+        <svg viewBox="0 0 474 900" class="detail-poster-svg" aria-hidden="true">
+          <defs>
+            <filter id="ink-filter" x="-50%" y="-50%" width="200%" height="200%">
+              <feTurbulence type="fractalNoise" baseFrequency="0.011" numOctaves="3" seed="7" result="noise" />
+              <feDisplacementMap in="SourceGraphic" in2="noise" scale="120" xChannelSelector="R" yChannelSelector="G" />
+            </filter>
+            <mask id="ink-mask" maskUnits="userSpaceOnUse" x="-200" y="-200" width="874" height="1300">
+              <g filter="url(#ink-filter)">
+                <circle id="ink-blob-1" cx="150" cy="330" r="0" fill="#ffffff" />
+                <circle id="ink-blob-2" cx="340" cy="600" r="0" fill="#ffffff" />
+                <circle id="ink-blob-3" cx="250" cy="120" r="0" fill="#ffffff" />
+                <circle id="ink-blob-4" cx="90" cy="760" r="0" fill="#ffffff" />
+                <circle id="ink-blob-5" cx="400" cy="250" r="0" fill="#ffffff" />
+                <circle id="ink-blob-6" cx="260" cy="860" r="0" fill="#ffffff" />
+                <circle id="ink-blob-7" cx="230" cy="470" r="0" fill="#ffffff" />
+              </g>
+            </mask>
+            <clipPath id="poster-clip">
+              <rect x="0" y="0" width="474" height="900" rx="6" />
+            </clipPath>
+          </defs>
+          <g clip-path="url(#poster-clip)" mask="url(#ink-mask)">
+            <image id="detail-poster-img" href="" preserveAspectRatio="none" />
+          </g>
+        </svg>
+
+        <!-- Shelf-Matched Cover Face Overlay (Exact as bookshelf) -->
+        <div class="detail-book-overlay" id="detail-book-overlay">
+          <div class="cv-bg-vignette"></div>
+          <div class="cv-center-graphic" id="detail-cv-graphic"></div>
+          <div class="cv-plate" id="detail-cv-plate">
+            <div class="cv-sub">
+              <span>TECHNOVATION</span>
+              <span id="detail-plate-chapter"></span>
+            </div>
+            <h2 class="cv-title" id="detail-plate-title"></h2>
+            <span class="cv-tagline" id="detail-plate-tagline"></span>
+          </div>
+          <div class="cv-foot-plate" id="detail-cv-foot-plate">
+            <span class="cv-edition" id="detail-plate-edition"></span>
+            <span class="cv-badge">ARCHIVE</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="node_modules/page-flip/dist/js/page-flip.browser.js"></script>
+  <script type="module">
+    import { FullScreenBookReader, BookReader } from './components/BookReader/FullScreenBookReader.js?v=2.2';
+    window.FullScreenBookReader = FullScreenBookReader;
+    window.BookReader = FullScreenBookReader;
+
+    /* --- DATA: SHEETS & CROPS --- */
+    const SHEET = {
+      covers: [
+        'https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20261029_010644_837e04ca-2418-45c1-b8e0-0233265c4cd5.png&w=1744&q=85',
+        1744,
+        2336
+      ],
+      spines: [
+        'https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20261029_010738_a3e47ead-18f2-4974-9468-06d16a25edc5.png&w=2688&q=85',
+        2688,
+        1152
+      ],
+      fix: [
+        'https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20261029_010831_3ebb874b-93dc-433e-87ed-6299aba720f0.png&w=1520&q=85',
+        1520,
+        2688
+      ],
+      fix2: [
+        'https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20261029_092020_f96bc094-db7b-46de-9298-074a24e0a3b8.png&w=1520&q=85',
+        1520,
+        2688
+      ]
+    };
+
+    const CROP = {
+      'spine-noon': ['spines', 44, 32, 184, 1088],
+      'cover-noon': ['covers', 74, 72, 347, 659],
+
+      'spine-green': ['spines', 1157, 31, 185, 1090],
+      'cover-green': ['covers', 497, 815, 344, 674],
+
+      'spine-graphics': ['spines', 1600, 31, 188, 1089],
+      'cover-graphics': ['covers', 497, 72, 344, 659],
+
+      'spine-storm': ['fix2', 808, 15, 347, 2656],
+      'cover-storm': ['covers', 74, 1571, 345, 681],
+
+      'spine-events': ['spines', 715, 31, 188, 1089],
+      'cover-events': ['covers', 1331, 72, 344, 659],
+
+      'spine-bluehour': ['spines', 492, 31, 189, 1089],
+      'cover-bluehour': ['covers', 914, 72, 342, 659],
+
+      'spine-observer': ['fix2', 371, 15, 349, 2655],
+      'cover-observer': ['covers', 915, 815, 342, 675],
+
+      'spine-door': ['spines', 2462, 31, 188, 1089],
+      'cover-door': ['covers', 1331, 1579, 344, 677]
+    };
+
+    /* --- THE 8 STORY BOOKS (CUSTOM GRAPHICS & CENTERED COLLECTION) --- */
+    const BOOKS = [
+      {
+        id: 'noon',
+        vol: 'VOL. 01',
+        chapter: 'CHAPTER 01',
+        spineTitle: 'ABOUT US',
+        title: 'About Us: The Genesis',
+        romaji: 'THE GENESIS',
+        tag: 'CHAPTER 01 · FOUNDATION & PURPOSE',
+        meta: 'CHAPTER 01 / STORY / FOUNDATION & PURPOSE',
+        tagline: 'FOUNDATION & PURPOSE',
+        synopsis: 'We are a collective of creators, builders, thinkers, and disruptors united by an insatiable hunger to leave a mark. Born from late-night brainstorms in university halls, our club was founded on a simple truth: the most groundbreaking ideas don\'t happen in isolation—they happen when divergent minds collide. From our very first prototype to our grandest exhibitions, we foster an environment where curiosity is celebrated, failure is a stepping stone, and every member finds their voice.',
+        credit: 'Authored by The Executive Council. Official Record',
+        actionBtn: 'EXPLORE OUR MANIFESTO',
+        // Spine Icon: Compass Star
+        spineIconSvg: `<svg viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="1.8"><polygon points="12,2 14.5,9.5 22,12 14.5,14.5 12,22 9.5,14.5 2,12 9.5,9.5"/><circle cx="12" cy="12" r="2.5" fill="#F59E0B"/></svg>`,
+        // Cover Graphic: Celestial Compass Orbit
+        graphicSvg: `
+          <svg viewBox="0 0 160 160" fill="none">
+            <circle cx="80" cy="80" r="68" stroke="rgba(245, 158, 11, 0.35)" stroke-width="1.2" stroke-dasharray="4 3"/>
+            <circle cx="80" cy="80" r="52" stroke="rgba(245, 158, 11, 0.55)" stroke-width="1.2"/>
+            <circle cx="80" cy="80" r="36" stroke="rgba(245, 158, 11, 0.25)" stroke-width="1"/>
+            <polygon points="80,18 86,68 136,74 86,80 80,130 74,80 24,74 74,68" fill="url(#grad-gold)" opacity="0.95"/>
+            <polygon points="80,32 84,72 124,76 84,80 80,116 76,80 36,76 76,72" fill="#FFFFFF" opacity="0.45"/>
+            <circle cx="80" cy="74" r="5" fill="#FFFFFF"/>
+            <line x1="80" y1="8" x2="80" y2="140" stroke="rgba(245, 158, 11, 0.4)" stroke-width="1"/>
+            <line x1="14" y1="74" x2="146" y2="74" stroke="rgba(245, 158, 11, 0.4)" stroke-width="1"/>
+          </svg>
+        `
+      },
+      {
+        id: 'green',
+        vol: 'VOL. 02',
+        chapter: 'CHAPTER 02',
+        spineTitle: 'TECHNICAL',
+        title: 'Technical: The Architects',
+        romaji: 'THE ARCHITECTS',
+        tag: 'CHAPTER 02 · SYSTEMS & CODE',
+        meta: 'CHAPTER 02 / ENGINEERING / COMPUTATION & LABS',
+        tagline: 'SYSTEMS & CODE',
+        synopsis: 'The digital backbone of our vision. The Technical Division transforms ambitious concepts into resilient code, intelligent algorithms, and tactile hardware. From architecting full-stack web platforms and cloud infrastructure to training machine learning models and engineering embedded IoT gadgets, we turn complex logic into seamless human experiences. We don\'t just use technology—we dismantle, understand, and recreate it.',
+        credit: 'Engineered by the Technical Directorate. Systems Archive',
+        actionBtn: 'VIEW TECH STACK & REPOS',
+        // Spine Icon: Microchip
+        spineIconSvg: `<svg viewBox="0 0 24 24" fill="none" stroke="#06B6D4" stroke-width="1.8"><rect x="5" y="5" width="14" height="14" rx="2"/><path d="M9 9h6v6H9z"/><path d="M9 1v4M15 1v4M9 19v4M15 19v4M1 9h4M1 15h4M19 9h4M19 15h4"/></svg>`,
+        // Cover Graphic: Circuit Matrix Core
+        graphicSvg: `
+          <svg viewBox="0 0 160 160" fill="none">
+            <polygon points="80,15 135,46 135,108 80,139 25,108 25,46" stroke="rgba(6, 182, 212, 0.45)" stroke-width="1.5" stroke-dasharray="6 4"/>
+            <path d="M38 55 H65 V72 H80" stroke="rgba(16, 185, 129, 0.75)" stroke-width="1.6"/>
+            <path d="M122 55 H95 V72 H80" stroke="rgba(6, 182, 212, 0.75)" stroke-width="1.6"/>
+            <path d="M38 95 H65 V82 H80" stroke="rgba(16, 185, 129, 0.75)" stroke-width="1.6"/>
+            <path d="M122 95 H95 V82 H80" stroke="rgba(6, 182, 212, 0.75)" stroke-width="1.6"/>
+            <rect x="62" y="59" width="36" height="36" rx="4" fill="rgba(10, 18, 26, 0.9)" stroke="url(#grad-cyan)" stroke-width="2"/>
+            <circle cx="80" cy="77" r="8" fill="url(#grad-cyan)" opacity="0.95"/>
+            <path d="M50 70 L44 77 L50 84" stroke="rgba(6, 182, 212, 0.95)" stroke-width="2" stroke-linecap="round"/>
+            <path d="M110 70 L116 77 L110 84" stroke="rgba(16, 185, 129, 0.95)" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        `
+      },
+      {
+        id: 'graphics',
+        vol: 'VOL. 03',
+        chapter: 'CHAPTER 03',
+        spineTitle: 'GRAPHICS',
+        title: 'Graphics: Visual Alchemy',
+        romaji: 'VISUAL ALCHEMY',
+        tag: 'CHAPTER 03 · IDENTITY & CANVAS',
+        meta: 'CHAPTER 03 / CREATIVE / VISUAL DESIGN & BRAND',
+        tagline: 'CANVAS & VECTOR',
+        synopsis: 'The visual architects of Technovation’s aesthetic soul. The Graphics Division crafts the bold identity systems, 3D renders, illustrative posters, UI/UX conceptual wireframes, and kinetic motion graphics that make our club instantly recognizable. Balancing timeless editorial elegance with futuristic cyber aesthetics, our designers sculpt every pixel, gradient, and vector to tell stories that evoke wonder.',
+        credit: 'Designed by Creative Guild & Visual Leads. Design Portfolio',
+        actionBtn: 'VIEW DESIGN SHOWCASE',
+        // Spine Icon: Vector Pen Tool
+        spineIconSvg: `<svg viewBox="0 0 24 24" fill="none" stroke="#A78BFA" stroke-width="1.8"><path d="M12 2L19 9L15 13L13 11L7 17L3 21L7 17L9 11L11 13Z"/><circle cx="15" cy="7" r="1.5" fill="#A78BFA"/></svg>`,
+        // Cover Graphic: Isometric Cube & Bezier Canvas
+        graphicSvg: `
+          <svg viewBox="0 0 160 160" fill="none">
+            <path d="M25 110 C40 45, 120 45, 135 110" stroke="rgba(167, 139, 250, 0.45)" stroke-width="1.5" stroke-dasharray="4 3"/>
+            <line x1="40" y1="45" x2="120" y2="45" stroke="rgba(56, 189, 248, 0.35)" stroke-width="1"/>
+            <rect x="36" y="41" width="8" height="8" fill="#A78BFA" stroke="#FFFFFF" stroke-width="1"/>
+            <rect x="116" y="41" width="8" height="8" fill="#38BDF8" stroke="#FFFFFF" stroke-width="1"/>
+            <circle cx="80" cy="45" r="3" fill="#FFFFFF"/>
+            <polygon points="80,50 115,70 80,90 45,70" fill="url(#grad-graphics)" opacity="0.9" stroke="#FFFFFF" stroke-width="1"/>
+            <polygon points="45,70 80,90 80,128 45,108" fill="rgba(99, 102, 241, 0.85)" stroke="#FFFFFF" stroke-width="1"/>
+            <polygon points="115,70 80,90 80,128 115,108" fill="rgba(56, 189, 248, 0.75)" stroke="#FFFFFF" stroke-width="1"/>
+            <circle cx="80" cy="90" r="4" fill="#FFFFFF"/>
+            <path d="M60 135 C70 142, 90 142, 100 135" stroke="rgba(167, 139, 250, 0.6)" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        `
+      },
+      {
+        id: 'storm',
+        vol: 'VOL. 04',
+        chapter: 'CHAPTER 04',
+        spineTitle: 'PRODUCTION',
+        title: 'Production: The Forge',
+        romaji: 'THE FORGE',
+        tag: 'CHAPTER 04 · LIGHTS & STAGE',
+        meta: 'CHAPTER 04 / PRODUCTION / AUDIO-VISUAL & STAGE',
+        tagline: 'LIGHTS & STAGE',
+        synopsis: 'The alchemists of atmosphere and experience. Production commands the stage, the lens, and the decibels. We oversee immersive stage management, cinematic videography, spatial acoustics, lighting choreography, and live-event broadcast orchestration. When the auditorium goes dark and thousands of eyes fixate on the spotlight, that electric goosebump moment is designed, built, and operated down to the millisecond by our crew.',
+        credit: 'Orchestrated by Stage Crew & Directors. Production Log',
+        actionBtn: 'SEE LIVE SHOWREEL',
+        // Spine Icon: Film Aperture
+        spineIconSvg: `<svg viewBox="0 0 24 24" fill="none" stroke="#EC4899" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 7.8 4.5L12 12"/><path d="M19.8 7.5A9 9 0 0 1 21 12l-9 0"/><path d="M21 12a9 9 0 0 1-4.5 7.8L12 12"/><path d="M16.5 19.8A9 9 0 0 1 12 21l0-9"/><path d="M12 21a9 9 0 0 1-7.8-4.5L12 12"/><path d="M4.2 16.5A9 9 0 0 1 3 12l9 0"/><path d="M3 12a9 9 0 0 1 4.5-7.8L12 12"/></svg>`,
+        // Cover Graphic: Aperture & Soundwave Stage
+        graphicSvg: `
+          <svg viewBox="0 0 160 160" fill="none">
+            <polygon points="80,18 20,135 140,135" fill="rgba(236, 72, 153, 0.12)"/>
+            <circle cx="80" cy="74" r="48" stroke="rgba(236, 72, 153, 0.35)" stroke-width="1.5"/>
+            <circle cx="80" cy="74" r="34" stroke="rgba(139, 92, 246, 0.65)" stroke-width="1.2"/>
+            <path d="M80 44 L95 60 L85 74" stroke="rgba(236, 72, 153, 0.95)" stroke-width="2" stroke-linecap="round"/>
+            <path d="M106 60 L98 80 L84 76" stroke="rgba(139, 92, 246, 0.95)" stroke-width="2" stroke-linecap="round"/>
+            <path d="M98 92 L78 90 L78 76" stroke="rgba(236, 72, 153, 0.95)" stroke-width="2" stroke-linecap="round"/>
+            <path d="M68 92 L62 72 L76 70" stroke="rgba(139, 92, 246, 0.95)" stroke-width="2" stroke-linecap="round"/>
+            <path d="M54 68 L72 56 L78 70" stroke="rgba(236, 72, 153, 0.95)" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="80" cy="74" r="8" fill="url(#grad-magenta)"/>
+            <line x1="48" y1="126" x2="48" y2="136" stroke="rgba(236, 72, 153, 0.85)" stroke-width="3" stroke-linecap="round"/>
+            <line x1="60" y1="118" x2="60" y2="136" stroke="rgba(139, 92, 246, 0.85)" stroke-width="3" stroke-linecap="round"/>
+            <line x1="72" y1="112" x2="72" y2="136" stroke="rgba(236, 72, 153, 0.95)" stroke-width="3" stroke-linecap="round"/>
+            <line x1="84" y1="108" x2="84" y2="136" stroke="rgba(139, 92, 246, 0.95)" stroke-width="3" stroke-linecap="round"/>
+            <line x1="96" y1="116" x2="96" y2="136" stroke="rgba(236, 72, 153, 0.85)" stroke-width="3" stroke-linecap="round"/>
+            <line x1="108" y1="124" x2="108" y2="136" stroke="rgba(139, 92, 246, 0.85)" stroke-width="3" stroke-linecap="round"/>
+          </svg>
+        `
+      },
+      {
+        id: 'events',
+        vol: 'VOL. 05',
+        chapter: 'CHAPTER 05',
+        spineTitle: 'EVENTS',
+        title: 'Events: The Grand Arena',
+        romaji: 'THE GRAND ARENA',
+        tag: 'CHAPTER 05 · HACKATHONS & SUMMITS',
+        meta: 'CHAPTER 05 / GATHERINGS / KEYNOTES & HACKATHONS',
+        tagline: 'ARENAS & EXPERIENCES',
+        synopsis: 'Where ideas transform into adrenaline and celebration. The Events Wing conceives, structures, and executes flagship hackathons, technical summits, design jams, and inter-college symposia. From hosting industry luminaries and judging roundtables to curating pulse-raising 36-hour code sprints, we turn campus spaces into epic battlegrounds of innovation, collaboration, and high-energy learning.',
+        credit: 'Spearheaded by Events Directorate & Operations. Event Chronology',
+        actionBtn: 'EXPLORE EVENT ARCHIVES',
+        // Spine Icon: Arena Starburst
+        spineIconSvg: `<svg viewBox="0 0 24 24" fill="none" stroke="#FB7185" stroke-width="1.8"><polygon points="12,2 15,8.5 22,9.5 17,14.5 18.5,21.5 12,18 5.5,21.5 7,14.5 2,9.5 9,8.5"/><circle cx="12" cy="12" r="2.5" fill="#FB7185"/></svg>`,
+        // Cover Graphic: Arena Stage & Starburst
+        graphicSvg: `
+          <svg viewBox="0 0 160 160" fill="none">
+            <ellipse cx="80" cy="120" rx="55" ry="18" stroke="rgba(251, 113, 133, 0.45)" stroke-width="1.2" stroke-dasharray="4 3"/>
+            <path d="M35 120 L75 35 L85 35 L125 120 Z" fill="rgba(244, 63, 94, 0.08)"/>
+            <line x1="35" y1="120" x2="75" y2="35" stroke="rgba(251, 113, 133, 0.6)" stroke-width="1.2"/>
+            <line x1="125" y1="120" x2="85" y2="35" stroke="rgba(251, 146, 60, 0.6)" stroke-width="1.2"/>
+            <circle cx="80" cy="65" r="32" stroke="rgba(251, 146, 60, 0.4)" stroke-width="1.2"/>
+            <polygon points="80,45 85,58 98,60 88,70 91,83 80,76 69,83 72,70 62,60 75,58" fill="url(#grad-events)" stroke="#FFFFFF" stroke-width="1"/>
+            <circle cx="80" cy="65" r="5" fill="#FFFFFF"/>
+            <line x1="80" y1="20" x2="80" y2="38" stroke="rgba(251, 113, 133, 0.7)" stroke-width="2" stroke-linecap="round"/>
+            <line x1="50" y1="30" x2="62" y2="42" stroke="rgba(251, 146, 60, 0.7)" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="110" y1="30" x2="98" y2="42" stroke="rgba(251, 146, 60, 0.7)" stroke-width="1.5" stroke-linecap="round"/>
+            <rect x="68" y="108" width="24" height="6" rx="2" fill="url(#grad-events)"/>
+          </svg>
+        `
+      },
+      {
+        id: 'bluehour',
+        vol: 'VOL. 06',
+        chapter: 'CHAPTER 06',
+        spineTitle: 'PR & OUTREACH',
+        title: 'PR & Outreach: The Megaphone',
+        romaji: 'THE MEGAPHONE',
+        tag: 'CHAPTER 06 · VOICE & COMMUNITY',
+        meta: 'CHAPTER 06 / OUTREACH / COMMUNITY & BRAND',
+        tagline: 'VOICE & COMMUNITY',
+        synopsis: 'A brilliant story deserves to be heard across the world. PR and Outreach is the connective tissue linking our club to industry giants, media partners, global alumni, and vibrant student communities. We architect viral social storytelling, curate brand aesthetics, manage sponsorships, and foster cross-university alliances. We ensure that our accomplishments resonate far beyond our campus gates.',
+        credit: 'Curated by Public Relations & Liaisons. Outreach Records',
+        actionBtn: 'PARTNER WITH US',
+        // Spine Icon: Megaphone
+        spineIconSvg: `<svg viewBox="0 0 24 24" fill="none" stroke="#38BDF8" stroke-width="1.8"><path d="M3 11l18-5v12L3 13v-2z"/><path d="M11.6 16.8L13 22h-4l-.8-5.2"/></svg>`,
+        // Cover Graphic: Megaphone & Pulse Waves
+        graphicSvg: `
+          <svg viewBox="0 0 160 160" fill="none">
+            <path d="M98 48 A42 42 0 0 1 98 106" stroke="rgba(56, 189, 248, 0.45)" stroke-width="2" stroke-linecap="round"/>
+            <path d="M110 36 A58 58 0 0 1 110 118" stroke="rgba(37, 99, 235, 0.6)" stroke-width="2" stroke-linecap="round"/>
+            <path d="M122 24 A74 74 0 0 1 122 130" stroke="rgba(56, 189, 248, 0.75)" stroke-width="2" stroke-linecap="round" stroke-dasharray="4 4"/>
+            <path d="M42 66 L64 56 L88 44 V108 L64 96 L42 86 Z" fill="url(#grad-blue)" stroke="#FFFFFF" stroke-width="1.5"/>
+            <path d="M42 66 H34 A4 4 0 0 0 30 70 V82 A4 4 0 0 0 34 86 H42 Z" fill="#1E293B" stroke="#FFFFFF" stroke-width="1.5"/>
+            <path d="M48 86 L44 104 H54 L58 86" fill="#1E293B" stroke="#FFFFFF" stroke-width="1.5"/>
+            <circle cx="88" cy="76" r="4" fill="#38BDF8"/>
+          </svg>
+        `
+      },
+      {
+        id: 'observer',
+        vol: 'VOL. 07',
+        chapter: 'CHAPTER 07',
+        spineTitle: 'CORE TEAM',
+        title: 'Core Team: The Vanguard',
+        romaji: 'THE VANGUARD',
+        tag: 'CHAPTER 07 · STEWARDSHIP',
+        meta: 'CHAPTER 07 / LEADERSHIP / CORE STEWARDS',
+        tagline: 'LEADERSHIP & MINDS',
+        synopsis: 'The heartbeat behind the momentum. The Core Team provides the strategic clarity, empathetic mentorship, and operational grit that turns aspirations into reality. Balancing long-term roadmaps with day-to-day execution, each lead champions psychological safety, interdisciplinary cross-pollination, and member empowerment. True leadership here isn\'t about giving orders—it\'s about clearing the path for others to shine.',
+        credit: 'Governed by President & Chapter Leads. Executive Roster',
+        actionBtn: 'MEET THE DIRECTORS',
+        // Spine Icon: Shield Crest
+        spineIconSvg: `<svg viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="1.8"><path d="M12 2l8 4v6c0 5.5-3.8 10.7-8 12-4.2-1.3-8-6.5-8-12V6l8-4z"/><path d="M12 6v12"/></svg>`,
+        // Cover Graphic: Vanguard Crest Shield
+        graphicSvg: `
+          <svg viewBox="0 0 160 160" fill="none">
+            <path d="M80 20 L124 38 V78 C124 110 80 136 80 136 C80 136 36 110 36 78 V38 Z" stroke="url(#grad-shield)" stroke-width="2.5" fill="rgba(15, 20, 28, 0.85)"/>
+            <path d="M80 32 L112 46 V76 C112 100 80 120 80 120 C80 120 48 100 48 76 V46 Z" stroke="rgba(245, 158, 11, 0.4)" stroke-width="1.2"/>
+            <path d="M80 48 L96 66 H86 V92 H74 V66 H64 Z" fill="url(#grad-shield)"/>
+            <circle cx="80" cy="40" r="3" fill="#FDE68A"/>
+            <circle cx="64" cy="74" r="2.5" fill="#FDE68A"/>
+            <circle cx="96" cy="74" r="2.5" fill="#FDE68A"/>
+            <circle cx="80" cy="104" r="3" fill="#FDE68A"/>
+          </svg>
+        `
+      },
+      {
+        id: 'door',
+        vol: 'VOL. 08',
+        chapter: 'CHAPTER 08',
+        spineTitle: 'LEGACY',
+        title: 'Legacy: Hall of Echoes',
+        romaji: 'HALL OF ECHOES',
+        tag: 'CHAPTER 08 · HERITAGE & ALUMNI',
+        meta: 'CHAPTER 08 / HERITAGE / ALUMNI & IMPACT',
+        tagline: 'HERITAGE & ALUMNI',
+        synopsis: 'We stand on the shoulders of the pioneers who walked these hallways before us. Our legacy spans championship hackathon trophies, historic festivals, startups founded by our peers, and distinguished alumni spearheading top global research labs and creative studios. As each cohort passes the torch to the next, our story grows richer, reminding us that we are part of something much larger than ourselves.',
+        credit: 'Preserved by Historians & Alumni Council. Heritage Annals',
+        actionBtn: 'BROWSE ARCHIVE GALLERY',
+        // Spine Icon: Eternal Torch
+        spineIconSvg: `<svg viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="1.8"><path d="M12 2c2 3 4 5 2 9-1 0-2-1-3-2-1 2-2 4-1 6 3 0 5-2 5-6 2 3 1 6-3 8v3h-4v-3c-4-2-5-5-3-8 1 2 2 3 4 3 0-2 1-4 3-7z"/></svg>`,
+        // Cover Graphic: Eternal Torch & Victory Laurel
+        graphicSvg: `
+          <svg viewBox="0 0 160 160" fill="none">
+            <path d="M38 98 C32 75 42 46 62 36" stroke="rgba(239, 68, 68, 0.65)" stroke-width="2" stroke-linecap="round"/>
+            <path d="M122 98 C128 75 118 46 98 36" stroke="rgba(239, 68, 68, 0.65)" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="44" cy="84" r="3.5" fill="rgba(249, 115, 22, 0.75)"/>
+            <circle cx="48" cy="64" r="3.5" fill="rgba(249, 115, 22, 0.75)"/>
+            <circle cx="56" cy="48" r="3.5" fill="rgba(249, 115, 22, 0.75)"/>
+            <circle cx="116" cy="84" r="3.5" fill="rgba(249, 115, 22, 0.75)"/>
+            <circle cx="112" cy="64" r="3.5" fill="rgba(249, 115, 22, 0.75)"/>
+            <circle cx="104" cy="48" r="3.5" fill="rgba(249, 115, 22, 0.75)"/>
+            <path d="M74 94 L86 94 L82 134 L78 134 Z" fill="rgba(255, 255, 255, 0.88)" stroke="#111" stroke-width="1"/>
+            <rect x="70" y="88" width="20" height="7" rx="2" fill="url(#grad-shield)"/>
+            <path d="M80 34 C88 50 96 64 88 84 C84 84 80 82 78 78 C74 84 68 82 72 70 C74 62 76 50 80 34 Z" fill="url(#grad-flame)"/>
+            <path d="M80 48 C84 58 88 66 84 76 C82 76 80 74 78 72 C76 76 72 74 74 68 C76 62 78 56 80 48 Z" fill="#FEF08A"/>
+          </svg>
+        `
+      }
+    ];
+
+    window.SHEET = SHEET;
+    window.CROP = CROP;
+    window.BOOKS = BOOKS;
+
+    /* --- INK BLOBS --- */
+    const BLOBS = [
+      { cx: 150, cy: 330, delay: 0 },
+      { cx: 340, cy: 600, delay: 120 },
+      { cx: 250, cy: 120, delay: 220 },
+      { cx: 90, cy: 760, delay: 300 },
+      { cx: 400, cy: 250, delay: 360 },
+      { cx: 260, cy: 860, delay: 420 },
+      { cx: 230, cy: 470, delay: 180 }
+    ];
+
+    /* --- MATH UTILS --- */
+    function smoothstep(x) {
+      const clamped = Math.max(0, Math.min(1, x));
+      return clamped * clamped * (3 - 2 * clamped);
+    }
+
+    /* --- PRELOAD ASSETS --- */
+    Object.values(SHEET).forEach(([url]) => {
+      const img = new Image();
+      img.src = url;
+    });
+
+    /* --- CROPPED BACKGROUND HELPER --- */
+    function applyCropStyle(el, cropKey) {
+      const [sheetKey, x, y, w, h] = CROP[cropKey];
+      const [url, W, H_sheet] = SHEET[sheetKey];
+      const bgSizeX = (W / w * 100).toFixed(4);
+      const bgSizeY = (H_sheet / h * 100).toFixed(4);
+      const bgPosX = (x / (W - w) * 100).toFixed(4);
+      const bgPosY = (y / (H_sheet - h) * 100).toFixed(4);
+      el.style.backgroundImage = `url("${url}")`;
+      el.style.backgroundSize = `${bgSizeX}% ${bgSizeY}%`;
+      el.style.backgroundPosition = `${bgPosX}% ${bgPosY}%`;
+      el.style.backgroundRepeat = 'no-repeat';
+    }
+
+    /* --- STATE --- */
+    // All books: indices 0 to BOOKS.length - 1
+    let s = 0;
+    let T = 0;
+    let prevS = 0;
+    let scrollVelocity = 0;
+    let hoveredIndex = -1;
+    let activeBook = 0;
+    let isOpen = false;
+
+    let mx = window.innerWidth / 2;
+    let my = window.innerHeight / 2;
+    let cx = mx;
+    let cy = my;
+
+    let tiltX = 0;
+    let tiltY = 0;
+    let onCover = false;
+
+    let isPointerDown = false;
+    let isDragging = false;
+    let hasMoved = false;
+    let startPointerX = 0;
+    let startT = 0;
+    let wheelTimeout = null;
+
+    let isCursorOverBtn = false;
+    let isCursorOverSpine = false;
+
+    // Reduced motion preference
+    let prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', e => {
+      prefersReducedMotion = e.matches;
+    });
+
+    /* --- DOM ELEMENTS --- */
+    const probe = document.getElementById('probe');
+    const stage = document.getElementById('stage');
+    const playRing = document.getElementById('play-ring');
+    const captionTitle = document.getElementById('caption-title');
+    const captionSub = document.getElementById('caption-sub');
+    const captionYear = document.getElementById('caption-year');
+    const arrowLeft = document.getElementById('arrow-left');
+    const arrowRight = document.getElementById('arrow-right');
+    const decadeIndicator = document.getElementById('decade-indicator');
+    const chapterButtons = Array.from(document.querySelectorAll('.decade-btn'));
+    const cursor = document.getElementById('cursor');
+    const detail = document.getElementById('detail');
+    const detailClose = document.getElementById('detail-close');
+    const detailSub = document.getElementById('detail-sub');
+    const detailTitle = document.getElementById('detail-title');
+    const detailMeta = document.getElementById('detail-meta');
+    const detailSynopsis = document.getElementById('detail-synopsis');
+    const detailCredit = document.getElementById('detail-credit');
+    const detailActionBtn = document.getElementById('detail-action-btn');
+    const detailPosterImg = document.getElementById('detail-poster-img');
+    const themeToggleBtn = document.getElementById('theme-toggle-btn');
+    const themeLabel = document.getElementById('theme-label');
+
+    /* --- THEME TOGGLE (DARK / LIGHT) --- */
+    function updateThemeUI(theme) {
+      const isDark = theme === 'dark';
+      if (themeLabel) themeLabel.textContent = isDark ? 'LIGHT' : 'DARK';
+      if (themeToggleBtn) {
+        themeToggleBtn.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
+        themeToggleBtn.setAttribute('title', isDark ? 'Switch to light mode' : 'Switch to dark mode');
+      }
+    }
+
+    const initialTheme = document.documentElement.getAttribute('data-theme') || 'light';
+    updateThemeUI(initialTheme);
+
+    if (themeToggleBtn) {
+      themeToggleBtn.addEventListener('click', () => {
+        const cur = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+        const next = cur === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        try {
+          localStorage.setItem('technovation-theme', next);
+        } catch (_) {}
+        updateThemeUI(next);
+      });
+    }
+
+    if (window.matchMedia) {
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+        if (!localStorage.getItem('technovation-theme')) {
+          const sys = e.matches ? 'dark' : 'light';
+          document.documentElement.setAttribute('data-theme', sys);
+          updateThemeUI(sys);
+        }
+      });
+    }
+
+    /* --- MEASURED DIMENSIONS --- */
+    let H = 350;
+    let ws = 59;
+    let d = 184;
+    let gap = 10.5;
+    let shelfCenterY = window.innerHeight * 0.5;
+
+    function measureDimensions() {
+      document.documentElement.style.removeProperty('--H');
+      document.documentElement.style.removeProperty('--ws');
+      document.documentElement.style.removeProperty('--d');
+
+      const isShort = window.innerHeight <= 520;
+      const isMobile = window.innerWidth <= 767;
+
+      if (isMobile) {
+        if (isShort) {
+          H = Math.min(180, Math.max(130, Math.round(window.innerHeight * 0.40)));
+        } else {
+          // Standard phone portrait (e.g. 375x667, 390x844, 412x915)
+          H = Math.min(260, Math.max(165, Math.round(Math.min(window.innerHeight * 0.35, window.innerWidth * 0.65))));
+        }
+      } else {
+        H = probe.getBoundingClientRect().height || Math.round(Math.min(window.innerHeight * 0.39, 400));
+      }
+
+      ws = Math.max(26, Math.round(H * 0.17));
+      d = Math.max(110, Math.round(H * 0.68));
+      gap = Math.max(4, Math.round(H * 0.026));
+      shelfCenterY = window.innerHeight * (isShort ? 0.46 : (isMobile ? 0.48 : 0.49));
+
+      const decadeNav = document.querySelector('.decade-nav');
+      if (decadeNav) decadeNav.scrollLeft = 0;
+
+      document.documentElement.style.setProperty('--ws', `${ws}px`);
+      document.documentElement.style.setProperty('--d', `${d}px`);
+      document.documentElement.style.setProperty('--H', `${H}px`);
+      document.documentElement.style.setProperty('--h', `${H}px`);
+    }
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual';
+    }
+    measureDimensions();
+
+    const decadeNavEl = document.querySelector('.decade-nav');
+    if (decadeNavEl) {
+      decadeNavEl.scrollLeft = 0;
+      decadeNavEl.addEventListener('scroll', () => {
+        if (decadeNavEl.scrollLeft !== 0) decadeNavEl.scrollLeft = 0;
+      });
+    }
+
+    /* --- BUILD ALL BOOKS (WITH BESPOKE GRAPHICS) --- */
+    const tapes = [];
+    for (let i = 0; i < BOOKS.length; i++) {
+      const book = BOOKS[i];
+
+      const tapeEl = document.createElement('div');
+      tapeEl.className = 'tape';
+      tapeEl.dataset.bookIndex = i;
+
+      // Spine face with artwork + custom label plaque & icon
+      const spEl = document.createElement('div');
+      spEl.className = 'sp';
+      applyCropStyle(spEl, `spine-${book.id}`);
+
+      spEl.innerHTML = `
+        <div class="sp-label">
+          <div class="sp-icon">${book.spineIconSvg}</div>
+          <div class="sp-vol">${book.vol}</div>
+          <div class="sp-title">${book.spineTitle}</div>
+          <div class="sp-badge">CLUB</div>
+        </div>
+      `;
+
+      // Cover face with artwork + custom vector graphic + header/footer plates
+      const cvEl = document.createElement('div');
+      cvEl.className = 'cv';
+      applyCropStyle(cvEl, `cover-${book.id}`);
+
+      cvEl.innerHTML = `
+        <div class="cv-bg-vignette"></div>
+        <div class="cv-center-graphic">${book.graphicSvg}</div>
+        <div class="cv-plate">
+          <div class="cv-sub">
+            <span>TECHNOVATION</span>
+            <span>${book.chapter}</span>
+          </div>
+          <h2 class="cv-title">${book.spineTitle}</h2>
+          <span class="cv-tagline">${book.tagline}</span>
+        </div>
+        <div class="cv-foot-plate">
+          <span class="cv-edition">${book.romaji}</span>
+          <span class="cv-badge">ARCHIVE</span>
+        </div>
+      `;
+
+      tapeEl.appendChild(spEl);
+      tapeEl.appendChild(cvEl);
+      stage.appendChild(tapeEl);
+
+      const tapeObj = {
+        el: tapeEl,
+        sp: spEl,
+        cv: cvEl,
+        bookIndex: i,
+        lift: 0
+      };
+
+      tapeEl.addEventListener('pointerenter', () => {
+        let r = tapeObj.bookIndex - s;
+        if (Math.abs(r) > 0.5) {
+          hoveredIndex = i;
+          isCursorOverSpine = true;
+        }
+      });
+
+      tapeEl.addEventListener('pointerleave', () => {
+        if (hoveredIndex === i) {
+          hoveredIndex = -1;
+        }
+        isCursorOverSpine = false;
+      });
+
+      tapeEl.addEventListener('click', () => {
+        if (isDragging || hasMoved) return;
+        let r = tapeObj.bookIndex - s;
+        if (Math.abs(r) < 0.5) {
+          openDetail();
+        } else {
+          T = i;
+        }
+      });
+
+      tapes.push(tapeObj);
+    }
+
+    /* --- CAPTION SWAP WITH WEB ANIMATIONS API --- */
+    function swapCaptionLine(container, text, dir, className = '') {
+      const newSpan = document.createElement('span');
+      if (className) newSpan.className = className;
+      newSpan.textContent = text;
+      newSpan.style.gridArea = '1 / 1';
+      newSpan.style.display = 'block';
+      newSpan.style.width = '100%';
+      newSpan.style.textAlign = 'center';
+
+      const oldSpans = Array.from(container.children);
+      container.appendChild(newSpan);
+
+      if (prefersReducedMotion || oldSpans.length === 0) {
+        oldSpans.forEach(s => s.remove());
+        return;
+      }
+
+      // Animate new span into view
+      newSpan.animate([
+        { transform: `translateY(${dir * 105}%)` },
+        { transform: 'translateY(0%)' }
+      ], {
+        duration: 650,
+        easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)',
+        fill: 'both'
+      });
+
+      // Slide old spans out
+      oldSpans.forEach(oldSpan => {
+        if (oldSpan.dataset.leaving) return;
+        oldSpan.dataset.leaving = 'true';
+        const currentTransform = window.getComputedStyle(oldSpan).transform;
+        const anim = oldSpan.animate([
+          { transform: currentTransform === 'none' ? 'translateY(0%)' : currentTransform },
+          { transform: `translateY(${-dir * 105}%)` }
+        ], {
+          duration: 650,
+          easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)',
+          fill: 'both'
+        });
+        anim.onfinish = () => oldSpan.remove();
+      });
+    }
+
+    function updateCaption(bookIdx, dir) {
+      const book = BOOKS[bookIdx];
+      swapCaptionLine(captionTitle, book.title, dir);
+      swapCaptionLine(captionSub, `${book.romaji} · ${book.tagline}`, dir, 'lbl');
+      swapCaptionLine(captionYear, book.tag, dir);
+    }
+
+    /* --- CHAPTER TABS LOGIC --- */
+    function updateChapterIndicator(idx) {
+      const btn = chapterButtons[idx];
+      if (!btn) return;
+      decadeIndicator.style.width = `${btn.offsetWidth}px`;
+      decadeIndicator.style.transform = `translateX(${btn.offsetLeft}px)`;
+      chapterButtons.forEach((b, i) => {
+        b.classList.toggle('active', i === idx);
+      });
+    }
+
+    function updateArrowStates() {
+      const maxIdx = BOOKS.length - 1;
+      arrowLeft.style.opacity = activeBook === 0 ? '0.3' : '1';
+      arrowLeft.style.cursor = activeBook === 0 ? 'default' : 'pointer';
+      arrowRight.style.opacity = activeBook === maxIdx ? '0.3' : '1';
+      arrowRight.style.cursor = activeBook === maxIdx ? 'default' : 'pointer';
+    }
+
+    chapterButtons.forEach((btn, idx) => {
+      btn.addEventListener('click', () => {
+        T = idx;
+      });
+    });
+
+    // Initial caption, tabs, and arrows
+    updateCaption(activeBook, 1);
+    updateChapterIndicator(activeBook);
+    updateArrowStates();
+
+    if (document.fonts) {
+      document.fonts.ready.then(() => {
+        measureDimensions();
+        updateChapterIndicator(activeBook);
+      });
+    }
+
+    /* --- DETAIL VIEW & BLEEDING INK --- */
+    let currentSheetAnim = null;
+    let textAnims = [];
+    let inkRafId = null;
+
+    function startInkAnimation() {
+      if (inkRafId) cancelAnimationFrame(inkRafId);
+      const blobElements = BLOBS.map((_, i) => document.getElementById(`ink-blob-${i + 1}`));
+
+      if (prefersReducedMotion) {
+        blobElements.forEach(el => el && el.setAttribute('r', '720'));
+        return;
+      }
+
+      blobElements.forEach(el => el && el.setAttribute('r', '0'));
+      const openStartTime = performance.now();
+
+      function step(now) {
+        const elapsedSinceOpen = now - openStartTime;
+
+        BLOBS.forEach((b, i) => {
+          const blobStartTime = 520 + b.delay;
+          const blobElapsed = elapsedSinceOpen - blobStartTime;
+          if (blobElapsed <= 0) {
+            blobElements[i].setAttribute('r', '0');
+          } else {
+            const p = Math.min(1, blobElapsed / 1250);
+            const ease = 1 - Math.pow(1 - p, 3);
+            const r = (ease * 720).toFixed(1);
+            blobElements[i].setAttribute('r', r);
+          }
+        });
+
+        if (elapsedSinceOpen < 2400) {
+          inkRafId = requestAnimationFrame(step);
+        } else {
+          blobElements.forEach(el => el && el.setAttribute('r', '720'));
+          inkRafId = null;
+        }
+      }
+
+      inkRafId = requestAnimationFrame(step);
+    }
+
+    function openDetail() {
+      if (isOpen) return;
+      isOpen = true;
+
+      T = Math.round(T);
+      s = T;
+
+      const book = BOOKS[activeBook];
+
+      // Update text
+      detailSub.textContent = `${book.romaji} · ${book.tagline}`;
+      detailTitle.textContent = book.title;
+      detailMeta.textContent = book.meta;
+      detailSynopsis.textContent = book.synopsis;
+      detailCredit.textContent = book.credit;
+      detailActionBtn.textContent = book.actionBtn;
+
+      // Position SVG poster image
+      const [sheetId, x, y, w, h] = CROP[`cover-${book.id}`];
+      const [sheetUrl, W, H_sheet] = SHEET[sheetId];
+      detailPosterImg.setAttribute('href', sheetUrl);
+      detailPosterImg.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', sheetUrl);
+      detailPosterImg.setAttribute('x', (-x * 474 / w).toFixed(2));
+      detailPosterImg.setAttribute('y', (-y * 900 / h).toFixed(2));
+      detailPosterImg.setAttribute('width', (W * 474 / w).toFixed(2));
+      detailPosterImg.setAttribute('height', (H_sheet * 900 / h).toFixed(2));
+
+      // Update shelf-matched cover overlay on introduction screen
+      const detailBookOverlay = document.getElementById('detail-book-overlay');
+      const detailPlateChapter = document.getElementById('detail-plate-chapter');
+      const detailPlateTitle = document.getElementById('detail-plate-title');
+      const detailPlateTagline = document.getElementById('detail-plate-tagline');
+      const detailPlateEdition = document.getElementById('detail-plate-edition');
+      const detailCvGraphic = document.getElementById('detail-cv-graphic');
+
+      if (detailPlateChapter) detailPlateChapter.textContent = book.chapter;
+      if (detailPlateTitle) detailPlateTitle.textContent = book.spineTitle;
+      if (detailPlateTagline) detailPlateTagline.textContent = book.tagline;
+      if (detailPlateEdition) detailPlateEdition.textContent = book.romaji;
+      if (detailCvGraphic) detailCvGraphic.innerHTML = book.graphicSvg;
+
+      if (detailBookOverlay) {
+        detailBookOverlay.classList.remove('is-visible');
+        setTimeout(() => {
+          if (isOpen && detailBookOverlay) {
+            detailBookOverlay.classList.add('is-visible');
+          }
+        }, prefersReducedMotion ? 10 : 350);
+      }
+
+      // Reset blobs
+      BLOBS.forEach((_, i) => {
+        const el = document.getElementById(`ink-blob-${i + 1}`);
+        if (el) el.setAttribute('r', '0');
+      });
+
+      // Get active tape cover screen rect
+      const activeTape = tapes[activeBook] || tapes[0];
+      const coverFace = activeTape.el.querySelector('.cv');
+      const rawRect = (coverFace && coverFace.getBoundingClientRect().width > 0)
+        ? coverFace.getBoundingClientRect()
+        : {
+            top: window.innerHeight * 0.25,
+            left: window.innerWidth * 0.35,
+            right: window.innerWidth * 0.65,
+            bottom: window.innerHeight * 0.75,
+            width: window.innerWidth * 0.3,
+            height: window.innerHeight * 0.5
+          };
+
+      const top = Math.max(0, Math.round(rawRect.top));
+      const right = Math.max(0, Math.round(window.innerWidth - rawRect.right));
+      const bottom = Math.max(0, Math.round(window.innerHeight - rawRect.bottom));
+      const left = Math.max(0, Math.round(rawRect.left));
+
+      const startClip = `inset(${top}px ${right}px ${bottom}px ${left}px round 3px)`;
+      const endClip = 'inset(0px 0px 0px 0px round 0px)';
+
+      detail.style.transformOrigin = `${Math.round(left + rawRect.width / 2)}px ${Math.round(top + rawRect.height / 2)}px`;
+      detail.style.visibility = 'visible';
+
+      if (currentSheetAnim) currentSheetAnim.cancel();
+
+      currentSheetAnim = detail.animate([
+        { clipPath: startClip, transform: 'rotate(-4.5deg)' },
+        { clipPath: endClip, transform: 'rotate(0deg)' }
+      ], {
+        duration: prefersReducedMotion ? 1 : 1050,
+        easing: 'cubic-bezier(0.76, 0, 0.18, 1)',
+        fill: 'both'
+      });
+
+      // Text rises out of masks
+      textAnims.forEach(a => a.cancel());
+      textAnims = [];
+
+      const lines = detail.querySelectorAll('.detail-left-col .mask-line > *');
+      lines.forEach((line, index) => {
+        const a = line.animate([
+          { transform: 'translateY(110%)' },
+          { transform: 'translateY(0%)' }
+        ], {
+          duration: prefersReducedMotion ? 1 : 900,
+          delay: prefersReducedMotion ? 0 : (620 + index * 75),
+          easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)',
+          fill: 'both'
+        });
+        textAnims.push(a);
+      });
+
+      // Start poster ink bleed
+      startInkAnimation();
+    }
+
+    function closeDetail() {
+      if (!isOpen) return;
+      isOpen = false;
+
+      const detailBookOverlay = document.getElementById('detail-book-overlay');
+      if (detailBookOverlay) {
+        detailBookOverlay.classList.remove('is-visible');
+      }
+
+      if (inkRafId) {
+        cancelAnimationFrame(inkRafId);
+        inkRafId = null;
+      }
+
+      textAnims.forEach(a => a.cancel());
+      textAnims = [];
+
+      const activeTape = tapes[activeBook] || tapes[0];
+      const coverFace = activeTape.el.querySelector('.cv');
+      const rawRect = (coverFace && coverFace.getBoundingClientRect().width > 0)
+        ? coverFace.getBoundingClientRect()
+        : {
+            top: window.innerHeight * 0.25,
+            left: window.innerWidth * 0.35,
+            right: window.innerWidth * 0.65,
+            bottom: window.innerHeight * 0.75,
+            width: window.innerWidth * 0.3,
+            height: window.innerHeight * 0.5
+          };
+
+      const top = Math.max(0, Math.round(rawRect.top));
+      const right = Math.max(0, Math.round(window.innerWidth - rawRect.right));
+      const bottom = Math.max(0, Math.round(window.innerHeight - rawRect.bottom));
+      const left = Math.max(0, Math.round(rawRect.left));
+      const targetClip = `inset(${top}px ${right}px ${bottom}px ${left}px round 3px)`;
+
+      detail.style.transformOrigin = `${Math.round(left + rawRect.width / 2)}px ${Math.round(top + rawRect.height / 2)}px`;
+
+      if (currentSheetAnim) currentSheetAnim.cancel();
+
+      currentSheetAnim = detail.animate([
+        { clipPath: 'inset(0px 0px 0px 0px round 0px)', transform: 'rotate(0deg)' },
+        { clipPath: targetClip, transform: 'rotate(-4.5deg)' }
+      ], {
+        duration: prefersReducedMotion ? 1 : 850,
+        easing: 'cubic-bezier(0.76, 0, 0.18, 1)',
+        fill: 'both'
+      });
+
+      currentSheetAnim.onfinish = () => {
+        detail.style.visibility = 'hidden';
+        currentSheetAnim.cancel();
+        currentSheetAnim = null;
+      };
+    }
+
+    detailClose.addEventListener('click', closeDetail);
+    playRing.addEventListener('click', openDetail);
+
+    /* --- EXPLORE MANIFESTO: OPEN 3D INTERACTIVE BOOK READER --- */
+    detailActionBtn.addEventListener('click', () => {
+      const book = BOOKS[activeBook];
+      const deptKey = book ? (book.id === 'noon' ? 'about' :
+                             book.id === 'green' ? 'technical' :
+                             book.id === 'graphics' ? 'graphics' :
+                             book.id === 'storm' ? 'production' :
+                             book.id === 'events' ? 'events' :
+                             book.id === 'bluehour' ? 'pr' :
+                             book.id === 'observer' ? 'team' :
+                             book.id === 'door' ? 'legacy' : book.id) : 'about';
+
+      // Keep detail dialog visible underneath reader to eliminate any flash of the shelf
+      BookReader.open(deptKey, {
+        shelfBook: book,
+        onClose: () => {
+          // Returning from book: ensure detail screen is visible
+          detail.style.visibility = 'visible';
+        },
+        onReturnShelf: () => {
+          // Returning to main shelf: close detail dialog completely
+          closeDetail();
+        }
+      });
+    });
+
+    /* --- INPUT EVENTS WITH LEFT & RIGHT NAVIGATION --- */
+    arrowLeft.addEventListener('click', () => {
+      if (BookReader.isOpen) return;
+      if (T > 0) {
+        T = Math.round(T) - 1;
+      }
+    });
+
+    arrowRight.addEventListener('click', () => {
+      if (BookReader.isOpen) return;
+      if (T < BOOKS.length - 1) {
+        T = Math.round(T) + 1;
+      }
+    });
+
+    // Keyboard support
+    window.addEventListener('keydown', (e) => {
+      if (BookReader.isOpen) return;
+      if (e.key === 'Escape') {
+        if (isOpen) closeDetail();
+        return;
+      }
+      if (isOpen) return;
+
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        if (T > 0) T = Math.round(T) - 1;
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        if (T < BOOKS.length - 1) T = Math.round(T) + 1;
+      } else if (e.key === 'Enter') {
+        if (document.activeElement === document.body || document.activeElement.tagName === 'BODY' || document.activeElement.classList.contains('shelf-section')) {
+          e.preventDefault();
+          openDetail();
+        }
+      } else if (e.key === 't' || e.key === 'T') {
+        if (!isOpen && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+          if (themeToggleBtn) themeToggleBtn.click();
+        }
+      }
+    });
+
+    // Wheel support
+    window.addEventListener('wheel', (e) => {
+      if (isOpen || BookReader.isOpen) return;
+      const maxIdx = BOOKS.length - 1;
+      const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+      T = Math.max(0, Math.min(maxIdx, T + (delta / (ws + gap)) * 0.45));
+
+      clearTimeout(wheelTimeout);
+      wheelTimeout = setTimeout(() => {
+        T = Math.max(0, Math.min(maxIdx, Math.round(T)));
+      }, 160);
+    }, { passive: true });
+
+    // Drag support
+    const shelfSection = document.getElementById('shelf-section');
+
+    shelfSection.addEventListener('pointerdown', (e) => {
+      if ((e.pointerType === 'mouse' && e.button !== 0) || isOpen || BookReader.isOpen) return;
+      isPointerDown = true;
+      isDragging = false;
+      hasMoved = false;
+      startPointerX = e.clientX;
+      startT = T;
+      try {
+        shelfSection.setPointerCapture(e.pointerId);
+      } catch (_) {}
+    });
+
+    window.addEventListener('pointermove', (e) => {
+      mx = e.clientX;
+      my = e.clientY;
+
+      if (!isPointerDown) return;
+      const dx = e.clientX - startPointerX;
+      if (!hasMoved && Math.abs(dx) > 5) {
+        hasMoved = true;
+        isDragging = true;
+      }
+      if (isDragging) {
+        const isMobile = window.innerWidth <= 767;
+        const dragStep = isMobile ? Math.max(90, Math.round(d * 0.75)) : (ws + gap);
+        const maxIdx = BOOKS.length - 1;
+        T = Math.max(-0.2, Math.min(maxIdx + 0.2, startT - dx / dragStep));
+      }
+    });
+
+    window.addEventListener('pointerup', (e) => {
+      if (isPointerDown) {
+        try {
+          if (e && e.pointerId) shelfSection.releasePointerCapture(e.pointerId);
+        } catch (_) {}
+        isPointerDown = false;
+        if (isDragging) {
+          const dx = (e.clientX || mx) - startPointerX;
+          const isMobile = window.innerWidth <= 767;
+          const maxIdx = BOOKS.length - 1;
+          if (isMobile && Math.abs(dx) > 30) {
+            T = dx < 0 ? Math.min(maxIdx, Math.ceil(startT + 0.1)) : Math.max(0, Math.floor(startT - 0.1));
+          } else {
+            T = Math.max(0, Math.min(maxIdx, Math.round(T)));
+          }
+          setTimeout(() => {
+            isDragging = false;
+            hasMoved = false;
+          }, 60);
+        } else {
+          isDragging = false;
+          hasMoved = false;
+        }
+      }
+    });
+
+    window.addEventListener('pointercancel', (e) => {
+      if (isPointerDown) {
+        try {
+          if (e && e.pointerId) shelfSection.releasePointerCapture(e.pointerId);
+        } catch (_) {}
+        isPointerDown = false;
+        if (isDragging) T = Math.max(0, Math.min(BOOKS.length - 1, Math.round(T)));
+        isDragging = false;
+        hasMoved = false;
+      }
+    });
+
+    // Track button hovers dynamically for custom cursor across the entire site and reader
+    window.addEventListener('pointerover', (e) => {
+      if (e.target && e.target.closest && e.target.closest('button, a, .box, [role="button"], .fsp-action-btn, .fsp-edge-nav, .fsp-close-btn, .fsp-sound-toggle-btn')) {
+        isCursorOverBtn = true;
+      }
+    });
+    window.addEventListener('pointerout', (e) => {
+      if (e.target && e.target.closest && e.target.closest('button, a, .box, [role="button"], .fsp-action-btn, .fsp-edge-nav, .fsp-close-btn, .fsp-sound-toggle-btn')) {
+        isCursorOverBtn = false;
+      }
+    });
+
+    // Window resize & orientation change
+    window.addEventListener('resize', () => {
+      measureDimensions();
+      updateChapterIndicator(activeBook);
+    });
+    window.addEventListener('orientationchange', () => {
+      setTimeout(() => {
+        measureDimensions();
+        updateChapterIndicator(activeBook);
+      }, 80);
+    });
+    if (screen.orientation) {
+      screen.orientation.addEventListener('change', () => {
+        setTimeout(() => {
+          measureDimensions();
+          updateChapterIndicator(activeBook);
+        }, 80);
+      });
+    }
+
+    /* --- ANIMATION LOOP (requestAnimationFrame) --- */
+    let lastTime = performance.now();
+
+    function loop(now) {
+      let dt = (now - lastTime) / 1000;
+      if (dt > 0.05) dt = 0.05;
+      lastTime = now;
+
+      // 1. Spring physics for s (smooth bounded motion between 0 and 5)
+      const k = isDragging ? 18 : (prefersReducedMotion ? 100 : 6.0);
+      const prevSVal = s;
+      s += (T - s) * (1 - Math.exp(-k * dt));
+      if (Math.abs(T - s) < 1e-4) s = T;
+
+      // Track scroll velocity for realistic inertia lean
+      scrollVelocity = (s - prevSVal) / (dt || 0.016);
+
+      // 2. Caption update
+      const newActive = Math.max(0, Math.min(BOOKS.length - 1, Math.round(s)));
+      if (newActive !== activeBook) {
+        const dir = Math.sign(T - s) || 1;
+        activeBook = newActive;
+        updateCaption(activeBook, dir);
+        updateChapterIndicator(activeBook);
+        updateArrowStates();
+      }
+
+      // 3. Cursor smoothing
+      cx += (mx - cx) * (1 - Math.exp(-16 * dt));
+      cy += (my - cy) * (1 - Math.exp(-16 * dt));
+      cursor.style.transform = `translate3d(${cx.toFixed(2)}px, ${cy.toFixed(2)}px, 0)`;
+
+      // 4. Center-based layout calculations for all books
+      const rawX = [];
+      for (let idx = 0; idx < BOOKS.length; idx++) {
+        const r = idx - s;
+
+        // Smooth step B(r) pushes neighbours apart to accommodate the active open cover
+        let B;
+        if (Math.abs(r) < 1) {
+          B = (r + Math.sin(Math.PI * r) / Math.PI) / 2;
+        } else {
+          B = r > 0 ? 0.5 : -0.5;
+        }
+
+        rawX[idx] = r * (ws + gap) + (d - ws + 1.6 * gap) * B;
+      }
+
+      // Compute shelf bounds: on mobile center on active book (rawX=0), on desktop center the shelf
+      const isMobile = window.innerWidth <= 767;
+      const minX = Math.min(...rawX);
+      const maxX = Math.max(...rawX);
+      const shelfCenterOffset = isMobile ? 0 : (minX + maxX) * 0.5;
+
+      const halfW = window.innerWidth * 0.5;
+      const activeX = rawX[activeBook] - shelfCenterOffset;
+
+      // 5. Tilt calculation on active cover
+      const isNearCoverX = Math.abs(mx - (halfW + activeX)) <= 0.55 * d;
+      const isNearCoverY = Math.abs(my - shelfCenterY) <= 0.55 * H;
+      const isSettled = Math.abs(T - s) < 0.3;
+
+      onCover = isNearCoverX && isNearCoverY && !isOpen && isSettled;
+
+      let targetTiltX = 0;
+      let targetTiltY = 0;
+
+      if (onCover) {
+        targetTiltY = ((mx - (halfW + activeX)) / (0.55 * d)) * 9;
+        targetTiltX = -((my - shelfCenterY) / (H * 0.5)) * 6;
+      } else {
+        targetTiltY = ((mx - halfW) / window.innerWidth) * 5;
+        targetTiltX = 0;
+      }
+
+      tiltX += (targetTiltX - tiltX) * (1 - Math.exp(-7 * dt));
+      tiltY += (targetTiltY - tiltY) * (1 - Math.exp(-7 * dt));
+
+      // 6. Cursor states (supports homepage, detail modal, and full-screen book reader)
+      const isReaderActive = window.BookReader && window.BookReader.isOpen;
+      cursor.classList.toggle('is-open', onCover && !isOpen && !isReaderActive);
+      cursor.classList.toggle('is-spine', isCursorOverSpine && !onCover && !isOpen && !isReaderActive);
+      cursor.classList.toggle('is-btn', isCursorOverBtn && !onCover);
+
+      // 7. Play ring position & scale
+      const playScale = isOpen ? 0 : smoothstep(Math.max(0, 1 - Math.abs(T - s) * 3));
+      let playX = halfW + activeX - 0.5 * d - 6;
+      playX = Math.max(20, Math.min(window.innerWidth - 20, playX));
+      const playY = Math.max(38, Math.min(window.innerHeight - 38, shelfCenterY + 0.36 * H));
+      playRing.style.left = `${playX.toFixed(2)}px`;
+      playRing.style.top = `${playY.toFixed(2)}px`;
+      playRing.style.transform = `translate(-50%, -50%) scale(${playScale.toFixed(4)})`;
+      playRing.style.pointerEvents = (playScale > 0.1 && !isOpen) ? 'auto' : 'none';
+
+      // 8. Dynamic left/right animation of all books (Centered Layout)
+      const inertiaZ = Math.max(-4.5, Math.min(4.5, -scrollVelocity * 0.9));
+
+      for (let idx = 0; idx < BOOKS.length; idx++) {
+        const tape = tapes[idx];
+        const r = idx - s;
+        const x = rawX[idx] - shelfCenterOffset;
+
+        // Hover lift
+        const isHovered = hoveredIndex === idx && Math.abs(r) > 0.5 && !isOpen;
+        const targetLift = isHovered ? 1 : 0;
+        const liftRate = prefersReducedMotion ? 1 : (1 - Math.exp(-12 * dt));
+        tape.lift += (targetLift - tape.lift) * liftRate;
+
+        // Openness o
+        const o = smoothstep(Math.max(0, 1 - Math.abs(r)));
+
+        // 3D transforms
+        const rotY = -90 * o + tiltY * o;
+        const rotX = tiltX * o;
+        const rotZ = (-4.5 * o) + (inertiaZ * (1 - o * 0.7));
+        const transZ = o * 0.2 * H;
+        const transY = -o * 0.025 * H - tape.lift * 0.045 * H;
+
+        tape.el.style.transform = `translate3d(${x.toFixed(2)}px, ${transY.toFixed(2)}px, ${transZ.toFixed(2)}px) rotateZ(${rotZ.toFixed(2)}deg) rotateX(${rotX.toFixed(2)}deg) rotateY(${rotY.toFixed(2)}deg)`;
+        tape.el.style.zIndex = Math.round(100 - Math.abs(r) * 12);
+
+        // Dynamic light shading
+        tape.sp.style.setProperty('--shade', (o * 0.55).toFixed(3));
+        tape.cv.style.setProperty('--shade', ((1 - o) * 0.5).toFixed(3));
+      }
+
+      requestAnimationFrame(loop);
+    }
+
+    requestAnimationFrame(loop);
+  </script>
+</body>
+</html>
